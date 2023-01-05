@@ -1,0 +1,43 @@
+<mat-expansion-panel hideToggle [disabled]="true" [expanded]="isError">
+  <mat-expansion-panel-header class="mat-elevation-z2">
+    <mat-panel-title>
+      <app-menu-header></app-menu-header>
+      <a routerLink="">Project Management Application</a>
+    </mat-panel-title>
+    <mat-panel-description>
+      <button *ngIf = "isUserLoggedIn" mat-fab color="warn" aria-label="Add project" >
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="spacer"></span>
+
+      <button mat-raised-button>EN</button>
+      <button *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signin">Login</button>
+      <button *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signup">Sign up</button>
+      <button *ngIf = "isUserLoggedIn" mat-raised-button (click)="logOut()">Log out</button>
+      <button *ngIf = "isUserLoggedIn" mat-fab color="primary" aria-label="User profile">
+        <mat-icon>manage_accounts</mat-icon>
+      </button>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <p>Oops... Something went wrong!</p>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Error:</mat-card-title>
+      <mat-divider></mat-divider>
+    </mat-card-header>
+    <mat-card-content>
+      {{getError()}}
+    </mat-card-content>
+  </mat-card>
+  <mat-paginator #paginator
+    (page)="pageIndex = paginator.pageIndex"
+    [pageIndex]="pageIndex"
+    [length]="this.errorAmount"
+    style-paginator
+    [pageSize]="1"
+    hidePageSize="true"
+    aria-label="Select page">
+  </mat-paginator>
+  <button mat-flat-button color="warn" align="end" (click)="cleanErrors()">Got it!</button>
+</mat-expansion-panel>

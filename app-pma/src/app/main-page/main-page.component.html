@@ -1,0 +1,28 @@
+<button mat-flat-button *ngIf="!isBoards" (click)="createNewBoard()">
+  <mat-icon>add</mat-icon>
+  Create your first project
+</button>
+
+<mat-list>
+  <div mat-subheader>Your own projects</div>
+  <mat-list-item>
+    <mat-icon matListItemIcon>folder</mat-icon>
+    <div matListItemTitle></div>
+    <div matListItemLine></div>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+  <div mat-subheader>Projects you were invited to</div>
+  <mat-divider></mat-divider>
+  <div mat-subheader>Other projects</div>
+</mat-list>
+
+<!--
+{
+  "_id": "63bbe9aba5f586476cc9ffd2",
+  "title": "Test Board2",
+  "owner": "3434343434",
+  "users": [
+    "34354463434346"
+  ]
+
+-->

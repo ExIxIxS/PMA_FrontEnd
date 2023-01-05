@@ -1,0 +1,14 @@
+<h2>Welcome to Project Management Application!</h2>
+
+<mat-stepper orientation="vertical" [linear]="false" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <ng-template matStepLabel>About project</ng-template>
+    <p>It`s very cool project</p>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <ng-template matStepLabel>About course</ng-template>
+  </mat-step>
+  <mat-step [stepControl]="thirdFormGroup">
+    <ng-template matStepLabel>Developer</ng-template>
+  </mat-step>
+
