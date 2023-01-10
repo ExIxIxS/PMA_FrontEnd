@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<mat-dialog-content [ngSwitch]="type" id="popup-content" class="mat-typography" >
+  <app-form-new-board *ngSwitchCase="'createBoard'"></app-form-new-board>
+  <h3 *ngSwitchDefault>Sorry, this window opened with mistake...</h3>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" [mat-dialog-close]="true" [disabled]="!isConfirmValid">Confirm</button>
+  <button mat-flat-button color="warn" mat-dialog-close cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>
