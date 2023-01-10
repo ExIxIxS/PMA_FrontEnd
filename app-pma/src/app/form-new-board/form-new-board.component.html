@@ -1,0 +1,50 @@
+<form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
+  <mat-form-field appearance="fill">
+    <mat-label>Enter a board title</mat-label>
+    <input matInput formControlName="boardTitle" (input)="checkInput()">
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('boardTitle')}}</mat-error>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="user-chip-list" appearance="fill">
+    <mat-label>Invite participants</mat-label>
+    <mat-chip-grid #chipGrid aria-label="Invited users">
+      <mat-chip-row *ngFor="let participant of participants"
+                    (removed)="remove(participant)"
+                    [editable]="false">
+        {{participant.name}}
+        <button matChipRemove [attr.aria-label]="'remove ' + participant">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+
+      <br>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a name</mat-label>
+        <input type="text"
+              placeholder=""
+              aria-label="Number"
+              matInput
+              [formControl]="participantInput"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipGrid"
+              [matChipInputAddOnBlur]="addOnBlur"
+        >
+
+      <mat-autocomplete #auto="matAutocomplete"
+        (optionSelected)="add($event)">
+        <mat-option *ngFor="let userName of availableUsers" [value]="userName">
+          {{userName}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    </mat-chip-grid>
+
+
+
+
+  </mat-form-field>
+</form>
