@@ -49,11 +49,24 @@ export class FormNewBoardComponent {
     this.getUsers();
   }
 
-  getUsers() {
+  get ownerId(): string | undefined {
+    if (this.allUsers) {
+      const ownerLogin = this.localStorageService.currentUser.login;
+      return this.allUsers
+        .find((userObj) => userObj.login === ownerLogin)
+        ?._id;
+    }
+
+    return;
+  }
+
+  getUsers(): void {
     const usersObserver = {
       next: (userObjArr: UserObj[]) => {
         this.allUsers = userObjArr;
-        this.availableUsers = userObjArr.map((obj) => obj.name);
+        this.availableUsers = userObjArr
+          .filter((obj) => obj._id !== this.ownerId)
+          .map((obj) => obj.name);
       },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err);
@@ -107,15 +120,11 @@ export class FormNewBoardComponent {
 
   createNewBoardObj(): NewBoardObj {
     const title = this.checkoutForm.controls.boardTitle.value;
-    const owner = this.localStorageService.currentUser;
     let ownerID;
     let participantsIDs;
 
     if (this.allUsers) {
-      ownerID = this.allUsers
-        .find((userObj) => userObj.login === owner.login)
-        ?._id;
-
+      ownerID = this.ownerId;
       participantsIDs = this.allUsers
         .filter((userObj) => this.participants
           .map((participant) => participant.name)
@@ -138,7 +147,7 @@ export class FormNewBoardComponent {
     this.updateNewBoard();
   }
 
-  updateNewBoard() {
+  updateNewBoard(): void {
     if (this.checkoutForm.valid) {
       this.confirmationService.newBoard = this.createNewBoardObj();
     }
