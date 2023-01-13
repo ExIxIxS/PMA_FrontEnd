@@ -49,4 +49,8 @@ export class HeaderComponent {
     this.errorHandlerService.clearErrors();
     this.pageIndex = 0;
   }
+
+  createNewBoard() {
+    this.confirmationService.openDialog({type: 'createBoard'});
+  }
 }

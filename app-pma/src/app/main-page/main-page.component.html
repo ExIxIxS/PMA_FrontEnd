@@ -3,26 +3,56 @@
   Create your first project
 </button>
 
-<mat-list>
-  <div mat-subheader>Your own projects</div>
-  <mat-list-item>
-    <mat-icon matListItemIcon>folder</mat-icon>
-    <div matListItemTitle></div>
-    <div matListItemLine></div>
-  </mat-list-item>
-  <mat-divider></mat-divider>
-  <div mat-subheader>Projects you were invited to</div>
-  <mat-divider></mat-divider>
-  <div mat-subheader>Other projects</div>
-</mat-list>
+<ng-template #boardTemplate
+            let-boardTitle="title"
+            let-boardOwner="owner"
+            let-boardParticipants="participants"
+            let-delete="deleteBoard"
+            let-boardID="boardId">
+  <mat-card class="board-card" (click)="openBoard(boardID)">
+    <mat-card-header>
+      <mat-card-title matListItemTitle>{{boardTitle}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p matListItemLine>Owner: {{boardOwner}}</p>
+      <p matListItemLine>Participants: {{boardParticipants}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button (click)="deleteBoard(boardID, boardTitle, boardOwner)" mat-fab color="warn" aria-label="Icon button with a delete icon">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-template>
 
-<!--
-{
-  "_id": "63bbe9aba5f586476cc9ffd2",
-  "title": "Test Board2",
-  "owner": "3434343434",
-  "users": [
-    "34354463434346"
-  ]
+<h3>Your own projects</h3>
+<ng-template [ngTemplateOutlet]="boardTemplate"
+              *ngFor="let board of ownBoardsOutput"
+              [ngTemplateOutletContext]="{title: board.title,
+                owner: board.owner,
+                participants: board.users,
+                boardId: board._id
+              }">
+</ng-template>
+<mat-divider class="boards-divider"></mat-divider>
 
--->
+<h3>Projects you were invited to</h3>
+<ng-template [ngTemplateOutlet]="boardTemplate"
+              *ngFor="let board of participanceBoardsOutput"
+              [ngTemplateOutletContext]="{title: board.title,
+                owner: board.owner,
+                participants: board.users,
+                boardId: board._id
+              }">
+</ng-template>
+<mat-divider class="boards-divider"></mat-divider>
+<h3>Other projects</h3>
+<ng-template [ngTemplateOutlet]="boardTemplate"
+              *ngFor="let board of otherBoardsOutput"
+              [ngTemplateOutletContext]="{title: board.title,
+                owner: board.owner,
+                participants: board.users,
+                boardId: board._id
+              }">
+</ng-template>
+

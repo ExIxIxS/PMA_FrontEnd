@@ -4,7 +4,7 @@ import { AppControlService } from './app-control.service';
 
 @Injectable()
 export class ErrorHandlerService {
-  currentErrors: string[] = ['Test Error'];
+  currentErrors: string[] = [];
 
   constructor(
     private appControlService: AppControlService

@@ -30,4 +30,17 @@ export class DialogPopupComponent {
     return this.confirmationService.isConfirmValid;
   }
 
+  get boardTitle() {
+    return this.confirmationService.deletedBoard?.boardTitle;
+  }
+
+  get boardOwner() {
+    return this.confirmationService.deletedBoard?.owner;
+  }
+
+  get isRightToDelete() {
+    return this.confirmationService.deletedBoard?.rightToDelete;
+  }
+
+
 }

@@ -91,9 +91,7 @@ export class FormNewBoardComponent {
       this.participantInput.setValue('');
     }
 
-    if (this.checkoutForm.valid) {
-      this.confirmationService.newBoard = this.createNewBoardObj();
-    }
+    this.updateNewBoard();
   }
 
   remove(participant: Participant): void {
@@ -104,6 +102,7 @@ export class FormNewBoardComponent {
     }
 
     this.availableUsers.push(participant.name);
+    this.updateNewBoard();
   }
 
   createNewBoardObj(): NewBoardObj {
@@ -136,6 +135,13 @@ export class FormNewBoardComponent {
 
   checkInput(): void {
     this.confirmationService.isConfirmValid = this.checkoutForm.valid;
+    this.updateNewBoard();
+  }
+
+  updateNewBoard() {
+    if (this.checkoutForm.valid) {
+      this.confirmationService.newBoard = this.createNewBoardObj();
+    }
   }
 
 }

@@ -44,6 +44,7 @@ import { SignupPageComponent } from './signup-page/signup-page.component';
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 import { ConfirmationService } from './confirmation.service';
 import { FormNewBoardComponent } from './form-new-board/form-new-board.component';
+import { BoardContentComponent } from './board-content/board-content.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { FormNewBoardComponent } from './form-new-board/form-new-board.component
     SignupPageComponent,
     DialogPopupComponent,
     FormNewBoardComponent,
+    BoardContentComponent,
   ],
   imports: [
     BrowserModule,

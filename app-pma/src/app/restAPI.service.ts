@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+import { concat } from 'rxjs';
+
 import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 
@@ -88,9 +90,10 @@ export class RestDataService {
 
   createBoard(newBoard: NewBoardObj) {
     const createBoardObserver = {
-      next: () => {
+      next: (boardObj: BoardObj) => {
         console.log('Board poasted');
-        this.getBoards().subscribe((boards) => console.log(boards))
+        console.log(boardObj);
+        this.updateBoardsStorage();
       },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err)
@@ -102,8 +105,67 @@ export class RestDataService {
       .subscribe(createBoardObserver);
   }
 
+  updateBoardsStorage() {
+    let isBoardsTime = true;
+    const updateBoardsStorageObserver = {
+      next: (objArr: BoardObj[] | UserObj[]) => {
+        if (isBoardsTime) {
+          this.localStorageService.currentBoards = objArr as BoardObj[];
+          isBoardsTime = false;
+        } else {
+          this.localStorageService.currentUsers = objArr  as UserObj[];
+        }
+
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+      complete: () => {
+        console.log('Boards and user storage updated');
+        this.localStorageService.updateBoardsStorage()
+      }
+    }
+
+    concat(this.getBoards(), this.getUsers())
+      .subscribe(updateBoardsStorageObserver);
+
+  }
+
+/*
+updateBoardsStorage() {
+  function isBoardObj(objArr: BoardObj[] | UserObj[]): objArr is BoardObj[] {
+    return (objArr as BoardObj[])[0].owner !== undefined;
+  }
+
+  const updateBoardsStorageObserver = {
+    next: (objArr: BoardObj[]) => console.log(objArr),
+    error: (err: Error) => {
+      this.errorHandlerService.handleError(err)
+    },
+  }
+
+  this.getBoards()
+    .subscribe(updateBoardsStorageObserver);
+
+}
+*/
   getBoards() {
     return  this.http.get<BoardObj[]>(REST_URL + 'boards', this.getHttpOptions('getBoards'));
+  }
+
+  deleteBoard(boardId: string) {
+    const deleteBoardObserver = {
+      next: () => {
+        this.localStorageService.deleteBoard(boardId);
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    this.http
+      .delete<BoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions('deleteBoards'))
+      .subscribe(deleteBoardObserver);
   }
 
   getHttpOptions(type: string) {
@@ -111,6 +173,7 @@ export class RestDataService {
       case 'getUsers':
       case 'createBoard':
       case 'getBoards':
+      case 'deleteBoards':
         return {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',

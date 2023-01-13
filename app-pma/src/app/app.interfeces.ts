@@ -26,11 +26,18 @@ interface BoardObj {
   users: string[]
 }
 
+interface BoardObjStorage {
+  _id: string, // board id
+  title: string, // "Board title",
+  owner: UserObj,
+  users: UserObj[],
+}
+
 interface Participant {
   name: string;
 }
 
-type ConfirmationTypes = 'default' | 'createBoard';
+type ConfirmationTypes = 'default' | 'createBoard' | 'deleteBoard';
 
 export {
   CurUserObj,
@@ -40,4 +47,5 @@ export {
   BoardObj,
   Participant,
   ConfirmationTypes,
+  BoardObjStorage,
   }

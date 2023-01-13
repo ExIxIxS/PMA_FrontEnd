@@ -1,7 +1,19 @@
 <h2 mat-dialog-title>{{title}}</h2>
 <mat-dialog-content [ngSwitch]="type" id="popup-content" class="mat-typography" >
   <app-form-new-board *ngSwitchCase="'createBoard'"></app-form-new-board>
-  <h3 *ngSwitchDefault>Sorry, this window opened with mistake...</h3>
+  <div *ngSwitchCase="'deleteBoard'">
+    <div *ngIf="isRightToDelete">
+      <p>Board title: "{{boardTitle}}"</p>
+      <p>Are you sure want to delete this board?</p>
+      <p>There is no way to restore the board after deletion!</p>
+    </div>
+    <div *ngIf="!isRightToDelete">
+      <p>Sorry deletion avaliable only for board`s owner</p>
+      <p>Board`s owner: "{{boardOwner}}"</p>
+    </div>
+
+  </div>
+  <h3 *ngSwitchDefault>Sorry, this window has opened with mistake...</h3>
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">

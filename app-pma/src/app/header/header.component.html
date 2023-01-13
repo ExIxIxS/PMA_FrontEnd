@@ -5,7 +5,10 @@
       <a routerLink="">Project Management Application</a>
     </mat-panel-title>
     <mat-panel-description>
-      <button *ngIf = "isUserLoggedIn" mat-fab color="warn" aria-label="Add project" >
+      <button *ngIf = "isUserLoggedIn"
+              (click)="createNewBoard()"
+              mat-fab color="warn"
+              aria-label="Add project">
         <mat-icon>add</mat-icon>
       </button>
       <span class="spacer"></span>

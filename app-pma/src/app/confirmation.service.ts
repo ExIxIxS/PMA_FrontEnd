@@ -8,6 +8,18 @@ import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
 import { ConfirmationTypes, NewBoardObj } from './app.interfeces';
 
+interface OpenDialogArgs {
+  type: ConfirmationTypes,
+  deletedBoard?: DeletedBoard,
+}
+
+interface DeletedBoard {
+  boardId: string,
+  boardTitle: string,
+  owner: string,
+  rightToDelete: boolean
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +28,7 @@ export class ConfirmationService {
   title: string = 'Confirmation Service';
   newBoard: NewBoardObj | undefined;
   isConfirmValid: boolean;
+  deletedBoard: DeletedBoard | null = null;
 
   constructor(public dialog: MatDialog,
               private restAPI: RestDataService,
@@ -24,11 +37,23 @@ export class ConfirmationService {
       this.isConfirmValid = false;
     }
 
-  openDialog(type: ConfirmationTypes = 'default') {
+
+  openDialog({type = 'default', ...rest}: OpenDialogArgs): void {
     const dialogRef = this.dialog.open(DialogPopupComponent);
     this.type = type;
     this.title = this.getTitle();
     this.isConfirmValid = false;
+
+    if (rest.deletedBoard) {
+      this.deletedBoard = rest.deletedBoard;
+      this.isConfirmValid = this.deletedBoard.rightToDelete;
+    } else {
+      this.deletedBoard = null;
+    }
+
+    this.deletedBoard = (rest.deletedBoard)
+      ? rest.deletedBoard
+      : null;
 
     dialogRef
       .afterClosed()
@@ -45,7 +70,14 @@ export class ConfirmationService {
     switch(this.type) {
       case 'createBoard':
         if (this.newBoard) {
+          console.log(this.newBoard)
           this.restAPI.createBoard(this.newBoard);
+        };
+        break;
+      case 'deleteBoard':
+        if (this.deletedBoard) {
+          console.log('Delete the board!!!')
+          this.restAPI.deleteBoard(this.deletedBoard.boardId)
         };
         break;
       default:
@@ -56,6 +88,8 @@ export class ConfirmationService {
     switch(this.type) {
       case 'createBoard':
         return 'Create a new board';
+      case 'deleteBoard':
+          return 'Board deletion';
       default:
         return 'Confirmation Service';
     }
