@@ -131,24 +131,6 @@ export class RestDataService {
 
   }
 
-/*
-updateBoardsStorage() {
-  function isBoardObj(objArr: BoardObj[] | UserObj[]): objArr is BoardObj[] {
-    return (objArr as BoardObj[])[0].owner !== undefined;
-  }
-
-  const updateBoardsStorageObserver = {
-    next: (objArr: BoardObj[]) => console.log(objArr),
-    error: (err: Error) => {
-      this.errorHandlerService.handleError(err)
-    },
-  }
-
-  this.getBoards()
-    .subscribe(updateBoardsStorageObserver);
-
-}
-*/
   getBoards() {
     return  this.http.get<BoardObj[]>(REST_URL + 'boards', this.getHttpOptions('getBoards'));
   }
@@ -183,6 +165,21 @@ updateBoardsStorage() {
         };
       default: return;
     }
+  }
+
+  deleteUser(userId: string): void {
+    const deleteUserObserver = {
+      next: () => {
+        console.log('User removed');
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    this.http
+      .delete<UserObj>(REST_URL + 'users/' + userId, this.getHttpOptions('deleteUser'))
+      .subscribe(deleteUserObserver);
   }
 
 }

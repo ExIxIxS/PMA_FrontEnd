@@ -7,6 +7,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
 import { ConfirmationTypes, NewBoardObj } from './app.interfeces';
+import { LocalStorageService } from './localStorage.service';
 
 interface OpenDialogArgs {
   type: ConfirmationTypes,
@@ -32,6 +33,7 @@ export class ConfirmationService {
 
   constructor(public dialog: MatDialog,
               private restAPI: RestDataService,
+              private localStorageService: LocalStorageService,
               private errorHandlerService: ErrorHandlerService,
     ) {
       this.isConfirmValid = false;
@@ -49,6 +51,10 @@ export class ConfirmationService {
       this.isConfirmValid = this.deletedBoard.rightToDelete;
     } else {
       this.deletedBoard = null;
+    }
+
+    if (type === 'deleteUser') {
+      this.isConfirmValid = true;
     }
 
     this.deletedBoard = (rest.deletedBoard)
@@ -80,6 +86,13 @@ export class ConfirmationService {
           this.restAPI.deleteBoard(this.deletedBoard.boardId)
         };
         break;
+      case 'deleteUser':
+        console.log(this.localStorageService.currentUserId)
+        if (this.localStorageService.currentUserId) {
+          console.log('Delete the user!!!')
+            this.restAPI.deleteUser(this.localStorageService.currentUserId)
+          };
+          break;
       default:
     }
   }
@@ -90,6 +103,8 @@ export class ConfirmationService {
         return 'Create a new board';
       case 'deleteBoard':
           return 'Board deletion';
+      case 'deleteBoard':
+          return 'User account removing';
       default:
         return 'Confirmation Service';
     }

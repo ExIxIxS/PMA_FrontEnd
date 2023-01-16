@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AppControlService } from '../app-control.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -14,6 +15,7 @@ export class HeaderComponent {
   pageIndex: number = 0;
 
   constructor(
+    private router: Router,
     private appControlService: AppControlService,
     private localStorageService: LocalStorageService,
     private errorHandlerService: ErrorHandlerService,
@@ -52,5 +54,9 @@ export class HeaderComponent {
 
   createNewBoard() {
     this.confirmationService.openDialog({type: 'createBoard'});
+  }
+
+  editUser() {
+    this.router.navigate(['user']);
   }
 }

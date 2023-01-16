@@ -11,8 +11,11 @@
       <p>Sorry deletion avaliable only for board`s owner</p>
       <p>Board`s owner: "{{boardOwner}}"</p>
     </div>
-
   </div>
+  <div *ngSwitchCase="'deleteUser'">
+      <h2>Are you sure want to remove your User Account?</h2>
+      <h4>Note: there is no way to restore it after removing!</h4>
+    </div>
   <h3 *ngSwitchDefault>Sorry, this window has opened with mistake...</h3>
 
 </mat-dialog-content>

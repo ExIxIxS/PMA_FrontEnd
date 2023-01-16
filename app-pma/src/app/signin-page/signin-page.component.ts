@@ -5,8 +5,6 @@ import { RestDataService } from '../restAPI.service'
 import { LocalStorageService } from '../localStorage.service';
 import { ErrorHandlerService } from '../errorHandler.service';
 
-import { TokenObj } from '../app.interfeces';
-
 @Component({
   selector: 'app-singin-page',
   templateUrl: './signin-page.component.html',

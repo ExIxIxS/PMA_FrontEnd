@@ -37,7 +37,10 @@ interface Participant {
   name: string;
 }
 
-type ConfirmationTypes = 'default' | 'createBoard' | 'deleteBoard';
+type ConfirmationTypes = 'default'
+                        | 'createBoard'
+                        | 'deleteBoard'
+                        | 'deleteUser';
 
 export {
   CurUserObj,
