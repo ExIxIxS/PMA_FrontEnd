@@ -90,7 +90,7 @@ export class ConfirmationService {
         console.log(this.localStorageService.currentUserId)
         if (this.localStorageService.currentUserId) {
           console.log('Delete the user!!!')
-            this.restAPI.deleteUser(this.localStorageService.currentUserId)
+            this.restAPI.deleteCurentUser();
           };
           break;
       default:

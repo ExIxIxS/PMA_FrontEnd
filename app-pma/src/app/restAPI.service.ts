@@ -6,6 +6,7 @@ import { concat } from 'rxjs';
 
 import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
+import { AppControlService } from './app-control.service'
 
 import { TokenObj, UserObj, NewBoardObj, BoardObj } from './app.interfeces';
 
@@ -19,6 +20,7 @@ export class RestDataService {
     private router: Router,
     private localStorageService: LocalStorageService,
     private errorHandlerService: ErrorHandlerService,
+    private appControlService: AppControlService,
   ) {}
 
 
@@ -33,8 +35,10 @@ export class RestDataService {
 
   autoSignIn() {
     const autoSingInObserver = {
-      next: () => {
+      next: (users: UserObj[]) => {
         this.router.navigate(['main']);
+        this.localStorageService.currentUsers = users;
+        this.localStorageService.updateCurrentUserId();
        },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err)
@@ -156,6 +160,7 @@ export class RestDataService {
       case 'createBoard':
       case 'getBoards':
       case 'deleteBoards':
+      case 'deleteUser':
         return {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
@@ -167,19 +172,25 @@ export class RestDataService {
     }
   }
 
-  deleteUser(userId: string): void {
+  deleteCurentUser(): void {
     const deleteUserObserver = {
       next: () => {
         console.log('User removed');
+        this.appControlService.logOut();
       },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err)
       },
     }
 
-    this.http
-      .delete<UserObj>(REST_URL + 'users/' + userId, this.getHttpOptions('deleteUser'))
-      .subscribe(deleteUserObserver);
+    const userId = this.localStorageService.currentUserId;
+    if (userId) {
+      this.http
+        .delete<UserObj>(REST_URL + 'users/' + userId, this.getHttpOptions('deleteUser'))
+        .subscribe(deleteUserObserver);
+    } else {
+      this.errorHandlerService.handleError(new Error('Local Storage: "User does not exist!"'))
+    }
   }
 
 }

@@ -12,7 +12,7 @@ const emptyUserStr = JSON.stringify(
 @Injectable()
 export class LocalStorageService {
   private _currentUser: CurUserObj = JSON.parse(emptyUserStr);
-  public currentUserId: string | undefined;
+  private _currentUserId: string = '';
   public currentStorageBoards: BoardObjStorage[] = [];
   public currentBoards: BoardObj[] = [];
   public currentUsers: UserObj[] = [];
@@ -32,6 +32,20 @@ export class LocalStorageService {
   set currentUser(userObj) {
     this._currentUser = userObj;
     localStorage.setItem('currentUser', JSON.stringify(userObj));
+  }
+
+  get currentUserId() {
+    const currentUserId = localStorage.getItem('currentUserId');
+
+    if (currentUserId) {
+      this._currentUserId = currentUserId;
+    }
+    return this._currentUserId
+  }
+
+  set currentUserId(userId: string) {
+    this._currentUserId = userId;
+    localStorage.setItem('currentUserId', userId);
   }
 
   get isUserLoggedIn() {
@@ -65,15 +79,17 @@ export class LocalStorageService {
 
   updateCurrentUserId() {
     if (this.currentUsers.length !== 0) {
-      this.currentUserId = this.currentUsers
+      const currentUserId = this.currentUsers
         .find((userObj) => userObj.login === this.currentUser.login)
         ?._id;
-    }
 
+      this.currentUserId = (currentUserId) ? currentUserId : '';
+    }
   }
 
   logOutUser() {
     this.currentUser = JSON.parse(emptyUserStr);
+    this.currentUserId = '';
     console.log('User logged out');
   }
 
