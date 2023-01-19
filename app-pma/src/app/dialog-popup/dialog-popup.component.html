@@ -5,6 +5,8 @@
 
   <app-form-new-column *ngSwitchCase="'createColumn'"></app-form-new-column>
 
+  <app-form-new-task *ngSwitchCase="'createTask'"></app-form-new-task>
+
   <div *ngSwitchCase="'deleteBoard'">
     <div *ngIf="isRightToDelete">
       <p>Board title: "{{boardTitle}}"</p>

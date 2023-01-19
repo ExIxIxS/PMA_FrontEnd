@@ -6,7 +6,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
-import { ConfirmationTypes, DeletedColumnOption, NewBoardObj, NewColumn, NewColumnOption } from './app.interfeces';
+import { ConfirmationTypes, DeletedColumnOption, NewBoardObj, NewColumn, NewColumnOption, NewTaskObj, NewTaskOptions } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 
 interface OpenDialogArgs {
@@ -14,6 +14,7 @@ interface OpenDialogArgs {
   deletedBoard?: DeletedBoard,
   newColumn?: NewColumn,
   deletedColumn?: DeletedColumnOption,
+  newTask?: NewTaskOptions,
 }
 
 interface DeletedBoard {
@@ -24,7 +25,8 @@ interface DeletedBoard {
 }
 
 type HandleConfirmOptions = NewColumn
-                            | DeletedColumnOption;
+                            | DeletedColumnOption
+                            | NewTaskOptions;
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +40,8 @@ export class ConfirmationService {
   boardId: string | undefined;
   boardOrder: number | undefined;
   newColumnTitle: string | undefined;
+  newTaskTitle: string | undefined;
+  newTaskDescription: string | undefined;
 
   constructor(public dialog: MatDialog,
               private restAPI: RestDataService,
@@ -58,6 +62,16 @@ export class ConfirmationService {
     switch(this.type) {
       case 'createBoard':
         break;
+      case 'createColumn':
+        if (rest.newColumn) {
+          handleOptions = rest.newColumn;
+        };
+        break;
+      case 'createTask':
+        if (rest.newTask) {
+          handleOptions = rest.newTask;
+        };
+        break;
       case 'deleteBoard': {
         if (rest.deletedBoard) {
           this.deletedBoard = rest.deletedBoard;
@@ -75,11 +89,6 @@ export class ConfirmationService {
           this.isConfirmValid = true;
           handleOptions = rest.deletedColumn;
         }
-        break;
-      case 'createColumn':
-        if (rest.newColumn) {
-          handleOptions = rest.newColumn;
-        };
         break;
       default:
         break;
@@ -104,6 +113,37 @@ export class ConfirmationService {
           this.restAPI.createBoard(this.newBoard);
         };
         break;
+      case 'createColumn':
+        if (confirmOptions && this.newColumnTitle) {
+          const columnOption = {
+            ...confirmOptions,
+            columnTitle: this.newColumnTitle
+          }
+          this.restAPI.createColumn(columnOption as NewColumnOption);
+        } else {
+          this.errorHandlerService
+            .handleError(new Error('Application: "Initial values Error"'))
+        }
+        break;
+        case 'createTask':
+          if (confirmOptions  && this.newTaskTitle) {
+            const taskOptions = confirmOptions as NewTaskOptions;
+            const newTaskObj: NewTaskObj =
+              {
+                title: this.newTaskTitle,
+                order: taskOptions.order,
+                description: this.newTaskDescription as string,
+                userId: taskOptions.userId,
+                users: taskOptions.users,
+              }
+            console.log('Create task!')
+            this.restAPI.createTask(taskOptions.boardId, taskOptions.columnId, newTaskObj);
+
+          } else {
+            this.errorHandlerService
+              .handleError(new Error('Application: "Initial values Error"'))
+          }
+          break;
       case 'deleteBoard':
         if (this.deletedBoard) {
           console.log('Delete the board!!!')
@@ -117,18 +157,6 @@ export class ConfirmationService {
             this.restAPI.deleteCurentUser();
           };
           break;
-      case 'createColumn':
-        if (confirmOptions && this.newColumnTitle) {
-          const columnOption = {
-            ...confirmOptions,
-            columnTitle: this.newColumnTitle
-          }
-          this.restAPI.createColumn(columnOption as NewColumnOption);
-        } else {
-          this.errorHandlerService
-            .handleError(new Error('Application: "Initial values Error"'))
-        }
-        break;
       case 'deleteColumn': {
         this.restAPI.deleteColumn(confirmOptions as DeletedColumnOption);
         break;
@@ -142,12 +170,14 @@ export class ConfirmationService {
     switch(this.type) {
       case 'createBoard':
         return 'Create a new board';
+      case 'createColumn':
+        return 'Create a new column';
+      case 'createTask':
+        return 'Create a new task';
       case 'deleteBoard':
         return 'Board deletion';
       case 'deleteBoard':
         return 'User account removing';
-      case 'createColumn':
-        return 'Create a new column';
       case 'deleteColumn':
         return 'Column deletion';
       default:

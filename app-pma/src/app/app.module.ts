@@ -46,6 +46,7 @@ import { FormNewBoardComponent } from './form-new-board/form-new-board.component
 import { BoardContentComponent } from './board-content/board-content.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { FormNewColumnComponent } from './form-new-column/form-new-column.component';
+import { FormNewTaskComponent } from './form-new-task/form-new-task.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { FormNewColumnComponent } from './form-new-column/form-new-column.compon
     BoardContentComponent,
     EditUserComponent,
     FormNewColumnComponent,
+    FormNewTaskComponent,
   ],
   imports: [
     BrowserModule,

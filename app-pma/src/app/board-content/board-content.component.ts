@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -23,6 +23,7 @@ export class BoardContentComponent {
               private errorHandlerService: ErrorHandlerService,
               private confirmationService: ConfirmationService,
   ) {
+    this.localStorageService.clearColumns();
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
     this.getBoardColumns();
   }
@@ -41,12 +42,7 @@ export class BoardContentComponent {
 
   dropColumn(event: CdkDragDrop<ColumnAppObj[]>): void {
     if (event.previousContainer === event.container) {
-      console.log('move drop');
-      console.log(event.container.data);
-      console.log(event.previousIndex);
-      console.log(event.currentIndex);
       if (event.previousIndex !== event.currentIndex) {
-        console.log('moving');
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         this.restAPI.updateColumnsOrder();
       }
@@ -118,6 +114,27 @@ export class BoardContentComponent {
       columnId: columnId
     };
     this.confirmationService.openDialog({type: 'deleteColumn', deletedColumn: deletedColumnOption})
+  }
+
+  getTasksAmount(columnId: string) {
+    const column = this.appColumns
+      .find((column) => column._id === columnId);
+    return (column) ? column.tasks.length : 0;
+  }
+
+  createTask(columnId: string) {
+    if (columnId) {
+      const newTask: NewTaskOptions =
+        {
+          boardId: this.currentBoardId,
+          columnId: columnId,
+          order: this.getTasksAmount(columnId),
+          userId: this.localStorageService.currentUserId,
+          users: this.localStorageService.getCurrentBoardUsersId(this.currentBoardId),
+        }
+
+      this.confirmationService.openDialog({type: 'createTask', newTask})
+    }
   }
 
 }

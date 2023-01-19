@@ -1,0 +1,14 @@
+<form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
+    <mat-form-field appearance="fill">
+      <mat-label>Task title</mat-label>
+      <input matInput formControlName="title" (input)="checkInput()">
+      <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('title')}}</mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Enter a task description</mat-label>
+      <input matInput formControlName="description"
+            (input)="checkInput()">
+      <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('description')}}</mat-error>
+    </mat-form-field>
+  </form>

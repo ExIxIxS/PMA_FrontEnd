@@ -8,16 +8,23 @@
             <h2>{{column.title}} --> {{column.order}}</h2>
 
             <button mat-flat-button
-                class="delete-column-button"
-                (click)="deleteColumn(column._id)">
-            <mat-icon>remove</mat-icon>
-        </button>
+                    class="delete-column-button"
+                    (click)="deleteColumn(column._id)">
+                <mat-icon>remove</mat-icon>
+            </button>
+
+            <button mat-flat-button
+                    class="add-task-button"
+                    (click)="createTask(column._id)">
+                <mat-icon>add</mat-icon>
+            </button>
 
             <div cdkDropList class="list" [cdkDropListData]="column.tasks"
                 (cdkDropListDropped)="dropTask($event)">
 
                 <div class="list-item" *ngFor="let task of column.tasks" cdkDrag>
-                    {{task.title}} --> {{task.order}}</div>
+                    {{task.title}} --> {{task.order}}
+                </div>
             </div>
         </div>
 

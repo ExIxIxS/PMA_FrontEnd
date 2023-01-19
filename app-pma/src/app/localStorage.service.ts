@@ -55,6 +55,16 @@ export class LocalStorageService {
     return !!(this.currentUser.token)
   }
 
+  getCurrentBoardUsersId(boardId: string) {
+    const users = this.currentStorageBoards
+      .find((board) => board._id === boardId)
+      ?.users;
+
+    return (users)
+      ? users.map((user) => user._id)
+      : [];
+  }
+
   updateBoardsStorage() {
     const createStorageBoard = (boardObj: BoardObj) => {
       const ownerObj = this.currentUsers
@@ -78,6 +88,12 @@ export class LocalStorageService {
     this.currentStorageBoards = storageBoards;
     this.updateCurrentUserId();
     this.isBoards = (storageBoards.length !== 0)
+  }
+
+  clearColumns(): void {
+    this.currentBoardColumns = [];
+    this.apiColumns = [];
+    this.apiTasks = [];
   }
 
   updateCurrentUserId() {
@@ -164,6 +180,17 @@ export class LocalStorageService {
 
   getColumnAppSet(): ColumnSetApiObj[] {
     return this.getColumnSet(this.currentBoardColumns);
+  }
+
+  addTask(columnId: string, taskObj: TaskApiObj) {
+    const columnTasks = this.apiTasks
+      .find((tasksColumn) => tasksColumn
+        .find((tasks) => tasks.columnId === columnId));
+
+    if (columnTasks) {
+      columnTasks.push(taskObj);
+      this.updateBoardAppColumns();
+    }
   }
 
 }

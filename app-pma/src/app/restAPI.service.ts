@@ -8,7 +8,8 @@ import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
-import { TokenObj, UserObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj, PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, } from './app.interfeces';
+import { TokenObj, UserObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj,
+          PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, } from './app.interfeces';
 
 const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
@@ -265,6 +266,25 @@ export class RestDataService {
     this.http
       .patch<ColumnApiObj[]>(`${REST_URL}columnsSet`, columnsSet, this.getHttpOptions())
       .subscribe(updateOrderObserver);
+  }
+
+  createTask(boardId: string, columnId: string, newTaskObj: NewTaskObj): void {
+     const createTaskObserver = {
+      next: (taskObj: TaskApiObj) => {
+        console.log('Task created');
+        console.log(taskObj);
+        this.localStorageService.addTask(columnId, taskObj);
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    console.log(newTaskObj);
+
+    this.http
+    .post<TaskApiObj>(`${REST_URL}boards/${boardId}/columns/${columnId}/tasks`, newTaskObj, this.getHttpOptions())
+    .subscribe(createTaskObserver);
   }
 
 }

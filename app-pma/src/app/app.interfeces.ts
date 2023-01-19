@@ -91,6 +91,23 @@ interface DeletedColumnOption {
   columnId: string,
 }
 
+interface NewTaskOptions extends DeletedColumnOption {
+  order: number,
+  userId: string,
+  users: string[],
+}
+
+interface NewTaskObj {
+  title: string,
+  order: number,
+  description: string,
+  userId: string,
+  users: string[],
+}
+
+
+
+
 type ConfirmationTypes = 'default'
                         | 'createBoard'
                         | 'deleteBoard'
@@ -118,4 +135,6 @@ export {
   NewColumnOption,
   ColumnSetApiObj,
   DeletedColumnOption,
+  NewTaskOptions,
+  NewTaskObj,
 }
