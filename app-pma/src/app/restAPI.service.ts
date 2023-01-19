@@ -228,7 +228,7 @@ export class RestDataService {
       next: (columnObj: ColumnApiObj) => {
         console.log('Column removed');
         this.localStorageService.deleteApiColumn(columnObj);
-        this.updateColumnsOrder();
+        this.updateColumnsOrder(true);
       },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err)
@@ -244,16 +244,21 @@ export class RestDataService {
     }
   }
 
-  updateColumnsOrder() {
-    const columnsSet = this.localStorageService.getColumnSet();
+  updateColumnsOrder(isDeletion: boolean = false) {
+    const columnsSet = (isDeletion)
+      ? this.localStorageService.getColumnApiSet()
+      : this.localStorageService.getColumnAppSet();
     const updateOrderObserver = {
       next: (columns: ColumnApiObj[]) => {
         console.log('Column updating started')
         this.localStorageService.apiColumns = columns;
-        this.localStorageService.updateBoardAppColumns();
+        if (isDeletion) {
+          this.localStorageService.updateBoardAppColumns();
+        }
       },
       error: (err: Error) => {
-        this.errorHandlerService.handleError(err)
+        this.errorHandlerService.handleError(err);
+        //  this.appControlService.refreshPage();
       },
     }
 

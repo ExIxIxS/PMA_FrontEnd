@@ -147,15 +147,23 @@ export class LocalStorageService {
     this.apiColumns.splice(columnIndex, 1);
   }
 
-  getColumnSet(): ColumnSetApiObj[] {
-    const columnSet = this.apiColumns.map((columnObj, index) => {
+  getColumnSet<T extends ColumnApiObj[] | ColumnAppObj[]>(columnsArr: T): ColumnSetApiObj[]  {
+    const columnSet = columnsArr.map((columnObj, index) => {
       return {
-        _id: columnObj._id,
-        order: index,
-      }
+              _id: columnObj._id,
+              order: index,
+            }
     })
 
     return columnSet;
+  }
+
+  getColumnApiSet(): ColumnSetApiObj[] {
+    return this.getColumnSet(this.apiColumns);
+  }
+
+  getColumnAppSet(): ColumnSetApiObj[] {
+    return this.getColumnSet(this.currentBoardColumns);
   }
 
 }

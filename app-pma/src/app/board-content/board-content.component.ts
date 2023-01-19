@@ -41,27 +41,19 @@ export class BoardContentComponent {
 
   dropColumn(event: CdkDragDrop<ColumnAppObj[]>): void {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex);
-    }
+      console.log('move drop');
+      console.log(event.container.data);
+      console.log(event.previousIndex);
+      console.log(event.currentIndex);
+      if (event.previousIndex !== event.currentIndex) {
+        console.log('moving');
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        this.restAPI.updateColumnsOrder();
+      }
+    };
   }
 
   dropTask(event: CdkDragDrop<TaskApiObj[]>): void {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex);
-    }
-  }
-
-  drop(event: CdkDragDrop<string[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
