@@ -1,0 +1,7 @@
+<form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter a column title</mat-label>
+      <input matInput formControlName="columnTitle" (input)="checkInput()">
+      <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('columnTitle')}}</mat-error>
+    </mat-form-field>
+</form>

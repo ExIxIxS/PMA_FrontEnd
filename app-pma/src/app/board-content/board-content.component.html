@@ -1,1 +1,29 @@
-<p>board-content works!</p>
+
+    <div cdkDropListGroup
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        [cdkDropListData]="appColumns"
+        (cdkDropListDropped)="dropColumn($event)">
+        <div class="board-column" *ngFor="let column of appColumns" cdkDrag>
+            <h2>{{column.title}} --> {{column.order}}</h2>
+
+            <button mat-flat-button
+                class="delete-column-button"
+                (click)="deleteColumn(column._id)">
+            <mat-icon>remove</mat-icon>
+        </button>
+
+            <div cdkDropList class="list" [cdkDropListData]="column.tasks"
+                (cdkDropListDropped)="dropTask($event)">
+
+                <div class="list-item" *ngFor="let task of column.tasks" cdkDrag>
+                    {{task.title}} --> {{task.order}}</div>
+            </div>
+        </div>
+
+        <button mat-flat-button
+                class="add-column-button"
+                (click)="createColumn()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>

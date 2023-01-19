@@ -28,11 +28,12 @@
 <h3>Your own projects</h3>
 <ng-template [ngTemplateOutlet]="boardTemplate"
               *ngFor="let board of ownBoardsOutput"
-              [ngTemplateOutletContext]="{title: board.title,
-                owner: board.owner,
-                participants: board.users,
-                boardId: board._id
-              }">
+              [ngTemplateOutletContext]="
+                { title: board.title,
+                  owner: board.owner,
+                  participants: board.users,
+                  boardId: board._id
+                }">
 </ng-template>
 <mat-divider class="boards-divider"></mat-divider>
 

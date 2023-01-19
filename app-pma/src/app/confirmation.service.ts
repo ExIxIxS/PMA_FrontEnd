@@ -6,12 +6,14 @@ import { ErrorHandlerService } from './errorHandler.service';
 
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
-import { ConfirmationTypes, NewBoardObj } from './app.interfeces';
+import { ConfirmationTypes, DeletedColumnOption, NewBoardObj, NewColumn, NewColumnOption } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 
 interface OpenDialogArgs {
   type: ConfirmationTypes,
   deletedBoard?: DeletedBoard,
+  newColumn?: NewColumn,
+  deletedColumn?: DeletedColumnOption,
 }
 
 interface DeletedBoard {
@@ -20,6 +22,9 @@ interface DeletedBoard {
   owner: string,
   rightToDelete: boolean
 }
+
+type HandleConfirmOptions = NewColumn
+                            | DeletedColumnOption;
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +35,9 @@ export class ConfirmationService {
   newBoard: NewBoardObj | undefined;
   isConfirmValid: boolean;
   deletedBoard: DeletedBoard | null = null;
+  boardId: string | undefined;
+  boardOrder: number | undefined;
+  newColumnTitle: string | undefined;
 
   constructor(public dialog: MatDialog,
               private restAPI: RestDataService,
@@ -37,36 +45,52 @@ export class ConfirmationService {
               private errorHandlerService: ErrorHandlerService,
     ) {
       this.isConfirmValid = false;
-    }
+  }
 
 
   openDialog({type = 'default', ...rest}: OpenDialogArgs): void {
+    let handleOptions: HandleConfirmOptions;
     const dialogRef = this.dialog.open(DialogPopupComponent);
     this.type = type;
     this.title = this.getTitle();
     this.isConfirmValid = false;
 
-    if (rest.deletedBoard) {
-      this.deletedBoard = rest.deletedBoard;
-      this.isConfirmValid = this.deletedBoard.rightToDelete;
-    } else {
-      this.deletedBoard = null;
+    switch(this.type) {
+      case 'createBoard':
+        break;
+      case 'deleteBoard': {
+        if (rest.deletedBoard) {
+          this.deletedBoard = rest.deletedBoard;
+          this.isConfirmValid = this.deletedBoard.rightToDelete;
+        } else {
+          this.deletedBoard = null;
+        }
+      }
+        break;
+      case 'deleteUser':
+        this.isConfirmValid = true;
+        break;
+      case 'deleteColumn':
+        if (rest.deletedColumn) {
+          this.isConfirmValid = true;
+          handleOptions = rest.deletedColumn;
+        }
+        break;
+      case 'createColumn':
+        if (rest.newColumn) {
+          handleOptions = rest.newColumn;
+        };
+        break;
+      default:
+        break;
     }
-
-    if (type === 'deleteUser') {
-      this.isConfirmValid = true;
-    }
-
-    this.deletedBoard = (rest.deletedBoard)
-      ? rest.deletedBoard
-      : null;
 
     dialogRef
       .afterClosed()
-      .subscribe((result) => this.handleConfirmation(result));
+      .subscribe((result) => this.handleConfirmation(result, handleOptions));
   }
 
-  handleConfirmation(result: true | undefined | '') {
+  handleConfirmation(result: true | undefined | '', confirmOptions: HandleConfirmOptions) {
     if (!result) {
       return;
     }
@@ -93,7 +117,24 @@ export class ConfirmationService {
             this.restAPI.deleteCurentUser();
           };
           break;
+      case 'createColumn':
+        if (confirmOptions && this.newColumnTitle) {
+          const columnOption = {
+            ...confirmOptions,
+            columnTitle: this.newColumnTitle
+          }
+          this.restAPI.createColumn(columnOption as NewColumnOption);
+        } else {
+          this.errorHandlerService
+            .handleError(new Error('Application: "Initial values Error"'))
+        }
+        break;
+      case 'deleteColumn': {
+        this.restAPI.deleteColumn(confirmOptions as DeletedColumnOption);
+        break;
+      }
       default:
+        break;
     }
   }
 
@@ -102,9 +143,13 @@ export class ConfirmationService {
       case 'createBoard':
         return 'Create a new board';
       case 'deleteBoard':
-          return 'Board deletion';
+        return 'Board deletion';
       case 'deleteBoard':
-          return 'User account removing';
+        return 'User account removing';
+      case 'createColumn':
+        return 'Create a new column';
+      case 'deleteColumn':
+        return 'Column deletion';
       default:
         return 'Confirmation Service';
     }

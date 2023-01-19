@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { CurUserObj, BoardObj, UserObj, BoardObjStorage } from './app.interfeces';
+import { CurUserObj, BoardObj, UserObj, BoardObjStorage, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj } from './app.interfeces';
 
 const emptyUserStr = JSON.stringify(
   {
@@ -17,6 +17,9 @@ export class LocalStorageService {
   public currentBoards: BoardObj[] = [];
   public currentUsers: UserObj[] = [];
   public isBoards: boolean = false;
+  public currentBoardColumns: ColumnAppObj[] = [];
+  public apiColumns: ColumnApiObj[] = [];
+  public apiTasks: TaskApiObj[][] = [];
 
   constructor() {}
 
@@ -96,6 +99,63 @@ export class LocalStorageService {
   deleteBoard(boardId: string) {
     const boardIndex = this.currentStorageBoards.findIndex((boardObj) => boardObj._id === boardId);
     this.currentStorageBoards.splice(boardIndex, 1);
+  }
+
+  addColumn(apiColumn: ColumnApiObj) {
+    const appColumn = {
+      ...apiColumn,
+      tasks: [],
+    }
+
+    this.apiColumns.push(apiColumn);
+    this.currentBoardColumns.push(appColumn);
+  }
+
+  updateBoardAppColumns(): void {
+    const appColumns: ColumnAppObj[] = this
+      .apiColumns.map((apiColumn) => {
+        return {
+        ...apiColumn,
+        tasks: [],
+      }})
+      .sort(sortByOrder);
+
+    function fillTasks(apiTasks: TaskApiObj[]) {
+      const currentColumn = appColumns
+        .find((column) => column._id === apiTasks[0].columnId);
+
+      if (currentColumn) {
+        currentColumn.tasks = apiTasks;
+      }
+    }
+
+    function sortByOrder<T extends ColumnAppObj | TaskApiObj>(a: T, b: T) {
+      return a.order - b.order;
+    }
+
+    this.apiTasks
+      .filter((apiTasks) => apiTasks.length)
+      .map((apiTasks) => apiTasks.sort(sortByOrder))
+      .forEach(fillTasks);
+
+    this.currentBoardColumns = appColumns;
+    console.log(this.currentBoardColumns);
+  }
+
+  deleteApiColumn(columnObj: ColumnApiObj) {
+    const columnIndex = this.apiColumns.findIndex((column) => column._id === columnObj._id);
+    this.apiColumns.splice(columnIndex, 1);
+  }
+
+  getColumnSet(): ColumnSetApiObj[] {
+    const columnSet = this.apiColumns.map((columnObj, index) => {
+      return {
+        _id: columnObj._id,
+        order: index,
+      }
+    })
+
+    return columnSet;
   }
 
 }

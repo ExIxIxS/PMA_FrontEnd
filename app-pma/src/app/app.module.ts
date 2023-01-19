@@ -27,7 +27,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { TestDragAndDropComponent } from './test-drag-and-drop/test-drag-and-drop.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { HeaderComponent } from './header/header.component';
@@ -46,11 +45,11 @@ import { ConfirmationService } from './confirmation.service';
 import { FormNewBoardComponent } from './form-new-board/form-new-board.component';
 import { BoardContentComponent } from './board-content/board-content.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { FormNewColumnComponent } from './form-new-column/form-new-column.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TestDragAndDropComponent,
     WelcomePageComponent,
     MainPageComponent,
     MenuHeaderComponent,
@@ -63,6 +62,7 @@ import { EditUserComponent } from './edit-user/edit-user.component';
     FormNewBoardComponent,
     BoardContentComponent,
     EditUserComponent,
+    FormNewColumnComponent,
   ],
   imports: [
     BrowserModule,

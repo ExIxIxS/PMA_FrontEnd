@@ -8,7 +8,7 @@ import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
-import { TokenObj, UserObj, NewBoardObj, BoardObj } from './app.interfeces';
+import { TokenObj, UserObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj, PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, } from './app.interfeces';
 
 const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
@@ -89,7 +89,7 @@ export class RestDataService {
   }
 
   getUsers() {
-    return  this.http.get<UserObj[]>(REST_URL + 'users', this.getHttpOptions('getUsers'));
+    return  this.http.get<UserObj[]>(REST_URL + 'users', this.getHttpOptions());
   }
 
   createBoard(newBoard: NewBoardObj) {
@@ -105,7 +105,7 @@ export class RestDataService {
     }
 
     this.http
-      .post<BoardObj>(REST_URL + 'boards', newBoard, this.getHttpOptions('createBoard'))
+      .post<BoardObj>(REST_URL + 'boards', newBoard, this.getHttpOptions())
       .subscribe(createBoardObserver);
   }
 
@@ -136,7 +136,7 @@ export class RestDataService {
   }
 
   getBoards() {
-    return  this.http.get<BoardObj[]>(REST_URL + 'boards', this.getHttpOptions('getBoards'));
+    return  this.http.get<BoardObj[]>(REST_URL + 'boards', this.getHttpOptions());
   }
 
   deleteBoard(boardId: string) {
@@ -150,25 +150,22 @@ export class RestDataService {
     }
 
     this.http
-      .delete<BoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions('deleteBoards'))
+      .delete<BoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions())
       .subscribe(deleteBoardObserver);
   }
 
-  getHttpOptions(type: string) {
+  getHttpOptions(type: string = 'default') {
     switch(type) {
-      case 'getUsers':
-      case 'createBoard':
-      case 'getBoards':
-      case 'deleteBoards':
-      case 'deleteUser':
+      case 'nonDefault':
+        return;
+      default:
         return {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
             accept: 'application/json',
             Authorization: `Bearer ${this.localStorageService.currentUser.token}`
           })
-        };
-      default: return;
+        };;
     }
   }
 
@@ -186,11 +183,83 @@ export class RestDataService {
     const userId = this.localStorageService.currentUserId;
     if (userId) {
       this.http
-        .delete<UserObj>(REST_URL + 'users/' + userId, this.getHttpOptions('deleteUser'))
+        .delete<UserObj>(REST_URL + 'users/' + userId, this.getHttpOptions())
         .subscribe(deleteUserObserver);
     } else {
       this.errorHandlerService.handleError(new Error('Local Storage: "User does not exist!"'))
     }
+  }
+
+  getBoardColumns(boardId: string) {
+    return  this.http
+      .get<ColumnApiObj[]>(`${REST_URL}boards/${boardId}/columns/`, this.getHttpOptions());
+  }
+
+  getColumnTasks(boardId: string, columnId: string) {
+    return  this.http
+      .get<TaskApiObj[]>(`${REST_URL}boards/${boardId}/columns/${columnId}/tasks`, this.getHttpOptions());
+  }
+
+  createColumn(columnOption: NewColumnOption): void {
+    const createColumnObserver = {
+      next: (columnObj: ColumnApiObj) => {
+        console.log('Column created');
+        console.log(columnObj);
+        this.localStorageService.addColumn(columnObj);
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    const boardId = columnOption.boardID;
+    const newColumn: NewColumnApiObj = {
+      title: columnOption.columnTitle,
+      order: columnOption.columnOrder,
+    }
+
+    this.http
+      .post<ColumnApiObj>(`${REST_URL}boards/${boardId}/columns/`, newColumn, this.getHttpOptions())
+      .subscribe(createColumnObserver);
+  }
+
+  deleteColumn(deletedColumn: DeletedColumnOption): void {
+    const deleteColumnObserver = {
+      next: (columnObj: ColumnApiObj) => {
+        console.log('Column removed');
+        this.localStorageService.deleteApiColumn(columnObj);
+        this.updateColumnsOrder();
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    if (deletedColumn) {
+      this.http
+        .delete<ColumnApiObj>(`${REST_URL}boards/${deletedColumn.boardId}/columns/${deletedColumn.columnId}`, this.getHttpOptions())
+        .subscribe(deleteColumnObserver);
+    } else {
+      this.errorHandlerService.handleError(new Error('Application: "Deletion initial values error"'))
+    }
+  }
+
+  updateColumnsOrder() {
+    const columnsSet = this.localStorageService.getColumnSet();
+    const updateOrderObserver = {
+      next: (columns: ColumnApiObj[]) => {
+        console.log('Column updating started')
+        this.localStorageService.apiColumns = columns;
+        this.localStorageService.updateBoardAppColumns();
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    this.http
+      .patch<ColumnApiObj[]>(`${REST_URL}columnsSet`, columnsSet, this.getHttpOptions())
+      .subscribe(updateOrderObserver);
   }
 
 }

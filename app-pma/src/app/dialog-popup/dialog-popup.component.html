@@ -1,6 +1,10 @@
 <h2 mat-dialog-title>{{title}}</h2>
 <mat-dialog-content [ngSwitch]="type" id="popup-content" class="mat-typography" >
+
   <app-form-new-board *ngSwitchCase="'createBoard'"></app-form-new-board>
+
+  <app-form-new-column *ngSwitchCase="'createColumn'"></app-form-new-column>
+
   <div *ngSwitchCase="'deleteBoard'">
     <div *ngIf="isRightToDelete">
       <p>Board title: "{{boardTitle}}"</p>
@@ -12,10 +16,17 @@
       <p>Board`s owner: "{{boardOwner}}"</p>
     </div>
   </div>
+
   <div *ngSwitchCase="'deleteUser'">
-      <h2>Are you sure want to remove your User Account?</h2>
+      <h2>Are you sure want to delete your User Account?</h2>
       <h4>Note: there is no way to restore it after removing!</h4>
-    </div>
+  </div>
+
+  <div *ngSwitchCase="'deleteColumn'">
+    <h2>Are you sure want to delete this Column?</h2>
+    <h4>Note: there is no way to restore it after deletion!</h4>
+  </div>
+
   <h3 *ngSwitchDefault>Sorry, this window has opened with mistake...</h3>
 
 </mat-dialog-content>
