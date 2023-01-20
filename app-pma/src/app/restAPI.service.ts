@@ -9,7 +9,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
 import { TokenObj, UserObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj,
-          PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, TasksSetConfig, } from './app.interfeces';
+          PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, TasksSetConfig, DeletedTaskOption, } from './app.interfeces';
 
 const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
@@ -300,7 +300,6 @@ export class RestDataService {
         const updateOrderObserver = {
           next: (tasks: TaskApiObj[]) => {
             console.log('Tasks updated:');
-            console.log(tasks);
             this.localStorageService.updateApiTasks(columnId, tasks);
             this.localStorageService.updateBoardAppTasks(this.localStorageService.currentBoardColumns, columnIds);
 
@@ -327,6 +326,26 @@ export class RestDataService {
       }
     });
 
+  }
+
+  deleteTask(deletedTask: DeletedTaskOption): void {
+    const deleteTaskObserver = {
+      next: (taskObj: TaskApiObj) => {
+        console.log('Task removed');
+        this.localStorageService.deleteTask(taskObj);
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    if (deletedTask) {
+      this.http
+        .delete<TaskApiObj>(`${REST_URL}boards/${deletedTask.boardId}/columns/${deletedTask.columnId}/tasks/${deletedTask.taskId}`, this.getHttpOptions())
+        .subscribe(deleteTaskObserver);
+    } else {
+      this.errorHandlerService.handleError(new Error('Application: "Deletion initial values error"'))
+    }
   }
 
 }

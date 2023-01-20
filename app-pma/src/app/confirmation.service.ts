@@ -6,7 +6,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
-import { ConfirmationTypes, DeletedColumnOption, NewBoardObj, NewColumn, NewColumnOption, NewTaskObj, NewTaskOptions } from './app.interfeces';
+import { ConfirmationTypes, DeletedColumnOption, DeletedTaskOption, NewBoardObj, NewColumn, NewColumnOption, NewTaskObj, NewTaskOptions } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 
 interface OpenDialogArgs {
@@ -15,6 +15,7 @@ interface OpenDialogArgs {
   newColumn?: NewColumn,
   deletedColumn?: DeletedColumnOption,
   newTask?: NewTaskOptions,
+  deletedTask?: DeletedTaskOption,
 }
 
 interface DeletedBoard {
@@ -26,7 +27,8 @@ interface DeletedBoard {
 
 type HandleConfirmOptions = NewColumn
                             | DeletedColumnOption
-                            | NewTaskOptions;
+                            | NewTaskOptions
+                            | DeletedTaskOption;
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +91,12 @@ export class ConfirmationService {
           this.isConfirmValid = true;
           handleOptions = rest.deletedColumn;
         }
+        break;
+      case 'deleteTask':
+        if (rest.deletedTask) {
+          this.isConfirmValid = true;
+          handleOptions = rest.deletedTask;
+        };
         break;
       default:
         break;
@@ -161,6 +169,10 @@ export class ConfirmationService {
         this.restAPI.deleteColumn(confirmOptions as DeletedColumnOption);
         break;
       }
+      case 'deleteTask': {
+        this.restAPI.deleteTask(confirmOptions as DeletedTaskOption);
+        break;
+      }
       default:
         break;
     }
@@ -180,6 +192,8 @@ export class ConfirmationService {
         return 'User account removing';
       case 'deleteColumn':
         return 'Column deletion';
+      case 'deleteTask':
+          return 'Task deletion';
       default:
         return 'Confirmation Service';
     }

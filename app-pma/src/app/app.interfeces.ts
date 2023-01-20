@@ -116,6 +116,10 @@ interface TasksSetConfig {
   tasksColumn: TaskSetApiObj[],
 }
 
+interface DeletedTaskOption extends DeletedColumnOption {
+  taskId: string,
+}
+
 
 type ConfirmationTypes = 'default'
                         | 'createBoard'
@@ -148,4 +152,5 @@ export {
   NewTaskObj,
   TaskSetApiObj,
   TasksSetConfig,
+  DeletedTaskOption
 }

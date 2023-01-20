@@ -223,18 +223,21 @@ export class LocalStorageService {
           .filter((task) => task.columnId !== columnId));
     }
 
-
-    console.log('Trim ApiTasks');
     this.trimApiTasks();
-
-    console.log('ApiTasks updated');
-    console.log(this.apiTasks);
-    console.log('ApiTasks Columns Ids');
-    console.log(this.apiTasks.map((tasks) => tasks.map((task) => task.columnId)));
   }
 
   trimApiTasks() {
     this.apiTasks = this.apiTasks.filter((columnTasks) => columnTasks.length);
+  }
+
+  deleteTask(taskObj: TaskApiObj): void {
+    const tasksColumn = this.apiTasks.find((tasks) => tasks[0].columnId === taskObj.columnId);
+    const taskIndex = tasksColumn?.findIndex((task) => task._id === taskObj._id);
+
+    if (taskIndex !== undefined && taskIndex >= 0) {
+      tasksColumn?.splice(taskIndex, 1);
+      this.updateBoardAppTasks(this.currentBoardColumns, [taskObj.columnId]);
+    }
   }
 
 }

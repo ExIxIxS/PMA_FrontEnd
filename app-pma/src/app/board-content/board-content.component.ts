@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions, TaskSetApiObj } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -185,6 +185,16 @@ export class BoardContentComponent {
 
   get isTaskDropDisabled() {
     return this.localStorageService.isTaskDropDisabled;
+  }
+
+  deleteTask(taskId: string, columnId: string): void {
+    console.log('Delete task with id: ' + taskId);
+    const deletedTaskOption: DeletedTaskOption = {
+      taskId: taskId,
+      columnId: columnId,
+      boardId: this.currentBoardId,
+    }
+    this.confirmationService.openDialog({type: 'deleteTask', deletedTask: deletedTaskOption})
   }
 
 }

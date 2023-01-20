@@ -3,7 +3,8 @@
         cdkDropList
         cdkDropListOrientation="horizontal"
         [cdkDropListData]="appColumns"
-        (cdkDropListDropped)="dropColumn($event)">
+        (cdkDropListDropped)="dropColumn($event)"
+        [cdkDropListDisabled]="isTaskDropDisabled">
         <div class="board-column" *ngFor="let column of appColumns" cdkDrag>
             <h2>{{column.title}} --> {{column.order}}</h2>
 
@@ -24,7 +25,14 @@
                 [cdkDropListDisabled]="isTaskDropDisabled">
 
                 <div class="list-item" *ngFor="let task of column.tasks" cdkDrag>
-                    {{task.title}} --> {{task.order}}
+                    <h3>{{task.title}} --> {{task.order}}</h3>
+                    <h4>Description: {{task.description}}</h4>
+
+                    <button mat-flat-button
+                    class="delete-column-button"
+                    (click)="deleteTask(task._id, column._id)">
+                        <mat-icon>remove</mat-icon>
+                    </button>
                 </div>
             </div>
         </div>

@@ -29,6 +29,11 @@
     <h4>Note: there is no way to restore it after deletion!</h4>
   </div>
 
+  <div *ngSwitchCase="'deleteTask'">
+    <h2>Are you sure want to delete this Task?</h2>
+    <h4>Note: there is no way to restore it after deletion!</h4>
+  </div>
+
   <h3 *ngSwitchDefault>Sorry, this window has opened with mistake...</h3>
 
 </mat-dialog-content>
