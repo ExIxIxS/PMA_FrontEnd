@@ -105,7 +105,16 @@ interface NewTaskObj {
   users: string[],
 }
 
+interface TaskSetApiObj {
+  _id: string,
+  order: number,
+  columnId: string,
+}
 
+interface TasksSetConfig {
+  columnId: string,
+  tasksColumn: TaskSetApiObj[],
+}
 
 
 type ConfirmationTypes = 'default'
@@ -137,4 +146,6 @@ export {
   DeletedColumnOption,
   NewTaskOptions,
   NewTaskObj,
+  TaskSetApiObj,
+  TasksSetConfig,
 }

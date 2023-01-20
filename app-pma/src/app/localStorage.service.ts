@@ -20,6 +20,7 @@ export class LocalStorageService {
   public currentBoardColumns: ColumnAppObj[] = [];
   public apiColumns: ColumnApiObj[] = [];
   public apiTasks: TaskApiObj[][] = [];
+  public isTaskDropDisabled: boolean = false;
 
   constructor() {}
 
@@ -134,8 +135,19 @@ export class LocalStorageService {
         ...apiColumn,
         tasks: [],
       }})
-      .sort(sortByOrder);
+      .sort(this.sortByOrder);
 
+    this.updateBoardAppTasks(appColumns);
+
+    this.currentBoardColumns = appColumns;
+    console.log(this.currentBoardColumns);
+  }
+
+  sortByOrder<T extends ColumnAppObj | TaskApiObj>(a: T, b: T): number {
+      return a.order - b.order;
+  }
+
+  updateBoardAppTasks(appColumns: ColumnAppObj[], columnIds: string[] = []): void {
     function fillTasks(apiTasks: TaskApiObj[]) {
       const currentColumn = appColumns
         .find((column) => column._id === apiTasks[0].columnId);
@@ -145,17 +157,16 @@ export class LocalStorageService {
       }
     }
 
-    function sortByOrder<T extends ColumnAppObj | TaskApiObj>(a: T, b: T) {
-      return a.order - b.order;
-    }
+    this.trimApiTasks();
 
     this.apiTasks
-      .filter((apiTasks) => apiTasks.length)
-      .map((apiTasks) => apiTasks.sort(sortByOrder))
-      .forEach(fillTasks);
+      .map((apiTasks) => apiTasks.sort(this.sortByOrder))
 
-    this.currentBoardColumns = appColumns;
-    console.log(this.currentBoardColumns);
+    const apiTasksArr = (columnIds.length)
+      ? this.apiTasks.filter((apiTasks) => columnIds.includes(apiTasks[0].columnId))
+      : this.apiTasks;
+
+    apiTasksArr.forEach((apiTasks) => fillTasks(apiTasks));
   }
 
   deleteApiColumn(columnObj: ColumnApiObj) {
@@ -189,8 +200,41 @@ export class LocalStorageService {
 
     if (columnTasks) {
       columnTasks.push(taskObj);
-      this.updateBoardAppColumns();
+    } else {
+      this.apiTasks.push([taskObj]);
     }
+    this.updateBoardAppTasks(this.currentBoardColumns, [columnId]);
+
+  }
+
+  updateApiTasks(columnId: string, tasks: TaskApiObj[]): void {
+    if (tasks.length) {
+      const columnTasksIndex = this.apiTasks
+        .findIndex((columnTasks) => columnTasks[0].columnId === columnId);
+      if (columnTasksIndex >= 0) {
+        this.apiTasks.splice(columnTasksIndex, 1, tasks);
+      } else {
+        this.apiTasks.push(tasks);
+      }
+
+    } else {
+      this.apiTasks = this.apiTasks
+        .map((columnTasks) => columnTasks
+          .filter((task) => task.columnId !== columnId));
+    }
+
+
+    console.log('Trim ApiTasks');
+    this.trimApiTasks();
+
+    console.log('ApiTasks updated');
+    console.log(this.apiTasks);
+    console.log('ApiTasks Columns Ids');
+    console.log(this.apiTasks.map((tasks) => tasks.map((task) => task.columnId)));
+  }
+
+  trimApiTasks() {
+    this.apiTasks = this.apiTasks.filter((columnTasks) => columnTasks.length);
   }
 
 }

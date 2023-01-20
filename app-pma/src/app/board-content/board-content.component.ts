@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions, TaskSetApiObj } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -49,14 +49,59 @@ export class BoardContentComponent {
     };
   }
 
-  dropTask(event: CdkDragDrop<TaskApiObj[]>): void {
+  dropTask(event: CdkDragDrop<TaskApiObj[]>, currentColumnId: string): void {
+    function getTasksSet(container: typeof event.container, newColumnId: string = ''): TaskSetApiObj[] {
+      return container.data.map((task, index) => {
+          return {
+                  _id: task._id,
+                  order: index,
+                  columnId: (newColumnId) ? newColumnId : task.columnId,
+                }
+        });
+    }
+
+    function getColumnId(container: typeof event.container): string | undefined {
+      if (container.data.length) {
+        return container.data[0].columnId;
+      }
+
+      return;
+    }
+
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      if (event.previousIndex !== event.currentIndex) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+
+        const tasksSet = getTasksSet(event.container);
+        const columnId = getColumnId(event.container);
+        if (columnId && tasksSet) {
+          const updateConfigs = [{columnId: columnId, tasksColumn: tasksSet}];
+          this.restAPI.updateTaskSet(updateConfigs);
+        }
+      }
     } else {
+      console.log(event);
+      const prevColumnId = getColumnId(event.previousContainer);
+      console.log('Prev Tasks Columns Ids');
+      console.log(event.previousContainer.data.map((tasks) => tasks.columnId));
       transferArrayItem(event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex);
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+
+      console.log(event.previousContainer.data);
+      console.log('prevColumnId -->' + prevColumnId);
+      console.log('currentColumnId' + currentColumnId);
+      if (prevColumnId && prevColumnId) {
+        const updateConfigs = [
+          {columnId: prevColumnId, tasksColumn: getTasksSet(event.previousContainer)},
+          {columnId: currentColumnId, tasksColumn: getTasksSet(event.container, currentColumnId)}
+        ];
+        console.log('updateConfigs');
+        console.log(updateConfigs);
+        this.restAPI.updateTaskSet(updateConfigs);
+      }
+
     }
   }
 
@@ -86,6 +131,7 @@ export class BoardContentComponent {
           this.errorHandlerService.handleError(err)
         },
         complete: () => {
+          this.localStorageService.trimApiTasks();
           this.localStorageService.updateBoardAppColumns();
         }
       }
@@ -135,6 +181,10 @@ export class BoardContentComponent {
 
       this.confirmationService.openDialog({type: 'createTask', newTask})
     }
+  }
+
+  get isTaskDropDisabled() {
+    return this.localStorageService.isTaskDropDisabled;
   }
 
 }

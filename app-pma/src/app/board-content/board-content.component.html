@@ -20,7 +20,8 @@
             </button>
 
             <div cdkDropList class="list" [cdkDropListData]="column.tasks"
-                (cdkDropListDropped)="dropTask($event)">
+                (cdkDropListDropped)="dropTask($event, column._id)"
+                [cdkDropListDisabled]="isTaskDropDisabled">
 
                 <div class="list-item" *ngFor="let task of column.tasks" cdkDrag>
                     {{task.title}} --> {{task.order}}

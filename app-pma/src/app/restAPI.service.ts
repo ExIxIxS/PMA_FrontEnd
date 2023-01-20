@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { concat } from 'rxjs';
+import { concat, merge } from 'rxjs';
 
 import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
 import { TokenObj, UserObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj,
-          PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, } from './app.interfeces';
+          PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, TasksSetConfig, } from './app.interfeces';
 
 const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
@@ -249,6 +249,7 @@ export class RestDataService {
     const columnsSet = (isDeletion)
       ? this.localStorageService.getColumnApiSet()
       : this.localStorageService.getColumnAppSet();
+
     const updateOrderObserver = {
       next: (columns: ColumnApiObj[]) => {
         console.log('Column updating started')
@@ -285,6 +286,47 @@ export class RestDataService {
     this.http
     .post<TaskApiObj>(`${REST_URL}boards/${boardId}/columns/${columnId}/tasks`, newTaskObj, this.getHttpOptions())
     .subscribe(createTaskObserver);
+  }
+
+  updateTaskSet(tasksSetsConfigs: TasksSetConfig[], isDeletion: boolean = false) {
+    const columnIds = tasksSetsConfigs.map((config) => config.columnId);
+    this.localStorageService.isTaskDropDisabled = true;
+
+    tasksSetsConfigs.forEach((config, index) => {
+      const columnId = config.columnId;
+      const taskColumn = config.tasksColumn;
+
+      if (taskColumn.length) {
+        const updateOrderObserver = {
+          next: (tasks: TaskApiObj[]) => {
+            console.log('Tasks updated:');
+            console.log(tasks);
+            this.localStorageService.updateApiTasks(columnId, tasks);
+            this.localStorageService.updateBoardAppTasks(this.localStorageService.currentBoardColumns, columnIds);
+
+            if (isDeletion) {
+              this.localStorageService.updateBoardAppColumns();
+            }
+
+            if (index === tasksSetsConfigs.length - 1) {
+              this.localStorageService.isTaskDropDisabled = false;
+            }
+          },
+          error: (err: Error) => {
+            this.errorHandlerService.handleError(err);
+            //  this.appControlService.refreshPage();
+          },
+        }
+
+      this.http
+        .patch<TaskApiObj[]>(`${REST_URL}tasksSet`, taskColumn, this.getHttpOptions())
+        .subscribe(updateOrderObserver);
+
+      } else {
+        this.localStorageService.updateApiTasks(columnId, [])
+      }
+    });
+
   }
 
 }
