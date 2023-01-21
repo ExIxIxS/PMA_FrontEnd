@@ -11,7 +11,7 @@
             <button mat-flat-button
                     class="delete-column-button"
                     (click)="deleteColumn(column._id)">
-                <mat-icon>remove</mat-icon>
+                <mat-icon>delete_sweep</mat-icon>
             </button>
 
             <button mat-flat-button
@@ -27,11 +27,13 @@
                 <div class="list-item" *ngFor="let task of column.tasks" cdkDrag>
                     <h3>{{task.title}} --> {{task.order}}</h3>
                     <h4>Description: {{task.description}}</h4>
+                    <h4>Current task executor:</h4>
+                    <p *ngFor="let user of task.users">{{user}}</p>
 
                     <button mat-flat-button
                     class="delete-column-button"
                     (click)="deleteTask(task._id, column._id)">
-                        <mat-icon>remove</mat-icon>
+                        <mat-icon>delete_forever</mat-icon>
                     </button>
                 </div>
             </div>

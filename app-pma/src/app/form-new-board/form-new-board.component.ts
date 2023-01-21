@@ -8,7 +8,7 @@ import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
 import { ErrorHandlerService } from '../errorHandler.service';
 
-import { NewBoardObj, Participant, UserObj } from '../app.interfeces'
+import { NewBoardObj, Participant, UserApiObj } from '../app.interfeces'
 
 @Component({
   selector: 'app-form-new-board',
@@ -37,7 +37,7 @@ export class FormNewBoardComponent {
   participants: Participant[] = [];
   participantInput = new FormControl('');
   availableUsers: string[] = [];
-  allUsers: UserObj[] | undefined;
+  allUsers: UserApiObj[] | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -53,7 +53,7 @@ export class FormNewBoardComponent {
     if (this.allUsers) {
       const ownerLogin = this.localStorageService.currentUser.login;
       return this.allUsers
-        .find((userObj) => userObj.login === ownerLogin)
+        .find((UserApiObj) => UserApiObj.login === ownerLogin)
         ?._id;
     }
 
@@ -62,7 +62,7 @@ export class FormNewBoardComponent {
 
   getUsers(): void {
     const usersObserver = {
-      next: (userObjArr: UserObj[]) => {
+      next: (userObjArr: UserApiObj[]) => {
         this.allUsers = userObjArr;
         this.availableUsers = userObjArr
           .filter((obj) => obj._id !== this.ownerId)
@@ -126,11 +126,11 @@ export class FormNewBoardComponent {
     if (this.allUsers) {
       ownerID = this.ownerId;
       participantsIDs = this.allUsers
-        .filter((userObj) => this.participants
+        .filter((UserApiObj) => this.participants
           .map((participant) => participant.name)
-          .includes(userObj.name)
+          .includes(UserApiObj.name)
         )
-        .map((userObj) => userObj._id);
+        .map((UserApiObj) => UserApiObj._id);
     }
 
     const newBoard: NewBoardObj = {

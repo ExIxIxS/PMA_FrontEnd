@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { RestDataService } from '../restAPI.service'
 import { ConfirmationService } from '../confirmation.service';
+import { LocalStorageService } from '../localStorage.service';
+import { UserApiObj } from '../app.interfeces';
 
 @Component({
   selector: 'app-form-new-task',
@@ -33,13 +35,21 @@ export class FormNewTaskComponent {
         Validators.pattern('[a-zA-Z0-9_\.]*'),
       ]
     ],
+    executor: ['',
+      [Validators.required,]
+    ]
   });
 
   constructor(
     private formBuilder: FormBuilder,
     private confirmationService: ConfirmationService,
     private restAPI : RestDataService,
+    private localStorageService: LocalStorageService,
   ) {}
+
+  get availableUsers() {
+    return this.localStorageService.currentBoardUsers;
+  }
 
   getErrorMessage(optionName: string) {
     const controlOption = this.validOptions[optionName as keyof typeof this.validOptions];
@@ -64,12 +74,14 @@ export class FormNewTaskComponent {
   checkInput(): void {
     this.confirmationService.isConfirmValid = this.checkoutForm.valid;
     const title = this.checkoutForm.controls.title.value;
+    const executor = this.checkoutForm.controls.executor.value;
 
-    if (this.checkoutForm.valid && title) {
+    if (this.checkoutForm.valid && title && executor) {
       this.confirmationService.newTaskTitle = title;
       this.confirmationService.newTaskDescription = (this.checkoutForm.controls.description.value)
         ? this.checkoutForm.controls.description.value
         : 'without description';
+      this.confirmationService.newTaskExecutor = executor;
     }
   }
 

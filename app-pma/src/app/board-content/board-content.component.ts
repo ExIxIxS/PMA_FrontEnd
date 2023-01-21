@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption, UserApiObj } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -26,6 +26,7 @@ export class BoardContentComponent {
     this.localStorageService.clearColumns();
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
     this.getBoardColumns();
+    this.checkLocalBoardStorage();
   }
 
   get columnsAmount() {
@@ -38,6 +39,12 @@ export class BoardContentComponent {
 
   set appColumns(columns: ColumnAppObj[]) {
     this.localStorageService.currentBoardColumns = columns;
+  }
+
+  checkLocalBoardStorage() {
+    if (!this.localStorageService.currentStorageBoards.length) {
+      this.restAPI.updateBoardsStorage();
+    }
   }
 
   dropColumn(event: CdkDragDrop<ColumnAppObj[]>): void {
@@ -170,13 +177,13 @@ export class BoardContentComponent {
 
   createTask(columnId: string) {
     if (columnId) {
+      this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
       const newTask: NewTaskOptions =
         {
           boardId: this.currentBoardId,
           columnId: columnId,
           order: this.getTasksAmount(columnId),
           userId: this.localStorageService.currentUserId,
-          users: this.localStorageService.getCurrentBoardUsersId(this.currentBoardId),
         }
 
       this.confirmationService.openDialog({type: 'createTask', newTask})
@@ -196,5 +203,7 @@ export class BoardContentComponent {
     }
     this.confirmationService.openDialog({type: 'deleteTask', deletedTask: deletedTaskOption})
   }
+
+
 
 }

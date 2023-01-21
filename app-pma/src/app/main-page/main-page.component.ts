@@ -38,7 +38,7 @@ export class MainPageComponent {
   }
 
   get participanceBoards() {
-    const participant = this.localStorageService.currentUsers
+    const participant = this.localStorageService.apiUsers
       .find((userObj) => userObj._id === this.localStorageService.currentUserId);
 
     if (participant) {

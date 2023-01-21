@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { CurUserObj, BoardObj, UserObj, BoardObjStorage, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj } from './app.interfeces';
+import { CurUserObj, BoardObj, UserApiObj, BoardObjStorage, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj } from './app.interfeces';
 
 const emptyUserStr = JSON.stringify(
   {
@@ -13,14 +13,15 @@ const emptyUserStr = JSON.stringify(
 export class LocalStorageService {
   private _currentUser: CurUserObj = JSON.parse(emptyUserStr);
   private _currentUserId: string = '';
-  public currentStorageBoards: BoardObjStorage[] = [];
-  public currentBoards: BoardObj[] = [];
-  public currentUsers: UserObj[] = [];
   public isBoards: boolean = false;
+  public currentBoards: BoardObj[] = [];
+  public currentStorageBoards: BoardObjStorage[] = [];
+  public apiUsers: UserApiObj[] = [];
   public currentBoardColumns: ColumnAppObj[] = [];
   public apiColumns: ColumnApiObj[] = [];
   public apiTasks: TaskApiObj[][] = [];
   public isTaskDropDisabled: boolean = false;
+  public currentBoardUsers: UserApiObj[] = [];
 
   constructor() {}
 
@@ -56,22 +57,39 @@ export class LocalStorageService {
     return !!(this.currentUser.token)
   }
 
-  getCurrentBoardUsersId(boardId: string) {
-    const users = this.currentStorageBoards
-      .find((board) => board._id === boardId)
-      ?.users;
+  get currentBoardUsersId() {
+    return this.currentBoardUsers.map((user) => user._id);
+  }
 
-    return (users)
-      ? users.map((user) => user._id)
-      : [];
+  get currentBoardUsersNames() {
+    return this.currentBoardUsers.map((user) => user.name);
+  }
+
+// shift to restAPI --> getUsers + getBoard
+  updateCurrentBoardUsers(boardId: string) {
+    if (this.currentStorageBoards.length) {
+      const currentBoard = this.currentStorageBoards
+        .find((board) => board._id === boardId);
+
+      if (currentBoard) {
+        const users = [...currentBoard?.users]
+        users?.push(currentBoard.owner);
+
+        this.currentBoardUsers = (users)
+          ? users
+          : [];
+      }
+    } else {
+      console.log('!Boards Storage is empty!');
+    }
   }
 
   updateBoardsStorage() {
     const createStorageBoard = (boardObj: BoardObj) => {
-      const ownerObj = this.currentUsers
+      const ownerObj = this.apiUsers
         .find((userObj) => boardObj.owner === userObj._id);
 
-      const participantsObj = this.currentUsers
+      const participantsObj = this.apiUsers
         .filter((userObj) => boardObj.users.includes(userObj._id));
 
       const storageBoard: BoardObjStorage = {
@@ -98,8 +116,8 @@ export class LocalStorageService {
   }
 
   updateCurrentUserId() {
-    if (this.currentUsers.length !== 0) {
-      const currentUserId = this.currentUsers
+    if (this.apiUsers.length !== 0) {
+      const currentUserId = this.apiUsers
         .find((userObj) => userObj.login === this.currentUser.login)
         ?._id;
 

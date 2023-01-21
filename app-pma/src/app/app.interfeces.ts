@@ -7,7 +7,7 @@ interface TokenObj {
   token: string;
 }
 
-interface UserObj {
+interface UserApiObj {
   _id: string,
   name: string,
   login: string,
@@ -29,8 +29,8 @@ interface BoardObj {
 interface BoardObjStorage {
   _id: string, // board id
   title: string, // "Board title",
-  owner: UserObj,
-  users: UserObj[],
+  owner: UserApiObj,
+  users: UserApiObj[],
 }
 
 interface Participant {
@@ -94,7 +94,6 @@ interface DeletedColumnOption {
 interface NewTaskOptions extends DeletedColumnOption {
   order: number,
   userId: string,
-  users: string[],
 }
 
 interface NewTaskObj {
@@ -133,7 +132,7 @@ type ConfirmationTypes = 'default'
 export {
   CurUserObj,
   TokenObj,
-  UserObj,
+  UserApiObj,
   NewBoardObj,
   BoardObj,
   Participant,

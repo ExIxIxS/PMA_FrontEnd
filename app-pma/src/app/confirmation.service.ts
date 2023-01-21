@@ -44,6 +44,7 @@ export class ConfirmationService {
   newColumnTitle: string | undefined;
   newTaskTitle: string | undefined;
   newTaskDescription: string | undefined;
+  newTaskExecutor: string | undefined;
 
   constructor(public dialog: MatDialog,
               private restAPI: RestDataService,
@@ -134,7 +135,7 @@ export class ConfirmationService {
         }
         break;
         case 'createTask':
-          if (confirmOptions  && this.newTaskTitle) {
+          if (confirmOptions  && this.newTaskTitle && this.newTaskExecutor) {
             const taskOptions = confirmOptions as NewTaskOptions;
             const newTaskObj: NewTaskObj =
               {
@@ -142,7 +143,7 @@ export class ConfirmationService {
                 order: taskOptions.order,
                 description: this.newTaskDescription as string,
                 userId: taskOptions.userId,
-                users: taskOptions.users,
+                users: [this.newTaskExecutor],
               }
             console.log('Create task!')
             this.restAPI.createTask(taskOptions.boardId, taskOptions.columnId, newTaskObj);

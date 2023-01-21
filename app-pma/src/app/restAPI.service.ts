@@ -8,7 +8,7 @@ import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
-import { TokenObj, UserObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj,
+import { TokenObj, UserApiObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj,
           PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, TasksSetConfig, DeletedTaskOption, } from './app.interfeces';
 
 const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
@@ -36,9 +36,9 @@ export class RestDataService {
 
   autoSignIn() {
     const autoSingInObserver = {
-      next: (users: UserObj[]) => {
+      next: (users: UserApiObj[]) => {
         this.router.navigate(['main']);
-        this.localStorageService.currentUsers = users;
+        this.localStorageService.apiUsers = users;
         this.localStorageService.updateCurrentUserId();
        },
       error: (err: Error) => {
@@ -85,12 +85,27 @@ export class RestDataService {
     }
 
     this.http
-      .post<UserObj>(REST_URL + 'auth/signup', singUpObj)
+      .post<UserApiObj>(REST_URL + 'auth/signup', singUpObj)
       .subscribe(singUpObserver);
   }
 
   getUsers() {
-    return  this.http.get<UserObj[]>(REST_URL + 'users', this.getHttpOptions());
+    return  this.http.get<UserApiObj[]>(REST_URL + 'users', this.getHttpOptions());
+  }
+
+  updateApiUsers() {
+    const updateApiUsersObserver = {
+      next: (users: UserApiObj[]) => {
+        this.localStorageService.apiUsers = users;
+        console.log('Users updated')
+       },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    };
+
+    this.getUsers()
+      .subscribe(updateApiUsersObserver);
   }
 
   createBoard(newBoard: NewBoardObj) {
@@ -113,12 +128,12 @@ export class RestDataService {
   updateBoardsStorage() {
     let isBoardsTime = true;
     const updateBoardsStorageObserver = {
-      next: (objArr: BoardObj[] | UserObj[]) => {
+      next: (objArr: BoardObj[] | UserApiObj[]) => {
         if (isBoardsTime) {
           this.localStorageService.currentBoards = objArr as BoardObj[];
           isBoardsTime = false;
         } else {
-          this.localStorageService.currentUsers = objArr  as UserObj[];
+          this.localStorageService.apiUsers = objArr  as UserApiObj[];
         }
 
       },
@@ -184,7 +199,7 @@ export class RestDataService {
     const userId = this.localStorageService.currentUserId;
     if (userId) {
       this.http
-        .delete<UserObj>(REST_URL + 'users/' + userId, this.getHttpOptions())
+        .delete<UserApiObj>(REST_URL + 'users/' + userId, this.getHttpOptions())
         .subscribe(deleteUserObserver);
     } else {
       this.errorHandlerService.handleError(new Error('Local Storage: "User does not exist!"'))
