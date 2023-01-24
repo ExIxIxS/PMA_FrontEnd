@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
+import { Validators } from '@angular/forms';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, ColumnSetApiObj, DeletedColumnOption, TaskApiObj, NewTaskObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption, UserApiObj } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption, ColumnTitleInputObj, NewColumnApiObj } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-board-content',
@@ -16,6 +18,13 @@ import { LocalStorageService } from '../localStorage.service';
 })
 export class BoardContentComponent {
   public currentBoardId: string;
+  private formControlInputObjs: ColumnTitleInputObj[] = [];
+
+  validOptions = {
+    columnTitle: {
+      name: 'Column title', minLength: 2, maxLength: 30, pattern: 'a-zA-Z" "-'
+    },
+  }
 
   constructor(private activeRoute: ActivatedRoute,
               private restAPI: RestDataService,
@@ -25,25 +34,73 @@ export class BoardContentComponent {
   ) {
     this.localStorageService.clearColumns();
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
-    this.getBoardColumns();
-    this.checkLocalBoardStorage();
+    this.createBoardColumns();
   }
 
   get columnsAmount() {
     return this.appColumns.length;
   }
 
-  get appColumns() {
+  get appColumns(): ColumnAppObj[] {
     return this.localStorageService.currentBoardColumns;
+  }
+
+  createTitleInputs(): void {
+    console.log('input`s creation started');
+    console.log(JSON.parse(JSON.stringify(this.appColumns)));
+    const formControlInputs = this.appColumns.map((column) => {
+      const formControl = new FormControl(column.title,
+                          [
+                            Validators.required,
+                            Validators.minLength(this.validOptions.columnTitle.minLength),
+                            Validators.maxLength(this.validOptions.columnTitle.maxLength),
+                            Validators.pattern('[a-zA-Z_\.]*'),
+                          ]);
+      formControl.disable();
+      return {
+        columnId: column._id,
+        formControl: formControl,
+      }
+    });
+
+    this.formControlInputObjs = formControlInputs;
+  }
+
+  getFormControlTitleInput(column: ColumnAppObj) {
+    if (this.formControlInputObjs.length) {
+      const input = this.formControlInputObjs.find((inputObj) => inputObj.columnId === column._id);
+      if (input) {
+        return input.formControl;
+      }
+    }
+
+    const newFormControl = new FormControl(column.title,
+      [
+        Validators.required,
+        Validators.minLength(this.validOptions.columnTitle.minLength),
+        Validators.maxLength(this.validOptions.columnTitle.maxLength),
+        Validators.pattern('[a-zA-Z_\.]*'),
+      ]);
+      newFormControl.disable();
+
+      const newFormControlObj: ColumnTitleInputObj  = {
+        columnId: column._id,
+        formControl: newFormControl,
+      }
+      this.formControlInputObjs.push(newFormControlObj);
+
+    return newFormControl;
   }
 
   set appColumns(columns: ColumnAppObj[]) {
     this.localStorageService.currentBoardColumns = columns;
   }
 
-  checkLocalBoardStorage() {
+  createFormControls() {
     if (!this.localStorageService.currentStorageBoards.length) {
-      this.restAPI.updateBoardsStorage();
+      this.restAPI.updateBoardsStorage(this.createTitleInputs.bind(this));
+    } else {
+      this.createTitleInputs();
     }
   }
 
@@ -87,32 +144,24 @@ export class BoardContentComponent {
         }
       }
     } else {
-      console.log(event);
       const prevColumnId = getColumnId(event.previousContainer);
-      console.log('Prev Tasks Columns Ids');
-      console.log(event.previousContainer.data.map((tasks) => tasks.columnId));
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex);
 
-      console.log(event.previousContainer.data);
-      console.log('prevColumnId -->' + prevColumnId);
-      console.log('currentColumnId' + currentColumnId);
       if (prevColumnId && prevColumnId) {
         const updateConfigs = [
           {columnId: prevColumnId, tasksColumn: getTasksSet(event.previousContainer)},
           {columnId: currentColumnId, tasksColumn: getTasksSet(event.container, currentColumnId)}
         ];
-        console.log('updateConfigs');
-        console.log(updateConfigs);
         this.restAPI.updateTaskSet(updateConfigs);
       }
 
     }
   }
 
-  getBoardColumns() {
+  createBoardColumns() {
     const getColumnsObserver = {
       next: (columns: ColumnApiObj[]) => {
         this.localStorageService.apiColumns = columns;
@@ -140,6 +189,7 @@ export class BoardContentComponent {
         complete: () => {
           this.localStorageService.trimApiTasks();
           this.localStorageService.updateBoardAppColumns();
+          this.createFormControls();
         }
       }
 
@@ -204,6 +254,72 @@ export class BoardContentComponent {
     this.confirmationService.openDialog({type: 'deleteTask', deletedTask: deletedTaskOption})
   }
 
+  printElement(event: any, titleInput: any) {
+    console.log(event);
+    console.log(titleInput);
+  }
 
+  activateTitleInput(input: HTMLInputElement, column: ColumnAppObj) {
+    this.getFormControlTitleInput(column).enable();
+    input.focus();
+  }
+
+  disableTitleInput(column: ColumnAppObj, delay: number = 200) {
+    const formControl = this.getFormControlTitleInput(column);
+    if (formControl.valid) {
+      setTimeout(()=> {
+        console.log((formControl.untouched) ? 'untouched' : 'touched');
+        console.log(formControl.value === column.title);
+        if (formControl.untouched || formControl.pristine) {
+          formControl.disable();
+        }
+      }, delay);
+    }
+  }
+
+  getErrorMessage(optionName: string, column: ColumnAppObj) {
+    const formControl = this.getFormControlTitleInput(column);
+    const controlOption = this.validOptions[optionName as keyof typeof this.validOptions];
+    const controlOptionName = controlOption.name;
+    const formControlErrors = formControl.errors;
+
+    switch(true) {
+      case (!!formControlErrors?.['minlength']):
+        return `Min length of ${controlOptionName} is ${controlOption.minLength} chars`;
+      case (!!formControlErrors?.['maxlength']):
+        return `Max length of ${controlOptionName} is ${controlOption.maxLength} chars`;
+      case (!!formControlErrors?.['pattern']):
+        return `Allowed symbols for ${controlOptionName} are "${controlOption.pattern}"`;
+      default:
+        return `Not a valid ${optionName}`;
+    };
+  }
+
+  submitTitleChanges(column: ColumnAppObj): void {
+    console.log('submited');
+    const formControl = this.getFormControlTitleInput(column);
+
+    if (formControl.valid) {
+      if (formControl.dirty) {
+        const columnObj: NewColumnApiObj = {
+          title: formControl.value,
+          order: column.order,
+        }
+        this.restAPI.updateColumnTitle(column.boardId, column._id, columnObj);
+      }
+
+      formControl.markAsUntouched();
+      formControl.markAsPristine();
+    }
+
+    console.log((formControl.untouched) ? 'untouched' : 'touched');
+  }
+
+  restoreTitleInputValue(column: ColumnAppObj) {
+    const formControl = this.getFormControlTitleInput(column);
+    formControl.setValue(column.title);
+    formControl.markAsUntouched();
+    formControl.markAsPristine();
+  }
 
 }

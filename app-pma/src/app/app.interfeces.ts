@@ -1,3 +1,5 @@
+import { FormControl } from "@angular/forms";
+
 interface CurUserObj {
   login: string,
   token: string,
@@ -119,6 +121,11 @@ interface DeletedTaskOption extends DeletedColumnOption {
   taskId: string,
 }
 
+interface ColumnTitleInputObj {
+  columnId: string,
+  formControl: FormControl,
+}
+
 
 type ConfirmationTypes = 'default'
                         | 'createBoard'
@@ -151,5 +158,6 @@ export {
   NewTaskObj,
   TaskSetApiObj,
   TasksSetConfig,
-  DeletedTaskOption
+  DeletedTaskOption,
+  ColumnTitleInputObj
 }

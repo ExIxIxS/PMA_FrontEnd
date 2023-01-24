@@ -6,7 +6,33 @@
         (cdkDropListDropped)="dropColumn($event)"
         [cdkDropListDisabled]="isTaskDropDisabled">
         <div class="board-column" *ngFor="let column of appColumns" cdkDrag>
-            <h2>{{column.title}} --> {{column.order}}</h2>
+            <p>{{column.order}}</p>
+            <div class="title-container">
+                <mat-form-field class="title-form-field" appearance="outline"
+                (click)="activateTitleInput(titleInput, column)">
+                    <input  #titleInput
+                            matInput
+                            type="text"
+                            [formControl]="getFormControlTitleInput(column)"
+                            (blur)="disableTitleInput(column)">
+                    <mat-error *ngIf="getFormControlTitleInput(column).invalid">{{getErrorMessage('columnTitle', column)}}</mat-error>
+                    <mat-hint *ngIf="getFormControlTitleInput(column).dirty">*Please save title changes</mat-hint>
+
+                    <button *ngIf="!titleInput.disabled"
+                            mat-icon-button
+                            matPrefix
+                            (click)="submitTitleChanges(column)">
+                    <mat-icon>check</mat-icon>
+                    </button>
+
+                    <button *ngIf="!titleInput.disabled"
+                            mat-icon-button
+                            matPrefix
+                            (click)="restoreTitleInputValue(column)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
 
             <button mat-flat-button
                     class="delete-column-button"

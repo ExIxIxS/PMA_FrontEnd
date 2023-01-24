@@ -11,7 +11,9 @@ import { AppControlService } from './app-control.service'
 import { TokenObj, UserApiObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj,
           PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, TasksSetConfig, DeletedTaskOption, } from './app.interfeces';
 
-const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
+//  const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
+
+const REST_URL = 'http://localhost:3000/';
 
 @Injectable()
 export class RestDataService {
@@ -125,7 +127,7 @@ export class RestDataService {
       .subscribe(createBoardObserver);
   }
 
-  updateBoardsStorage() {
+  updateBoardsStorage(completeCallBack?: Function) {
     let isBoardsTime = true;
     const updateBoardsStorageObserver = {
       next: (objArr: BoardObj[] | UserApiObj[]) => {
@@ -142,7 +144,10 @@ export class RestDataService {
       },
       complete: () => {
         console.log('Boards and user storage updated');
-        this.localStorageService.updateBoardsStorage()
+        this.localStorageService.updateBoardsStorage();
+        if (completeCallBack) {
+          completeCallBack();
+        }
       }
     }
 
@@ -269,6 +274,7 @@ export class RestDataService {
       next: (columns: ColumnApiObj[]) => {
         console.log('Column updating started')
         this.localStorageService.apiColumns = columns;
+        this.localStorageService.updateBoardAppColumns();
         if (isDeletion) {
           this.localStorageService.updateBoardAppColumns();
         }
@@ -361,6 +367,28 @@ export class RestDataService {
     } else {
       this.errorHandlerService.handleError(new Error('Application: "Deletion initial values error"'))
     }
+  }
+
+  updateColumn(boardId: string, columnId: string, newColumn: NewColumnApiObj) {
+    return this.http
+      .put<ColumnApiObj>(`${REST_URL}boards/${boardId}/columns/${columnId}`, newColumn, this.getHttpOptions());
+  }
+
+  updateColumnTitle(boardId: string, columnId: string, newColumn: NewColumnApiObj) {
+    console.log(newColumn);
+    const updateColumnObserver = {
+      next: (column: ColumnApiObj) => {
+        console.log('Column updated');
+        console.log(column);
+        this.localStorageService.updateColumnTitle(column);
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    this.updateColumn(boardId, columnId, newColumn)
+      .subscribe(updateColumnObserver);
   }
 
 }

@@ -1,9 +1,17 @@
 .board-column {
     width: 300px;
     max-width: 100%;
-    margin: 0 20px;
+    margin: 20px 20px;
     display: inline-block;
     vertical-align: top;
+  }
+
+  .title-container {
+    height: 140px;
+  }
+
+  .title-form-field {
+    width: 100%;
   }
 
   .list {

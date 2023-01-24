@@ -65,7 +65,6 @@ export class LocalStorageService {
     return this.currentBoardUsers.map((user) => user.name);
   }
 
-// shift to restAPI --> getUsers + getBoard
   updateCurrentBoardUsers(boardId: string) {
     if (this.currentStorageBoards.length) {
       const currentBoard = this.currentStorageBoards
@@ -256,6 +255,26 @@ export class LocalStorageService {
       tasksColumn?.splice(taskIndex, 1);
       this.updateBoardAppTasks(this.currentBoardColumns, [taskObj.columnId]);
     }
+  }
+
+  updateColumnTitle(column: ColumnApiObj) {
+    const newTitle = column.title;
+
+    const findColumnById = function(columns: ColumnApiObj[] | ColumnAppObj[]) {
+      return columns.find((currentColumn) => currentColumn._id = column._id)
+    };
+
+    const changeColumnTitle = function(column: ColumnApiObj | ColumnAppObj | undefined) {
+      if (column) {
+        column.title = newTitle;
+      }
+    }
+
+    const apiColumn = findColumnById(this.apiColumns);
+    changeColumnTitle(apiColumn);
+
+    const appColumn = findColumnById(this.currentBoardColumns);
+    changeColumnTitle(appColumn);
   }
 
 }
