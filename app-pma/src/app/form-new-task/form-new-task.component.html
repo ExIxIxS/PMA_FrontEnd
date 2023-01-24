@@ -1,15 +1,15 @@
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
     <mat-form-field appearance="fill">
       <mat-label>Task title</mat-label>
-      <input matInput formControlName="title" (input)="checkInput()">
-      <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('title')}}</mat-error>
+      <input matInput formControlName="taskTitle" (input)="checkInput()">
+      <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('taskTitle')}}</mat-error>
     </mat-form-field>
 
     <br>
 
     <mat-form-field appearance="fill">
       <mat-label>Select an excecutor</mat-label>
-      <mat-select (selectionChange)="checkInput()" formControlName="executor">
+      <mat-select (selectionChange)="checkInput()" formControlName="taskExecutor">
         <mat-option *ngFor="let user of availableUsers" [value]="user.name">
           {{user.name}}
         </mat-option>
@@ -21,9 +21,9 @@
     <mat-form-field class="textarea-full-width"
                     appearance="fill">
       <mat-label>Enter a task description</mat-label>
-      <textarea matInput formControlName="description"
+      <textarea matInput formControlName="taskDescription"
                 (input)="checkInput()"></textarea>
-      <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('description')}}</mat-error>
+      <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('taskDescription')}}</mat-error>
     </mat-form-field>
 
   </form>

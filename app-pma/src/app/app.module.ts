@@ -39,6 +39,8 @@ import { RestDataService } from './restAPI.service';
 import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service';
+import { AppFormsService } from './app-forms.service';
+
 import { SignupPageComponent } from './signup-page/signup-page.component';
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 import { ConfirmationService } from './confirmation.service';
@@ -92,7 +94,7 @@ import { FormNewTaskComponent } from './form-new-task/form-new-task.component';
     MatAutocompleteModule,
     DragDropModule,
   ],
-  providers: [RestDataService, LocalStorageService, AppControlService, ErrorHandlerService, ConfirmationService ],
+  providers: [RestDataService, LocalStorageService, AppControlService, ErrorHandlerService, ConfirmationService, AppFormsService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

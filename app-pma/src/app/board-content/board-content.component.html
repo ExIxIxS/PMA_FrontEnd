@@ -13,10 +13,10 @@
                     <input  #titleInput
                             matInput
                             type="text"
-                            [formControl]="getFormControlTitleInput(column)"
+                            [formControl]="column.titleFormControl"
                             (blur)="disableTitleInput(column)">
-                    <mat-error *ngIf="getFormControlTitleInput(column).invalid">{{getErrorMessage('columnTitle', column)}}</mat-error>
-                    <mat-hint *ngIf="getFormControlTitleInput(column).dirty">*Please save title changes</mat-hint>
+                    <mat-error *ngIf="column.titleFormControl.invalid">{{getErrorMessage(column)}}</mat-error>
+                    <mat-hint *ngIf="column.titleFormControl.dirty">*Please submit title changes</mat-hint>
 
                     <button *ngIf="!titleInput.disabled"
                             mat-icon-button

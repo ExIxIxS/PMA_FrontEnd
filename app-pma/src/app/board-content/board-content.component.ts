@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
-import { Validators } from '@angular/forms';
 
 import { RestDataService } from '../restAPI.service';
 import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption, ColumnTitleInputObj, NewColumnApiObj } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
-import { FormControl } from '@angular/forms';
+import { AppFormsService } from '../app-forms.service';
 
 @Component({
   selector: 'app-board-content',
@@ -18,7 +17,6 @@ import { FormControl } from '@angular/forms';
 })
 export class BoardContentComponent {
   public currentBoardId: string;
-  private formControlInputObjs: ColumnTitleInputObj[] = [];
 
   validOptions = {
     columnTitle: {
@@ -31,6 +29,7 @@ export class BoardContentComponent {
               private localStorageService: LocalStorageService,
               private errorHandlerService: ErrorHandlerService,
               private confirmationService: ConfirmationService,
+              private formService: AppFormsService,
   ) {
     this.localStorageService.clearColumns();
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
@@ -45,63 +44,8 @@ export class BoardContentComponent {
     return this.localStorageService.currentBoardColumns;
   }
 
-  createTitleInputs(): void {
-    console.log('input`s creation started');
-    console.log(JSON.parse(JSON.stringify(this.appColumns)));
-    const formControlInputs = this.appColumns.map((column) => {
-      const formControl = new FormControl(column.title,
-                          [
-                            Validators.required,
-                            Validators.minLength(this.validOptions.columnTitle.minLength),
-                            Validators.maxLength(this.validOptions.columnTitle.maxLength),
-                            Validators.pattern('[a-zA-Z_\.]*'),
-                          ]);
-      formControl.disable();
-      return {
-        columnId: column._id,
-        formControl: formControl,
-      }
-    });
-
-    this.formControlInputObjs = formControlInputs;
-  }
-
-  getFormControlTitleInput(column: ColumnAppObj) {
-    if (this.formControlInputObjs.length) {
-      const input = this.formControlInputObjs.find((inputObj) => inputObj.columnId === column._id);
-      if (input) {
-        return input.formControl;
-      }
-    }
-
-    const newFormControl = new FormControl(column.title,
-      [
-        Validators.required,
-        Validators.minLength(this.validOptions.columnTitle.minLength),
-        Validators.maxLength(this.validOptions.columnTitle.maxLength),
-        Validators.pattern('[a-zA-Z_\.]*'),
-      ]);
-      newFormControl.disable();
-
-      const newFormControlObj: ColumnTitleInputObj  = {
-        columnId: column._id,
-        formControl: newFormControl,
-      }
-      this.formControlInputObjs.push(newFormControlObj);
-
-    return newFormControl;
-  }
-
   set appColumns(columns: ColumnAppObj[]) {
     this.localStorageService.currentBoardColumns = columns;
-  }
-
-  createFormControls() {
-    if (!this.localStorageService.currentStorageBoards.length) {
-      this.restAPI.updateBoardsStorage(this.createTitleInputs.bind(this));
-    } else {
-      this.createTitleInputs();
-    }
   }
 
   dropColumn(event: CdkDragDrop<ColumnAppObj[]>): void {
@@ -189,7 +133,6 @@ export class BoardContentComponent {
         complete: () => {
           this.localStorageService.trimApiTasks();
           this.localStorageService.updateBoardAppColumns();
-          this.createFormControls();
         }
       }
 
@@ -260,12 +203,12 @@ export class BoardContentComponent {
   }
 
   activateTitleInput(input: HTMLInputElement, column: ColumnAppObj) {
-    this.getFormControlTitleInput(column).enable();
+    column.titleFormControl.enable();
     input.focus();
   }
 
   disableTitleInput(column: ColumnAppObj, delay: number = 200) {
-    const formControl = this.getFormControlTitleInput(column);
+    const formControl = column.titleFormControl;
     if (formControl.valid) {
       setTimeout(()=> {
         console.log((formControl.untouched) ? 'untouched' : 'touched');
@@ -277,27 +220,14 @@ export class BoardContentComponent {
     }
   }
 
-  getErrorMessage(optionName: string, column: ColumnAppObj) {
-    const formControl = this.getFormControlTitleInput(column);
-    const controlOption = this.validOptions[optionName as keyof typeof this.validOptions];
-    const controlOptionName = controlOption.name;
-    const formControlErrors = formControl.errors;
-
-    switch(true) {
-      case (!!formControlErrors?.['minlength']):
-        return `Min length of ${controlOptionName} is ${controlOption.minLength} chars`;
-      case (!!formControlErrors?.['maxlength']):
-        return `Max length of ${controlOptionName} is ${controlOption.maxLength} chars`;
-      case (!!formControlErrors?.['pattern']):
-        return `Allowed symbols for ${controlOptionName} are "${controlOption.pattern}"`;
-      default:
-        return `Not a valid ${optionName}`;
-    };
+  getErrorMessage(column: ColumnAppObj) {
+    return this.formService
+      .getErrorMessage(column.titleFormControl, 'columnTitle')
   }
 
   submitTitleChanges(column: ColumnAppObj): void {
     console.log('submited');
-    const formControl = this.getFormControlTitleInput(column);
+    const formControl = column.titleFormControl;
 
     if (formControl.valid) {
       if (formControl.dirty) {
@@ -316,7 +246,7 @@ export class BoardContentComponent {
   }
 
   restoreTitleInputValue(column: ColumnAppObj) {
-    const formControl = this.getFormControlTitleInput(column);
+    const formControl = column.titleFormControl;
     formControl.setValue(column.title);
     formControl.markAsUntouched();
     formControl.markAsPristine();

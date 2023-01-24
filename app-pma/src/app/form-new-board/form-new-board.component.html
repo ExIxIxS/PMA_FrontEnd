@@ -2,7 +2,7 @@
   <mat-form-field appearance="fill">
     <mat-label>Enter a board title</mat-label>
     <input matInput formControlName="boardTitle" (input)="checkInput()">
-    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('boardTitle')}}</mat-error>
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage()}}</mat-error>
   </mat-form-field>
 
   <br>
@@ -42,9 +42,6 @@
     </mat-form-field>
 
     </mat-chip-grid>
-
-
-
 
   </mat-form-field>
 </form>

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import { RestDataService } from '../restAPI.service';
 import { ConfirmationService } from '../confirmation.service';
@@ -9,6 +8,7 @@ import { LocalStorageService } from '../localStorage.service';
 import { ErrorHandlerService } from '../errorHandler.service';
 
 import { NewBoardObj, Participant, UserApiObj } from '../app.interfeces'
+import { AppFormsService } from '../app-forms.service';
 
 @Component({
   selector: 'app-form-new-board',
@@ -18,20 +18,8 @@ import { NewBoardObj, Participant, UserApiObj } from '../app.interfeces'
 export class FormNewBoardComponent {
   hide = true;
 
-  validOptions = {
-    boardTitle: {name: 'boardTitle', minLength: 2, maxLength: 30, pattern: 'a-zA-Z" "-'},
-  }
-
-  checkoutForm = this.formBuilder.group({
-    boardTitle: ["",
-      [
-        Validators.required,
-        Validators.minLength(this.validOptions.boardTitle.minLength),
-        Validators.maxLength(this.validOptions.boardTitle.maxLength),
-        Validators.pattern('[a-zA-Z_\. ]*'),
-      ]
-    ],
-  });
+  titleFormControl = this.formService.getNewFormControl('boardTitle');
+  checkoutForm = new FormGroup({boardTitle: this.titleFormControl});
 
   addOnBlur = true;
   participants: Participant[] = [];
@@ -40,11 +28,11 @@ export class FormNewBoardComponent {
   allUsers: UserApiObj[] | undefined;
 
   constructor(
-    private formBuilder: FormBuilder,
     private restAPI: RestDataService,
     private localStorageService: LocalStorageService,
     private confirmationService: ConfirmationService,
     private errorHandlerService: ErrorHandlerService,
+    private formService: AppFormsService,
   ) {
     this.getUsers();
   }
@@ -58,6 +46,10 @@ export class FormNewBoardComponent {
     }
 
     return;
+  }
+
+  getErrorMessage(): string {
+    return this.formService.getErrorMessage(this.checkoutForm, 'boardTitle');
   }
 
   getUsers(): void {
@@ -74,25 +66,6 @@ export class FormNewBoardComponent {
     }
 
     this.restAPI.getUsers().subscribe(usersObserver)
-  }
-
-  getErrorMessage(optionName: string): string {
-    const controlOption = this.validOptions[optionName as keyof typeof this.validOptions];
-    const controlOptionName = controlOption.name as keyof typeof this.checkoutForm.controls;
-    const formControlErrors = this.checkoutForm.controls[controlOptionName].errors;
-
-    switch(true) {
-      case (!!formControlErrors?.['required']):
-        return `You must enter a Board Title`;
-      case (!!formControlErrors?.['minlength']):
-        return `Min length of ${optionName} is ${controlOption.minLength} chars`;
-      case (!!formControlErrors?.['maxlength']):
-        return `Max length of ${optionName} is ${controlOption.maxLength} chars`;
-      case (!!formControlErrors?.['pattern']):
-        return `Allowed symbols for ${optionName} are "${controlOption.pattern}"`;
-      default:
-        return `Not a valid ${optionName}`;
-    };
   }
 
   add(event: MatAutocompleteSelectedEvent): void {

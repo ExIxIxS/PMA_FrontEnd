@@ -64,6 +64,7 @@ interface TaskApiObj {
 
 interface ColumnAppObj extends ColumnApiObj {
   tasks: TaskApiObj[],
+  titleFormControl: FormControl,
 }
 
 interface PointApiObj {
@@ -136,6 +137,15 @@ type ConfirmationTypes = 'default'
                         | 'createTask'
                         | 'deleteTask';
 
+type FormConrolTypes = 'columnTitle'
+                      | 'boardTitle'
+                      | 'taskTitle'
+                      | 'taskDescription'
+                      | 'taskExecutor'
+                      | 'login'
+                      | 'password'
+                      | 'userName';
+
 export {
   CurUserObj,
   TokenObj,
@@ -159,5 +169,6 @@ export {
   TaskSetApiObj,
   TasksSetConfig,
   DeletedTaskOption,
-  ColumnTitleInputObj
+  ColumnTitleInputObj,
+  FormConrolTypes
 }

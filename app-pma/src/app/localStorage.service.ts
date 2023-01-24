@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { CurUserObj, BoardObj, UserApiObj, BoardObjStorage, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj } from './app.interfeces';
+import { AppFormsService } from './app-forms.service';
 
 const emptyUserStr = JSON.stringify(
   {
@@ -23,7 +24,9 @@ export class LocalStorageService {
   public isTaskDropDisabled: boolean = false;
   public currentBoardUsers: UserApiObj[] = [];
 
-  constructor() {}
+  constructor(
+    private formsService: AppFormsService,
+  ) {}
 
   get currentUser() {
     const localCurrentUser = localStorage.getItem('currentUser');
@@ -135,11 +138,16 @@ export class LocalStorageService {
     this.currentStorageBoards.splice(boardIndex, 1);
   }
 
-  addColumn(apiColumn: ColumnApiObj) {
-    const appColumn = {
+  createAppColumn(apiColumn: ColumnApiObj): ColumnAppObj {
+    return {
       ...apiColumn,
       tasks: [],
+      titleFormControl: this.formsService.getNewFormControl('columnTitle', apiColumn.title, true)
     }
+  }
+
+  addColumn(apiColumn: ColumnApiObj) {
+    const appColumn = this.createAppColumn(apiColumn);
 
     this.apiColumns.push(apiColumn);
     this.currentBoardColumns.push(appColumn);
@@ -147,11 +155,7 @@ export class LocalStorageService {
 
   updateBoardAppColumns(): void {
     const appColumns: ColumnAppObj[] = this
-      .apiColumns.map((apiColumn) => {
-        return {
-        ...apiColumn,
-        tasks: [],
-      }})
+      .apiColumns.map((apiColumn) => this.createAppColumn(apiColumn))
       .sort(this.sortByOrder);
 
     this.updateBoardAppTasks(appColumns);

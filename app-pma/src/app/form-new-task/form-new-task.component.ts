@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 
-import { RestDataService } from '../restAPI.service'
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
-import { UserApiObj } from '../app.interfeces';
+import { FormConrolTypes } from '../app.interfeces';
+import { AppFormsService } from '../app-forms.service';
 
 @Component({
   selector: 'app-form-new-task',
@@ -14,72 +13,33 @@ import { UserApiObj } from '../app.interfeces';
 export class FormNewTaskComponent {
   hide = true;
 
-  validOptions = {
-    title: {name: 'task title', minLength: 2, maxLength: 30, pattern: 'a-zA-Z" "-'},
-    description: {name: 'task description', minLength: 0, maxLength: 200, pattern: '0-9a-zA-Z_.'},
-  }
-
-  checkoutForm = this.formBuilder.group({
-    title: ["",
-      [
-        Validators.required,
-        Validators.minLength(this.validOptions.title.minLength),
-        Validators.maxLength(this.validOptions.title.maxLength),
-        Validators.pattern('[a-zA-Z_\.]*'),
-      ]
-    ],
-    description: ["",
-      [
-        Validators.minLength(this.validOptions.description.minLength),
-        Validators.maxLength(this.validOptions.description.maxLength),
-        Validators.pattern('[a-zA-Z0-9_\.]*'),
-      ]
-    ],
-    executor: ['',
-      [Validators.required,]
-    ]
-  });
+  checkoutForm = this.formService.getNewFormGroup('newTask');
 
   constructor(
-    private formBuilder: FormBuilder,
     private confirmationService: ConfirmationService,
-    private restAPI : RestDataService,
     private localStorageService: LocalStorageService,
+    private formService: AppFormsService,
   ) {}
 
   get availableUsers() {
     return this.localStorageService.currentBoardUsers;
   }
 
-  getErrorMessage(optionName: string) {
-    const controlOption = this.validOptions[optionName as keyof typeof this.validOptions];
-    const controlOptionName = controlOption.name as keyof typeof this.checkoutForm.controls;
-    const formControlErrors = this.checkoutForm.controls[optionName as keyof typeof this.checkoutForm.controls].errors;
-
-    switch(true) {
-      case (!!formControlErrors?.['required']):
-        return `You must enter a task ${controlOptionName}`;
-      case (!!formControlErrors?.['minlength']):
-        return `Min length of ${controlOptionName} is ${controlOption.minLength} chars`;
-      case (!!formControlErrors?.['maxlength']):
-        return `Max length of ${controlOptionName} is ${controlOption.maxLength} chars`;
-      case (!!formControlErrors?.['pattern']):
-        return `Allowed symbols for ${controlOptionName} are "${controlOption.pattern}"`;
-      default:
-        return `Not a valid ${optionName}`;
-    };
-
+  getErrorMessage(optionName: FormConrolTypes) {
+    return this.formService.getErrorMessage(this.checkoutForm, optionName)
   };
 
   checkInput(): void {
     this.confirmationService.isConfirmValid = this.checkoutForm.valid;
-    const title = this.checkoutForm.controls.title.value;
-    const executor = this.checkoutForm.controls.executor.value;
+    const title = this.checkoutForm.controls['taskTitle'].value;
+    const executor = this.checkoutForm.controls['taskExecutor'].value;
 
     if (this.checkoutForm.valid && title && executor) {
       this.confirmationService.newTaskTitle = title;
-      this.confirmationService.newTaskDescription = (this.checkoutForm.controls.description.value)
-        ? this.checkoutForm.controls.description.value
+
+      const taskDescription = this.checkoutForm.controls['taskDescription'].value;
+      this.confirmationService.newTaskDescription = (taskDescription)
+        ? taskDescription
         : 'without description';
       this.confirmationService.newTaskExecutor = executor;
     }
