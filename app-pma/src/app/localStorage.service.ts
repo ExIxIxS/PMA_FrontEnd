@@ -153,19 +153,20 @@ export class LocalStorageService {
     this.currentBoardColumns.push(appColumn);
   }
 
+  sortByOrder<T extends ColumnAppObj | ColumnApiObj | TaskApiObj>(a: T, b: T): number {
+      return a.order - b.order;
+  }
+
   updateBoardAppColumns(): void {
-    const appColumns: ColumnAppObj[] = this
-      .apiColumns.map((apiColumn) => this.createAppColumn(apiColumn))
-      .sort(this.sortByOrder);
+    const appColumns: ColumnAppObj[] = this.apiColumns
+      .sort(this.sortByOrder)
+      .map((apiColumn) => this.createAppColumn(apiColumn));
 
     this.updateBoardAppTasks(appColumns);
 
     this.currentBoardColumns = appColumns;
+    console.log(this.apiColumns);
     console.log(this.currentBoardColumns);
-  }
-
-  sortByOrder<T extends ColumnAppObj | TaskApiObj>(a: T, b: T): number {
-      return a.order - b.order;
   }
 
   updateBoardAppTasks(appColumns: ColumnAppObj[], columnIds: string[] = []): void {
@@ -181,7 +182,8 @@ export class LocalStorageService {
     this.trimApiTasks();
 
     this.apiTasks
-      .map((apiTasks) => apiTasks.sort(this.sortByOrder))
+      .forEach((apiTasks) => apiTasks
+        .sort(this.sortByOrder));
 
     const apiTasksArr = (columnIds.length)
       ? this.apiTasks.filter((apiTasks) => columnIds.includes(apiTasks[0].columnId))
@@ -265,19 +267,19 @@ export class LocalStorageService {
     const newTitle = column.title;
 
     const findColumnById = function(columns: ColumnApiObj[] | ColumnAppObj[]) {
-      return columns.find((currentColumn) => currentColumn._id = column._id)
+      return columns.find((currentColumn) => currentColumn._id === column._id)
     };
 
-    const changeColumnTitle = function(column: ColumnApiObj | ColumnAppObj | undefined) {
-      if (column) {
-        column.title = newTitle;
+    const changeColumnTitle = function(currentColumn: ColumnApiObj | ColumnAppObj | undefined) {
+      if (currentColumn) {
+        currentColumn.title = newTitle;
       }
     }
 
     const apiColumn = findColumnById(this.apiColumns);
-    changeColumnTitle(apiColumn);
-
     const appColumn = findColumnById(this.currentBoardColumns);
+
+    changeColumnTitle(apiColumn);
     changeColumnTitle(appColumn);
   }
 

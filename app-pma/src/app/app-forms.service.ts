@@ -17,10 +17,6 @@ export class AppFormsService {
     private formBuilder: FormBuilder,
   ) { }
 
-  /*
-
-  */
-
   validOptions = {
     columnTitle: {title: 'column title', minLength: 2, maxLength: 30, pattern: '[a-zA-Z_\. ]*'},
     boardTitle: {title: 'board title', minLength: 2, maxLength: 30, pattern: '[a-zA-Z_\. ]*'},
@@ -47,10 +43,10 @@ export class AppFormsService {
           ];
       case 'taskDescription':
         return [
-          Validators.minLength(this.validOptions[type].minLength),
-          Validators.maxLength(this.validOptions[type].maxLength),
-          Validators.pattern(this.validOptions[type].pattern),
-        ];
+            Validators.minLength(this.validOptions[type].minLength),
+            Validators.maxLength(this.validOptions[type].maxLength),
+            Validators.pattern(this.validOptions[type].pattern),
+          ];
       case 'taskExecutor':
         return [Validators.required];
       default:
@@ -90,13 +86,12 @@ export class AppFormsService {
           password: this.getNewFormControl('password'),
         })
       }
-      default:
-        return new FormGroup(this.getNewFormControl);
     }
   }
 
   getErrorMessage(controlObj: FormControl | FormGroup, formControlType: FormConrolTypes): string {
     const controlOption = this.validOptions[formControlType as keyof typeof this.validOptions];
+
     const controlOptionTitle = (controlObj instanceof FormControl)
       ? controlOption.title
       : controlOption.title as keyof typeof controlObj.controls;
