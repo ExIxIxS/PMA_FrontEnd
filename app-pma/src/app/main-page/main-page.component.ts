@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { RestDataService } from '../restAPI.service';
 import { LocalStorageService } from '../localStorage.service';
 import { ConfirmationService } from '../confirmation.service';
-import { BoardObjStorage } from '../app.interfeces';
+import { AppBoardObj } from '../app.interfeces';
 
 
 
@@ -28,7 +28,7 @@ export class MainPageComponent {
   }
 
   get ownBoards() {
-    return this.localStorageService.currentStorageBoards
+    return this.localStorageService.currentAppBoards
       .filter((boardObj) => boardObj.owner._id === this.localStorageService.currentUserId);
   }
 
@@ -42,7 +42,7 @@ export class MainPageComponent {
       .find((userObj) => userObj._id === this.localStorageService.currentUserId);
 
     if (participant) {
-      return this.localStorageService.currentStorageBoards
+      return this.localStorageService.currentAppBoards
       .filter((boardObj) => boardObj.users.includes(participant));
     }
 
@@ -55,7 +55,7 @@ export class MainPageComponent {
   }
 
   get otherBoards() {
-    return this.localStorageService.currentStorageBoards
+    return this.localStorageService.currentAppBoards
       .filter((boardObj) => !(
         this.ownBoards.includes(boardObj)
         || this.participanceBoards.includes(boardObj)
@@ -68,7 +68,7 @@ export class MainPageComponent {
       .map((boardObj) => this.adoptBoardForOutput(boardObj));
   }
 
-  adoptBoardForOutput(boardObj: BoardObjStorage) {
+  adoptBoardForOutput(boardObj: AppBoardObj) {
     return {
             _id: boardObj._id,
             title: boardObj.title,
@@ -84,7 +84,7 @@ export class MainPageComponent {
   }
 
   deleteBoard(boardId: string, boardTitle: string, owner: string) {
-    const rightToDelete = this.localStorageService.currentStorageBoards
+    const rightToDelete = this.localStorageService.currentAppBoards
       .find((boardObj) => boardObj._id === boardId)
       ?.owner._id === this.localStorageService.currentUserId;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { CurUserObj, BoardObj, UserApiObj, BoardObjStorage, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj } from './app.interfeces';
+import { CurUserObj, ApiBoardObj, UserApiObj, AppBoardObj, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj } from './app.interfeces';
 import { AppFormsService } from './app-forms.service';
 
 const emptyUserStr = JSON.stringify(
@@ -15,8 +15,8 @@ export class LocalStorageService {
   private _currentUser: CurUserObj = JSON.parse(emptyUserStr);
   private _currentUserId: string = '';
   public isBoards: boolean = false;
-  public currentBoards: BoardObj[] = [];
-  public currentStorageBoards: BoardObjStorage[] = [];
+  public apiBoards: ApiBoardObj[] = [];
+  public currentAppBoards: AppBoardObj[] = [];
   public apiUsers: UserApiObj[] = [];
   public currentBoardColumns: ColumnAppObj[] = [];
   public apiColumns: ColumnApiObj[] = [];
@@ -69,8 +69,8 @@ export class LocalStorageService {
   }
 
   updateCurrentBoardUsers(boardId: string) {
-    if (this.currentStorageBoards.length) {
-      const currentBoard = this.currentStorageBoards
+    if (this.currentAppBoards.length) {
+      const currentBoard = this.currentAppBoards
         .find((board) => board._id === boardId);
 
       if (currentBoard) {
@@ -87,14 +87,14 @@ export class LocalStorageService {
   }
 
   updateBoardsStorage() {
-    const createStorageBoard = (boardObj: BoardObj) => {
+    const createStorageBoard = (boardObj: ApiBoardObj) => {
       const ownerObj = this.apiUsers
         .find((userObj) => boardObj.owner === userObj._id);
 
       const participantsObj = this.apiUsers
         .filter((userObj) => boardObj.users.includes(userObj._id));
 
-      const storageBoard: BoardObjStorage = {
+      const storageBoard: AppBoardObj = {
         _id: boardObj._id,
         title: boardObj.title,
         owner: ownerObj!,
@@ -104,9 +104,9 @@ export class LocalStorageService {
       return storageBoard;
     }
 
-    const storageBoards = this.currentBoards.map((boardObj) => createStorageBoard(boardObj));
+    const storageBoards = this.apiBoards.map((boardObj) => createStorageBoard(boardObj));
 
-    this.currentStorageBoards = storageBoards;
+    this.currentAppBoards = storageBoards;
     this.updateCurrentUserId();
     this.isBoards = (storageBoards.length !== 0)
   }
@@ -134,8 +134,8 @@ export class LocalStorageService {
   }
 
   deleteBoard(boardId: string) {
-    const boardIndex = this.currentStorageBoards.findIndex((boardObj) => boardObj._id === boardId);
-    this.currentStorageBoards.splice(boardIndex, 1);
+    const boardIndex = this.currentAppBoards.findIndex((boardObj) => boardObj._id === boardId);
+    this.currentAppBoards.splice(boardIndex, 1);
   }
 
   createAppColumn(apiColumn: ColumnApiObj): ColumnAppObj {

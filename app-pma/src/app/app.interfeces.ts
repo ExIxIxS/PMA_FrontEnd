@@ -21,14 +21,14 @@ interface NewBoardObj {
   users: string[]
 }
 
-interface BoardObj {
+interface ApiBoardObj {
   _id: string, // board id
   title: string, // "Board title",
   owner: string, // "userId of owner",
   users: string[]
 }
 
-interface BoardObjStorage {
+interface AppBoardObj {
   _id: string, // board id
   title: string, // "Board title",
   owner: UserApiObj,
@@ -151,10 +151,10 @@ export {
   TokenObj,
   UserApiObj,
   NewBoardObj,
-  BoardObj,
+  ApiBoardObj,
+  AppBoardObj,
   Participant,
   ConfirmationTypes,
-  BoardObjStorage,
   NewColumnApiObj,
   ColumnApiObj,
   TaskApiObj,

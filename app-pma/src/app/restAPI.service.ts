@@ -8,7 +8,7 @@ import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
-import { TokenObj, UserApiObj, NewBoardObj, BoardObj, ColumnApiObj, TaskApiObj,
+import { TokenObj, UserApiObj, NewBoardObj, ApiBoardObj, ColumnApiObj, TaskApiObj,
           PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, TasksSetConfig, DeletedTaskOption, } from './app.interfeces';
 
 //  const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
@@ -112,7 +112,7 @@ export class RestDataService {
 
   createBoard(newBoard: NewBoardObj) {
     const createBoardObserver = {
-      next: (boardObj: BoardObj) => {
+      next: (boardObj: ApiBoardObj) => {
         console.log('Board poasted');
         console.log(boardObj);
         this.updateBoardsStorage();
@@ -123,16 +123,16 @@ export class RestDataService {
     }
 
     this.http
-      .post<BoardObj>(REST_URL + 'boards', newBoard, this.getHttpOptions())
+      .post<ApiBoardObj>(REST_URL + 'boards', newBoard, this.getHttpOptions())
       .subscribe(createBoardObserver);
   }
 
   updateBoardsStorage(completeCallBack?: Function) {
     let isBoardsTime = true;
     const updateBoardsStorageObserver = {
-      next: (objArr: BoardObj[] | UserApiObj[]) => {
+      next: (objArr: ApiBoardObj[] | UserApiObj[]) => {
         if (isBoardsTime) {
-          this.localStorageService.currentBoards = objArr as BoardObj[];
+          this.localStorageService.apiBoards = objArr as ApiBoardObj[];
           isBoardsTime = false;
         } else {
           this.localStorageService.apiUsers = objArr  as UserApiObj[];
@@ -157,7 +157,7 @@ export class RestDataService {
   }
 
   getBoards() {
-    return  this.http.get<BoardObj[]>(REST_URL + 'boards', this.getHttpOptions());
+    return  this.http.get<ApiBoardObj[]>(REST_URL + 'boards', this.getHttpOptions());
   }
 
   deleteBoard(boardId: string) {
@@ -171,7 +171,7 @@ export class RestDataService {
     }
 
     this.http
-      .delete<BoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions())
+      .delete<ApiBoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions())
       .subscribe(deleteBoardObserver);
   }
 
