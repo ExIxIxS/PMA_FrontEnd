@@ -17,12 +17,13 @@ export class LocalStorageService {
   public isBoards: boolean = false;
   public apiBoards: ApiBoardObj[] = [];
   public currentAppBoards: AppBoardObj[] = [];
+  public currentApiBoard: ApiBoardObj | undefined;
   public apiUsers: UserApiObj[] = [];
+  public currentBoardUsers: UserApiObj[] = [];
   public currentBoardColumns: ColumnAppObj[] = [];
   public apiColumns: ColumnApiObj[] = [];
   public apiTasks: TaskApiObj[][] = [];
   public isTaskDropDisabled: boolean = false;
-  public currentBoardUsers: UserApiObj[] = [];
 
   constructor(
     private formsService: AppFormsService,
@@ -69,21 +70,26 @@ export class LocalStorageService {
   }
 
   updateCurrentBoardUsers(boardId: string) {
+    let users: UserApiObj[] = [];
+
     if (this.currentAppBoards.length) {
       const currentBoard = this.currentAppBoards
         .find((board) => board._id === boardId);
 
       if (currentBoard) {
-        const users = [...currentBoard?.users]
+        users = [...currentBoard?.users];
         users?.push(currentBoard.owner);
-
-        this.currentBoardUsers = (users)
-          ? users
-          : [];
       }
     } else {
-      console.log('!Boards Storage is empty!');
+      if (this.apiUsers.length && this.currentApiBoard) {
+        const usersIds = [...this.currentApiBoard.users, this.currentApiBoard.owner];
+        users = usersIds
+          .map((userId) => this.apiUsers.find((user) => user._id === userId))
+          .filter((user) => user) as UserApiObj[];
+      }
     }
+
+      this.currentBoardUsers = users as UserApiObj[];
   }
 
   updateBoardsStorage() {

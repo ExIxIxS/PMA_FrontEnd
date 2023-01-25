@@ -156,6 +156,10 @@ export class RestDataService {
 
   }
 
+  getBoard(boardId: string) {
+    return  this.http.get<ApiBoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions());
+  }
+
   getBoards() {
     return  this.http.get<ApiBoardObj[]>(REST_URL + 'boards', this.getHttpOptions());
   }

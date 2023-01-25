@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption, ColumnTitleInputObj, NewColumnApiObj } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption, ColumnTitleInputObj, NewColumnApiObj, ApiBoardObj, UserApiObj } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -33,6 +33,7 @@ export class BoardContentComponent {
   ) {
     this.localStorageService.clearColumns();
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
+    this.updateBoardUsers();
     this.createBoardColumns();
   }
 
@@ -46,6 +47,33 @@ export class BoardContentComponent {
 
   set appColumns(columns: ColumnAppObj[]) {
     this.localStorageService.currentBoardColumns = columns;
+  }
+
+  updateBoardUsers() {
+    if (this.localStorageService.currentAppBoards.length) {
+      this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
+    } else {
+      const updateBoardUsersObserver = {
+        next: (apiObj: ApiBoardObj | UserApiObj[]) => {
+          if (apiObj.hasOwnProperty('length') ) {
+            this.localStorageService.apiUsers = apiObj as UserApiObj[];
+          } else {
+            this.localStorageService.currentApiBoard = apiObj as ApiBoardObj;
+          }
+        },
+        error: (err: Error) => {
+          this.errorHandlerService.handleError(err)
+        },
+        complete: () => {
+          this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
+        }
+      }
+
+      merge(this.restAPI.getBoard(this.currentBoardId),
+        this.restAPI.getUsers()
+      ).subscribe(updateBoardUsersObserver);
+
+    }
   }
 
   dropColumn(event: CdkDragDrop<ColumnAppObj[]>): void {
@@ -170,7 +198,6 @@ export class BoardContentComponent {
 
   createTask(columnId: string) {
     if (columnId) {
-      this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
       const newTask: NewTaskOptions =
         {
           boardId: this.currentBoardId,
@@ -197,11 +224,6 @@ export class BoardContentComponent {
     this.confirmationService.openDialog({type: 'deleteTask', deletedTask: deletedTaskOption})
   }
 
-  printElement(event: any, titleInput: any) {
-    console.log(event);
-    console.log(titleInput);
-  }
-
   activateTitleInput(input: HTMLInputElement, column: ColumnAppObj) {
     column.titleFormControl.enable();
     input.focus();
@@ -211,8 +233,6 @@ export class BoardContentComponent {
     const formControl = column.titleFormControl;
     if (formControl.valid) {
       setTimeout(()=> {
-        console.log((formControl.untouched) ? 'untouched' : 'touched');
-        console.log(formControl.value === column.title);
         if (formControl.untouched || formControl.pristine) {
           formControl.disable();
         }
@@ -242,7 +262,6 @@ export class BoardContentComponent {
       formControl.markAsPristine();
     }
 
-    console.log((formControl.untouched) ? 'untouched' : 'touched');
   }
 
   restoreTitleInputValue(column: ColumnAppObj) {
