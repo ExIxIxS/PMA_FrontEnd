@@ -116,6 +116,7 @@ export class RestDataService {
         console.log('Board poasted');
         console.log(boardObj);
         this.updateBoardsStorage();
+        this.router.navigateByUrl(`boards/${boardObj._id}`);;
       },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err)
