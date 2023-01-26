@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
-import { FormConrolTypes } from './app.interfeces';
+import { FormConrolTypes, TaskApiObj } from './app.interfeces';
+import { LocalStorageService } from './localStorage.service';
 
-type FormGroupTypes = 'newTask'
+type FormGroupTypes = 'taskForm'
                     | 'singIn'
                     | 'singUp';
 
@@ -64,13 +65,22 @@ export class AppFormsService {
     return formControl;
   }
 
-  getNewFormGroup(type: FormGroupTypes): FormGroup {
+  getNewFormGroup(type: FormGroupTypes, sourceTask?: TaskApiObj | null, executorName?: string): FormGroup {
     switch(type) {
-      case 'newTask': {
+      case 'taskForm': {
+        const title = (sourceTask)
+          ? sourceTask.title
+          : '';
+        const description = (sourceTask)
+          ? sourceTask.description
+          : '';
+        const executor = (executorName)
+          ? executorName
+          : '';
         return new FormGroup({
-          taskTitle: this.getNewFormControl('taskTitle'),
-          taskDescription: this.getNewFormControl('taskDescription'),
-          taskExecutor: this.getNewFormControl('taskExecutor'),
+          taskTitle: this.getNewFormControl('taskTitle', title),
+          taskDescription: this.getNewFormControl('taskDescription', description),
+          taskExecutor: this.getNewFormControl('taskExecutor', executor),
         })
       }
       case 'singIn': {

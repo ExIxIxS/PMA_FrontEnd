@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
-import { FormConrolTypes } from '../app.interfeces';
+import { FormConrolTypes, UserApiObj } from '../app.interfeces';
 import { AppFormsService } from '../app-forms.service';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-form-new-task',
@@ -12,8 +13,7 @@ import { AppFormsService } from '../app-forms.service';
 })
 export class FormNewTaskComponent {
   hide = true;
-
-  checkoutForm = this.formService.getNewFormGroup('newTask');
+  checkoutForm = this.getCheckoutForm();
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -25,23 +25,45 @@ export class FormNewTaskComponent {
     return this.localStorageService.currentBoardUsers;
   }
 
+  getCheckoutForm() {
+    const currentTask = this.confirmationService.editableTask;
+
+    if (currentTask) {
+      const executorName = this.localStorageService.getCurrentBoardUserById(currentTask.users[0])?.name
+      return this.formService.getNewFormGroup('taskForm', currentTask, executorName);
+    }
+    return this.formService.getNewFormGroup('taskForm');
+  }
+
   getErrorMessage(optionName: FormConrolTypes) {
     return this.formService.getErrorMessage(this.checkoutForm, optionName)
   };
 
-  checkInput(): void {
+  checkInput(event?: MatSelectChange): void {
+    let executor: UserApiObj | undefined;
+
+    if (event) {
+      const indexArr = Object.entries(event.source._keyManager).find((propArr) => propArr[0] === '_activeItemIndex');
+      if (indexArr) {
+        const valueIndex = indexArr[1];
+        executor = this.availableUsers[valueIndex]
+      }
+
+    }
     this.confirmationService.isConfirmValid = this.checkoutForm.valid;
     const title = this.checkoutForm.controls['taskTitle'].value;
-    const executor = this.checkoutForm.controls['taskExecutor'].value;
 
-    if (this.checkoutForm.valid && title && executor) {
+    if (this.checkoutForm.valid && title) {
       this.confirmationService.newTaskTitle = title;
 
       const taskDescription = this.checkoutForm.controls['taskDescription'].value;
       this.confirmationService.newTaskDescription = (taskDescription)
         ? taskDescription
         : 'without description';
-      this.confirmationService.newTaskExecutor = executor;
+
+      if (executor) {
+        this.confirmationService.newTaskExecutor = executor;
+      }
     }
   }
 

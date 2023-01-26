@@ -6,8 +6,8 @@ import { ErrorHandlerService } from './errorHandler.service';
 
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
-import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, HandleConfirmOptions, NewBoardObj, NewColumnOption, NewTaskObj,
-          NewTaskOptions, OpenDialogArgs, TaskDeletionOptions } from './app.interfeces';
+import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, EditableTask, HandleConfirmOptions, NewBoardObj, NewColumnOption, NewTaskObj,
+          NewTaskOptions, OpenDialogArgs, TaskApiObj, TaskDeletionOptions, UserApiObj } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 
 
@@ -25,7 +25,8 @@ export class ConfirmationService {
   newColumnTitle: string | undefined;
   newTaskTitle: string | undefined;
   newTaskDescription: string | undefined;
-  newTaskExecutor: string | undefined;
+  newTaskExecutor: UserApiObj | undefined;
+  editableTask: TaskApiObj | undefined | null;
 
   constructor(public dialog: MatDialog,
               private restAPI: RestDataService,
@@ -35,13 +36,12 @@ export class ConfirmationService {
       this.isConfirmValid = false;
   }
 
-
   openDialog({type = 'default', ...rest}: OpenDialogArgs): void {
     let handleOptions: HandleConfirmOptions;
-    const dialogRef = this.dialog.open(DialogPopupComponent);
     this.type = type;
     this.title = this.getTitle();
     this.isConfirmValid = false;
+    this.editableTask = null;
 
     switch(this.type) {
       case 'createBoard':
@@ -54,6 +54,12 @@ export class ConfirmationService {
       case 'createTask':
         if (rest.newTask) {
           handleOptions = rest.newTask;
+        };
+        break;
+      case 'editTask':
+        if (rest.editableTask) {
+          this.editableTask = rest.editableTask;
+          handleOptions = rest.editableTask;
         };
         break;
       case 'deleteBoard': {
@@ -89,6 +95,8 @@ export class ConfirmationService {
       default:
         break;
     }
+
+    const dialogRef = this.dialog.open(DialogPopupComponent);
 
     dialogRef
       .afterClosed()
@@ -130,7 +138,7 @@ export class ConfirmationService {
                 order: taskOptions.order,
                 description: this.newTaskDescription as string,
                 userId: taskOptions.userId,
-                users: [this.newTaskExecutor],
+                users: [this.newTaskExecutor._id],
               }
             console.log('Create task!')
             this.restAPI.createTask(taskOptions.boardId, taskOptions.columnId, newTaskObj);
@@ -140,30 +148,51 @@ export class ConfirmationService {
               .handleError(new Error('Application: "Initial values Error"'))
           }
           break;
-      case 'deleteBoard':
-        if (this.deletedBoard) {
-          console.log('Delete the board!!!')
-          this.restAPI.deleteBoard(this.deletedBoard.boardId)
-        };
-        break;
-      case 'deleteUser':
-        console.log(this.localStorageService.currentUserId)
-        if (this.localStorageService.currentUserId) {
-          console.log('Delete the user!!!')
-            this.restAPI.deleteCurentUser();
+          case 'editTask':
+            console.log(handleOptions, this.newTaskTitle, this.newTaskExecutor)
+            if (handleOptions  && this.newTaskTitle) {
+              const currentTask = handleOptions as TaskApiObj;
+              const newTaskObj: EditableTask =
+                {
+                  title: this.newTaskTitle,
+                  order: currentTask.order,
+                  description: this.newTaskDescription as string,
+                  columnId: currentTask.columnId,
+                  userId: currentTask.userId,
+                  users: [(this.newTaskExecutor) ? this.newTaskExecutor._id : currentTask.users[0]],
+                }
+              console.log('Edit task!')
+              this.restAPI.updateTask(currentTask.boardId, currentTask._id, newTaskObj);
+
+            } else {
+              this.errorHandlerService
+                .handleError(new Error('Application: "Initial values Error"'))
+            }
+            break;
+        case 'deleteBoard':
+          if (this.deletedBoard) {
+            console.log('Delete the board!!!')
+            this.restAPI.deleteBoard(this.deletedBoard.boardId)
           };
           break;
-      case 'deleteColumn': {
-        this.restAPI.deleteColumn(handleOptions as DeletedColumnOption);
-        break;
+        case 'deleteUser':
+          console.log(this.localStorageService.currentUserId)
+          if (this.localStorageService.currentUserId) {
+            console.log('Delete the user!!!')
+              this.restAPI.deleteCurentUser();
+            };
+            break;
+        case 'deleteColumn': {
+          this.restAPI.deleteColumn(handleOptions as DeletedColumnOption);
+          break;
+        }
+        case 'deleteTask': {
+          this.restAPI.deleteTask(handleOptions as TaskDeletionOptions);
+          break;
+        }
+        default:
+          break;
       }
-      case 'deleteTask': {
-        this.restAPI.deleteTask(handleOptions as TaskDeletionOptions);
-        break;
-      }
-      default:
-        break;
-    }
   }
 
   getTitle() {
@@ -174,6 +203,8 @@ export class ConfirmationService {
         return 'Create a new column';
       case 'createTask':
         return 'Create a new task';
+      case 'editTask':
+          return 'Edit task';
       case 'deleteBoard':
         return 'Board deletion';
       case 'deleteBoard':

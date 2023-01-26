@@ -50,14 +50,18 @@
                 (cdkDropListDropped)="dropTask($event, column._id)"
                 [cdkDropListDisabled]="isTaskDropDisabled">
 
-                <div class="list-item" *ngFor="let task of column.tasks" cdkDrag>
+                <div class="list-item"
+                    *ngFor="let task of column.tasks"
+                    cdkDrag
+                    (click)="editTask($event, task)">
+
                     <h3>{{task.title}} --> {{task.order}}</h3>
                     <h4>Description: {{task.description}}</h4>
                     <h4>Current task executor:</h4>
                     <p *ngFor="let user of task.users">{{user}}</p>
 
                     <button mat-flat-button
-                    class="delete-column-button"
+                    class="delete-task-button"
                     (click)="deleteTask(task._id, column._id)">
                         <mat-icon>delete_forever</mat-icon>
                     </button>

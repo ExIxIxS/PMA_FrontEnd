@@ -7,6 +7,8 @@
 
   <app-form-new-task *ngSwitchCase="'createTask'"></app-form-new-task>
 
+  <app-form-new-task *ngSwitchCase="'editTask'"></app-form-new-task>
+
   <div *ngSwitchCase="'deleteBoard'">
     <div *ngIf="isRightToDelete">
       <p>Board title: "{{boardTitle}}"</p>

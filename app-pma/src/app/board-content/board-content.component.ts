@@ -269,4 +269,14 @@ export class BoardContentComponent {
     formControl.markAsPristine();
   }
 
+  editTask(event: Event, task: TaskApiObj) {
+    if (event.target) {
+      if (!(event.target as HTMLElement).classList.contains('mat-mdc-button-touch-target')) {
+        console.log(`Edit task ${task.title}`);
+        console.log(task);
+        this.confirmationService.openDialog({type: 'editTask', editableTask: task});
+      }
+    }
+  }
+
 }

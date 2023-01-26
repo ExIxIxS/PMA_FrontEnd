@@ -9,7 +9,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
 import { TokenObj, UserApiObj, NewBoardObj, ApiBoardObj, ColumnApiObj, TaskApiObj,
-        NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, DeletedTask, TaskDeletionOptions, } from './app.interfeces';
+        NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, DeletedTask, TaskDeletionOptions, EditableTask, } from './app.interfeces';
 
 //  const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
@@ -367,7 +367,6 @@ export class RestDataService {
       },
     }
 
-
     if (deletedTask) {
       this.http
         .delete<TaskApiObj>(`${REST_URL}boards/${deletedTask.boardId}/columns/${deletedTask.columnId}/tasks/${deletedTask.taskId}`, this.getHttpOptions())
@@ -397,6 +396,23 @@ export class RestDataService {
 
     this.updateColumn(boardId, columnId, newColumn)
       .subscribe(updateColumnObserver);
+  }
+
+  updateTask(boardId: string, taskId: string, taskObj: EditableTask) {
+    const updateTaskObserver = {
+      next: (task: TaskApiObj) => {
+        console.log('Task updated');
+        console.log(task);
+        this.localStorageService.updateBoardTasks([task]);
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    this.http
+    .put<TaskApiObj>(`${REST_URL}boards/${boardId}/columns/${taskObj.columnId}/tasks/${taskId}`, taskObj, this.getHttpOptions())
+    .subscribe(updateTaskObserver);
   }
 
 }

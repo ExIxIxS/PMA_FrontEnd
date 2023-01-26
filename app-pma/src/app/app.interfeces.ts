@@ -107,6 +107,10 @@ interface NewTaskObj {
   users: string[],
 }
 
+interface EditableTask extends NewTaskObj {
+  columnId: string,
+}
+
 interface TaskSetApiObj {
   _id: string,
   order: number,
@@ -140,6 +144,7 @@ interface OpenDialogArgs {
   newTask?: NewTaskOptions,
   deletedTask?: DeletedTask,
   updatedTasks?: TaskSetApiObj[],
+  editableTask?: TaskApiObj,
 }
 
 interface DeletedBoard {
@@ -162,7 +167,8 @@ type ConfirmationTypes = 'default'
                         | 'createColumn'
                         | 'deleteColumn'
                         | 'createTask'
-                        | 'deleteTask';
+                        | 'deleteTask'
+                        | 'editTask';
 
 type FormConrolTypes = 'columnTitle'
                       | 'boardTitle'
@@ -202,4 +208,5 @@ export {
   DeletedBoard,
   HandleConfirmOptions,
   TaskDeletionOptions,
+  EditableTask
 }

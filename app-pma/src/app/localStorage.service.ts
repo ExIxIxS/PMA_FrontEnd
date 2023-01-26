@@ -69,6 +69,13 @@ export class LocalStorageService {
     return this.currentBoardUsers.map((user) => user.name);
   }
 
+  getCurrentBoardUserById(userId: string) {
+    if (this.currentBoardUsers.length) {
+      return this.currentBoardUsers.find((user) => user._id === userId);
+    }
+    return;
+  }
+
   updateCurrentBoardUsers(boardId: string) {
     let users: UserApiObj[] = [];
 
