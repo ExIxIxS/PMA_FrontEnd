@@ -26,7 +26,7 @@ export class SignupPageComponent {
   submitSignUp(): void {
     if (this.checkoutForm.valid) {
       const formControls = this.checkoutForm.controls;
-      const name = formControls['name'].value;
+      const name = formControls['userName'].value;
       const login = formControls['login'].value;
       const pass = formControls['password'].value;
 
