@@ -9,7 +9,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
 import { TokenObj, UserApiObj, NewBoardObj, ApiBoardObj, ColumnApiObj, TaskApiObj,
-          PointApiObj, NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, TasksSetConfig, DeletedTaskOption, } from './app.interfeces';
+        NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, DeletedTask, TaskDeletionOptions, } from './app.interfeces';
 
 //  const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
@@ -313,56 +313,59 @@ export class RestDataService {
     .subscribe(createTaskObserver);
   }
 
-  updateTaskSet(tasksSetsConfigs: TasksSetConfig[], isDeletion: boolean = false) {
-    const columnIds = tasksSetsConfigs.map((config) => config.columnId);
+  updateTaskSet(tasksSetsConfig: TaskSetApiObj[]) {
     this.localStorageService.isTaskDropDisabled = true;
 
-    tasksSetsConfigs.forEach((config, index) => {
-      const columnId = config.columnId;
-      const taskColumn = config.tasksColumn;
+    console.log('TaskDrop Disabled');
+    console.log('Api Tasks before REST updating -->');
+    console.log(JSON.parse(JSON.stringify(this.localStorageService.apiTasks)));
+    console.log('Update tasksets -->');
+    console.log(tasksSetsConfig);
 
-      if (taskColumn.length) {
-        const updateOrderObserver = {
-          next: (tasks: TaskApiObj[]) => {
-            console.log('Tasks updated:');
-            this.localStorageService.updateApiTasks(columnId, tasks);
-            this.localStorageService.updateBoardAppTasks(this.localStorageService.currentBoardColumns, columnIds);
+    if (tasksSetsConfig.length) {
+      const updateOrderObserver = {
+        next: (tasks: TaskApiObj[]) => {
+          console.log(`Tasks updated`);
+          console.log(tasks);
 
-            if (isDeletion) {
-              this.localStorageService.updateBoardAppColumns();
-            }
+          if (tasks.length) {
+            this.localStorageService.updateBoardTasks(tasks);
+          }
+          this.localStorageService.isTaskDropDisabled = false;
+            console.log('TaskDrop Enabled');
 
-            if (index === tasksSetsConfigs.length - 1) {
-              this.localStorageService.isTaskDropDisabled = false;
-            }
-          },
-          error: (err: Error) => {
-            this.errorHandlerService.handleError(err);
-            //  this.appControlService.refreshPage();
-          },
-        }
+        },
+        error: (err: Error) => {
+          this.errorHandlerService.handleError(err);
+          //  this.appControlService.refreshPage();
+        },
+      }
 
       this.http
-        .patch<TaskApiObj[]>(`${REST_URL}tasksSet`, taskColumn, this.getHttpOptions())
+        .patch<TaskApiObj[]>(`${REST_URL}tasksSet`, tasksSetsConfig, this.getHttpOptions())
         .subscribe(updateOrderObserver);
 
-      } else {
-        this.localStorageService.updateApiTasks(columnId, [])
       }
-    });
 
   }
 
-  deleteTask(deletedTask: DeletedTaskOption): void {
+  deleteTask(deletionOptions: TaskDeletionOptions): void {
+    const deletedTask = deletionOptions.deletedTask;
+    const updatedTasks = deletionOptions.updatedTasks;
+
     const deleteTaskObserver = {
       next: (taskObj: TaskApiObj) => {
         console.log('Task removed');
         this.localStorageService.deleteTask(taskObj);
+        if (updatedTasks) {
+          this.updateTaskSet(updatedTasks);
+        }
       },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err)
       },
     }
+
 
     if (deletedTask) {
       this.http

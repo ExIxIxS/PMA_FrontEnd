@@ -118,14 +118,41 @@ interface TasksSetConfig {
   tasksColumn: TaskSetApiObj[],
 }
 
-interface DeletedTaskOption extends DeletedColumnOption {
+interface DeletedTask extends DeletedColumnOption {
   taskId: string,
+}
+
+interface TaskDeletionOptions {
+  deletedTask: DeletedTask,
+  updatedTasks?: TaskSetApiObj[],
 }
 
 interface ColumnTitleInputObj {
   columnId: string,
   formControl: FormControl,
 }
+
+interface OpenDialogArgs {
+  type: ConfirmationTypes,
+  deletedBoard?: DeletedBoard,
+  newColumn?: NewColumn,
+  deletedColumn?: DeletedColumnOption,
+  newTask?: NewTaskOptions,
+  deletedTask?: DeletedTask,
+  updatedTasks?: TaskSetApiObj[],
+}
+
+interface DeletedBoard {
+  boardId: string,
+  boardTitle: string,
+  owner: string,
+  rightToDelete: boolean
+}
+
+type HandleConfirmOptions = NewColumn
+                            | DeletedColumnOption
+                            | NewTaskOptions
+                            | TaskDeletionOptions;
 
 
 type ConfirmationTypes = 'default'
@@ -168,7 +195,11 @@ export {
   NewTaskObj,
   TaskSetApiObj,
   TasksSetConfig,
-  DeletedTaskOption,
+  DeletedTask,
   ColumnTitleInputObj,
-  FormConrolTypes
+  FormConrolTypes,
+  OpenDialogArgs,
+  DeletedBoard,
+  HandleConfirmOptions,
+  TaskDeletionOptions,
 }

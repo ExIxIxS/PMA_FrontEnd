@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTaskOption, ColumnTitleInputObj, NewColumnApiObj, ApiBoardObj, UserApiObj } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTask, ColumnTitleInputObj, NewColumnApiObj, ApiBoardObj, UserApiObj, OpenDialogArgs } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -85,51 +85,60 @@ export class BoardContentComponent {
     };
   }
 
+  private getTasksSet(container: CdkDropList<TaskApiObj[]> | TaskApiObj[], newColumnId: string = ''): TaskSetApiObj[] {
+    const sourceObj = (container instanceof CdkDropList)
+      ? container.data
+      : container;
+
+    return sourceObj.map((task, index) => {
+        return {
+                _id: task._id,
+                order: index,
+                columnId: (newColumnId) ? newColumnId : task.columnId,
+              }
+      });
+  }
+
+  deleteTask(taskId: string, columnId: string): void {
+    console.log('Delete task with id: ' + taskId);
+    const deletedTaskObj: DeletedTask = {
+      taskId: taskId,
+      columnId: columnId,
+      boardId: this.currentBoardId,
+    }
+
+    const targetColumn = this.localStorageService.currentBoardColumns.find((column) => column._id === columnId);
+    const updatedColumnTasks = targetColumn?.tasks.filter((task) => task._id !== taskId);
+    const deleteOptions: OpenDialogArgs = {type: 'deleteTask', deletedTask: deletedTaskObj};
+
+    if (updatedColumnTasks?.length) {
+      deleteOptions.updatedTasks = this.getTasksSet(updatedColumnTasks);
+    }
+    this.confirmationService.openDialog(deleteOptions)
+  }
+
   dropTask(event: CdkDragDrop<TaskApiObj[]>, currentColumnId: string): void {
-    function getTasksSet(container: typeof event.container, newColumnId: string = ''): TaskSetApiObj[] {
-      return container.data.map((task, index) => {
-          return {
-                  _id: task._id,
-                  order: index,
-                  columnId: (newColumnId) ? newColumnId : task.columnId,
-                }
-        });
-    }
+    console.log('Api Tasks before moving -->');
+    console.log(JSON.parse(JSON.stringify(this.localStorageService.apiTasks)));
 
-    function getColumnId(container: typeof event.container): string | undefined {
-      if (container.data.length) {
-        return container.data[0].columnId;
-      }
-
-      return;
-    }
+    let taskSet: TaskSetApiObj[] = [];
 
     if (event.previousContainer === event.container) {
       if (event.previousIndex !== event.currentIndex) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-
-        const tasksSet = getTasksSet(event.container);
-        const columnId = getColumnId(event.container);
-        if (columnId && tasksSet) {
-          const updateConfigs = [{columnId: columnId, tasksColumn: tasksSet}];
-          this.restAPI.updateTaskSet(updateConfigs);
-        }
+        taskSet = this.getTasksSet(event.container);
       }
     } else {
-      const prevColumnId = getColumnId(event.previousContainer);
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex);
 
-      if (prevColumnId && prevColumnId) {
-        const updateConfigs = [
-          {columnId: prevColumnId, tasksColumn: getTasksSet(event.previousContainer)},
-          {columnId: currentColumnId, tasksColumn: getTasksSet(event.container, currentColumnId)}
-        ];
-        this.restAPI.updateTaskSet(updateConfigs);
-      }
+      taskSet = [...this.getTasksSet(event.previousContainer), ...this.getTasksSet(event.container, currentColumnId)];
+    }
 
+    if (taskSet) {
+      this.restAPI.updateTaskSet(taskSet);
     }
   }
 
@@ -153,13 +162,12 @@ export class BoardContentComponent {
     if (this.localStorageService.apiColumns.length) {
       const tasksObserver = {
         next: (tasks: TaskApiObj[]) => {
-          this.localStorageService.apiTasks.push(tasks);
+          this.localStorageService.apiTasks.push(...tasks);
         },
         error: (err: Error) => {
           this.errorHandlerService.handleError(err)
         },
         complete: () => {
-          this.localStorageService.trimApiTasks();
           this.localStorageService.updateBoardAppColumns();
         }
       }
@@ -212,16 +220,6 @@ export class BoardContentComponent {
 
   get isTaskDropDisabled() {
     return this.localStorageService.isTaskDropDisabled;
-  }
-
-  deleteTask(taskId: string, columnId: string): void {
-    console.log('Delete task with id: ' + taskId);
-    const deletedTaskOption: DeletedTaskOption = {
-      taskId: taskId,
-      columnId: columnId,
-      boardId: this.currentBoardId,
-    }
-    this.confirmationService.openDialog({type: 'deleteTask', deletedTask: deletedTaskOption})
   }
 
   activateTitleInput(input: HTMLInputElement, column: ColumnAppObj) {

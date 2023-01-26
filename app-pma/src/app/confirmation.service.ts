@@ -6,29 +6,9 @@ import { ErrorHandlerService } from './errorHandler.service';
 
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
-import { ConfirmationTypes, DeletedColumnOption, DeletedTaskOption, NewBoardObj, NewColumn, NewColumnOption, NewTaskObj, NewTaskOptions } from './app.interfeces';
+import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, DeletedTask, HandleConfirmOptions, NewBoardObj, NewColumnOption, NewTaskObj, NewTaskOptions, OpenDialogArgs, TaskDeletionOptions } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 
-interface OpenDialogArgs {
-  type: ConfirmationTypes,
-  deletedBoard?: DeletedBoard,
-  newColumn?: NewColumn,
-  deletedColumn?: DeletedColumnOption,
-  newTask?: NewTaskOptions,
-  deletedTask?: DeletedTaskOption,
-}
-
-interface DeletedBoard {
-  boardId: string,
-  boardTitle: string,
-  owner: string,
-  rightToDelete: boolean
-}
-
-type HandleConfirmOptions = NewColumn
-                            | DeletedColumnOption
-                            | NewTaskOptions
-                            | DeletedTaskOption;
 
 @Injectable({
   providedIn: 'root'
@@ -96,7 +76,13 @@ export class ConfirmationService {
       case 'deleteTask':
         if (rest.deletedTask) {
           this.isConfirmValid = true;
-          handleOptions = rest.deletedTask;
+          handleOptions = {
+            deletedTask: rest.deletedTask
+          } as TaskDeletionOptions;
+
+          if (rest.updatedTasks) {
+            handleOptions['updatedTasks'] = rest.updatedTasks;
+          }
         };
         break;
       default:
@@ -108,7 +94,7 @@ export class ConfirmationService {
       .subscribe((result) => this.handleConfirmation(result, handleOptions));
   }
 
-  handleConfirmation(result: true | undefined | '', confirmOptions: HandleConfirmOptions) {
+  handleConfirmation(result: true | undefined | '', handleOptions: HandleConfirmOptions) {
     if (!result) {
       return;
     }
@@ -123,9 +109,9 @@ export class ConfirmationService {
         };
         break;
       case 'createColumn':
-        if (confirmOptions && this.newColumnTitle) {
+        if (handleOptions && this.newColumnTitle) {
           const columnOption = {
-            ...confirmOptions,
+            ...handleOptions,
             columnTitle: this.newColumnTitle
           }
           this.restAPI.createColumn(columnOption as NewColumnOption);
@@ -135,8 +121,8 @@ export class ConfirmationService {
         }
         break;
         case 'createTask':
-          if (confirmOptions  && this.newTaskTitle && this.newTaskExecutor) {
-            const taskOptions = confirmOptions as NewTaskOptions;
+          if (handleOptions  && this.newTaskTitle && this.newTaskExecutor) {
+            const taskOptions = handleOptions as NewTaskOptions;
             const newTaskObj: NewTaskObj =
               {
                 title: this.newTaskTitle,
@@ -167,11 +153,11 @@ export class ConfirmationService {
           };
           break;
       case 'deleteColumn': {
-        this.restAPI.deleteColumn(confirmOptions as DeletedColumnOption);
+        this.restAPI.deleteColumn(handleOptions as DeletedColumnOption);
         break;
       }
       case 'deleteTask': {
-        this.restAPI.deleteTask(confirmOptions as DeletedTaskOption);
+        this.restAPI.deleteTask(handleOptions as TaskDeletionOptions);
         break;
       }
       default:

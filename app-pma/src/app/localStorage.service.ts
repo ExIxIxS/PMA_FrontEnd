@@ -22,7 +22,7 @@ export class LocalStorageService {
   public currentBoardUsers: UserApiObj[] = [];
   public currentBoardColumns: ColumnAppObj[] = [];
   public apiColumns: ColumnApiObj[] = [];
-  public apiTasks: TaskApiObj[][] = [];
+  public apiTasks: TaskApiObj[] = [];
   public isTaskDropDisabled: boolean = false;
 
   constructor(
@@ -168,34 +168,27 @@ export class LocalStorageService {
       .sort(this.sortByOrder)
       .map((apiColumn) => this.createAppColumn(apiColumn));
 
-    this.updateBoardAppTasks(appColumns);
+    this.fillAppBoardWithTasks(appColumns);
 
     this.currentBoardColumns = appColumns;
-    console.log(this.apiColumns);
-    console.log(this.currentBoardColumns);
+    console.log('Board columns updated');
+    console.log(JSON.parse(JSON.stringify(this.apiColumns)));
+    console.log(JSON.parse(JSON.stringify(this.currentBoardColumns)));
+    console.log(JSON.parse(JSON.stringify(this.apiTasks)));
   }
 
-  updateBoardAppTasks(appColumns: ColumnAppObj[], columnIds: string[] = []): void {
-    function fillTasks(apiTasks: TaskApiObj[]) {
-      const currentColumn = appColumns
-        .find((column) => column._id === apiTasks[0].columnId);
+  fillAppBoardWithTasks(appColumns: ColumnAppObj[], columnIds: string[] = []): void {
+    const fillableColumns = (columnIds.length)
+      ? appColumns.filter((column) => columnIds.includes(column._id))
+      : appColumns;
 
-      if (currentColumn) {
-        currentColumn.tasks = apiTasks;
+    fillableColumns.forEach((column) => {
+      const columnTasks = this.apiTasks.filter((apiTask) => apiTask.columnId === column._id);
+      columnTasks.sort(this.sortByOrder);
+      if (columnTasks.length) {
+        column.tasks = columnTasks;
       }
-    }
-
-    this.trimApiTasks();
-
-    this.apiTasks
-      .forEach((apiTasks) => apiTasks
-        .sort(this.sortByOrder));
-
-    const apiTasksArr = (columnIds.length)
-      ? this.apiTasks.filter((apiTasks) => columnIds.includes(apiTasks[0].columnId))
-      : this.apiTasks;
-
-    apiTasksArr.forEach((apiTasks) => fillTasks(apiTasks));
+    });
   }
 
   deleteApiColumn(columnObj: ColumnApiObj) {
@@ -223,49 +216,57 @@ export class LocalStorageService {
   }
 
   addTask(columnId: string, taskObj: TaskApiObj) {
-    const columnTasks = this.apiTasks
-      .find((tasksColumn) => tasksColumn
-        .find((tasks) => tasks.columnId === columnId));
-
-    if (columnTasks) {
-      columnTasks.push(taskObj);
-    } else {
-      this.apiTasks.push([taskObj]);
-    }
-    this.updateBoardAppTasks(this.currentBoardColumns, [columnId]);
+    this.apiTasks.push(taskObj);
+    this.fillAppBoardWithTasks(this.currentBoardColumns, [columnId]);
 
   }
 
-  updateApiTasks(columnId: string, tasks: TaskApiObj[]): void {
-    if (tasks.length) {
-      const columnTasksIndex = this.apiTasks
-        .findIndex((columnTasks) => columnTasks[0].columnId === columnId);
-      if (columnTasksIndex >= 0) {
-        this.apiTasks.splice(columnTasksIndex, 1, tasks);
-      } else {
-        this.apiTasks.push(tasks);
+  updateBoardTasks(tasks: TaskApiObj[]): void {
+    function updateObjValues<T extends TaskApiObj>(targetObj: T, sourceObj: T) {
+      for (let key in targetObj) {
+        targetObj[key as keyof T] = sourceObj[key as keyof T];
       }
-
-    } else {
-      this.apiTasks = this.apiTasks
-        .map((columnTasks) => columnTasks
-          .filter((task) => task.columnId !== columnId));
     }
 
-    this.trimApiTasks();
-  }
+    if (tasks.length) {
+      tasks.forEach((task) => {
+        const targetTaskIndex = this.apiTasks
+            .findIndex((apiTask) => apiTask._id === task._id);
 
-  trimApiTasks() {
-    this.apiTasks = this.apiTasks.filter((columnTasks) => columnTasks.length);
+        const targetTask = this.apiTasks[targetTaskIndex] as TaskApiObj;
+
+        if (targetTask) {
+          updateObjValues(targetTask, task);
+
+          console.log('Task updated in ApiTasks');
+          console.log(task.title);
+        } else {
+          this.apiTasks.push(task);
+          const targetAppColumn = this.currentBoardColumns
+            .find((appColumn) => appColumn.tasks
+              .some((appTask) => appTask._id === task._id));
+
+          if (targetAppColumn) {
+            const targetTaskIndex = targetAppColumn.tasks
+              .findIndex((appTask) => appTask._id === task._id);
+
+            targetAppColumn.tasks[targetTaskIndex] = task;
+            console.log('Task updated in AppColumns');
+            console.log(task.title);
+          }
+        }
+      });
+    }
+
+    console.log('Updating ended');
   }
 
   deleteTask(taskObj: TaskApiObj): void {
-    const tasksColumn = this.apiTasks.find((tasks) => tasks[0].columnId === taskObj.columnId);
-    const taskIndex = tasksColumn?.findIndex((task) => task._id === taskObj._id);
+    const taskIndex = this.apiTasks.findIndex((task) => task._id === taskObj._id);
 
     if (taskIndex !== undefined && taskIndex >= 0) {
-      tasksColumn?.splice(taskIndex, 1);
-      this.updateBoardAppTasks(this.currentBoardColumns, [taskObj.columnId]);
+      this.apiTasks.splice(taskIndex, 1);
+      this.fillAppBoardWithTasks(this.currentBoardColumns, [taskObj.columnId]);
     }
   }
 
