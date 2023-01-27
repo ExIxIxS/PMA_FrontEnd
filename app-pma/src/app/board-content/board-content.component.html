@@ -58,7 +58,7 @@
                     <h3>{{task.title}} --> {{task.order}}</h3>
                     <h4>Description: {{task.description}}</h4>
                     <h4>Current task executor:</h4>
-                    <p *ngFor="let user of task.users">{{user}}</p>
+                    <p>{{getExecutorName(task)}}</p>
 
                     <button mat-flat-button
                     class="delete-task-button"

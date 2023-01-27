@@ -49,6 +49,18 @@ export class BoardContentComponent {
     this.localStorageService.currentBoardColumns = columns;
   }
 
+  getExecutorName(task: TaskApiObj): string {
+    if (task.users.length) {
+      const userObj = this.localStorageService.getCurrentBoardUserById(task.users[0]);
+      if (userObj) {
+        return userObj.name;
+      }
+    } else {
+      this.errorHandlerService.handleError(new Error(`There is no executor in task "${task.title}"`))
+    }
+    return 'unknown';
+  }
+
   updateBoardUsers() {
     if (this.localStorageService.currentAppBoards.length) {
       this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
