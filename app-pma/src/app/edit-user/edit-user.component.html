@@ -1,4 +1,89 @@
-<p>Edit Form</p>
+<form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
+  <h2>Change Name or Login</h2>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter new Name</mat-label>
+    <input matInput
+      formControlName="userName">
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('userName')}}</mat-error>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Enter new login</mat-label>
+    <input matInput formControlName="login">
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('login')}}</mat-error>
+  </mat-form-field>
+
+  <br>
+  <mat-divider></mat-divider>
+  <br>
+
+  <h2>Change Password</h2>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter a new password</mat-label>
+    <input matInput
+          [type]="hideNewPass ? 'password' : 'text'"
+          formControlName="newPassword">
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('newPassword')}}</mat-error>
+    <button mat-icon-button
+            matSuffix (click)="hideNewPass = !hideNewPass"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hideNewPass">
+      <mat-icon>{{hideNewPass ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <br>
+
+  <br>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Repeat new password</mat-label>
+    <input matInput
+          [type]="hideNewPass ? 'password' : 'text'"
+          formControlName="repeatedPassword">
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('repeatedPassword')}}</mat-error>
+    <button mat-icon-button
+            matSuffix (click)="hideNewPass = !hideNewPass"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hideNewPass">
+      <mat-icon>{{hideNewPass ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <br>
+  <mat-divider></mat-divider>
+  <br>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Enter current password</mat-label>
+    <input matInput
+          [type]="hidePass ? 'password' : 'text'"
+          formControlName="password">
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('password')}}</mat-error>
+    <button mat-icon-button
+            matSuffix (click)="hidePass = !hidePass"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePass">
+      <mat-icon>{{hideNewPass ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <br>
+
+  <button mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="isSubmitDisabled()"
+          (click)="saveChanges()">Save changes
+  </button>
+
+  <button mat-flat-button
+    color="basic"
+    (click)="cancelEditing()">Cancel
+  </button>
+</form>
 
 <button mat-fab extended color="warn" (click)="deleteUser()">
   <mat-icon>person_off</mat-icon>

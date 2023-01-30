@@ -9,6 +9,12 @@ interface TokenObj {
   token: string;
 }
 
+interface NewUserObj {
+  name: string,
+  login: string,
+  password: string,
+}
+
 interface UserApiObj {
   _id: string,
   name: string,
@@ -177,11 +183,14 @@ type FormConrolTypes = 'columnTitle'
                       | 'taskExecutor'
                       | 'login'
                       | 'password'
+                      | 'newPassword'
+                      | 'repeatedPassword'
                       | 'userName';
 
 export {
   CurUserObj,
   TokenObj,
+  NewUserObj,
   UserApiObj,
   NewBoardObj,
   ApiBoardObj,

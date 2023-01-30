@@ -30,9 +30,9 @@ export class FormNewTaskComponent {
 
     if (currentTask) {
       const executorName = this.localStorageService.getCurrentBoardUserById(currentTask.users[0])?.name
-      return this.formService.getNewFormGroup('taskForm', currentTask, executorName);
+      return this.formService.getNewFormGroup({type: 'taskForm', sourceTask: currentTask, executorName: executorName});
     }
-    return this.formService.getNewFormGroup('taskForm');
+    return this.formService.getNewFormGroup({type: 'taskForm'});
   }
 
   getErrorMessage(optionName: FormConrolTypes) {

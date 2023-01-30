@@ -9,7 +9,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
 import { TokenObj, UserApiObj, NewBoardObj, ApiBoardObj, ColumnApiObj, TaskApiObj,
-        NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, DeletedTask, TaskDeletionOptions, EditableTask, } from './app.interfeces';
+        NewColumnOption, NewColumnApiObj, DeletedColumnOption, NewTaskObj, TaskSetApiObj, DeletedTask, TaskDeletionOptions, EditableTask, NewUserObj, } from './app.interfeces';
 
 //  const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
@@ -51,7 +51,7 @@ export class RestDataService {
     this.getUsers().subscribe(autoSingInObserver);
   }
 
-  signIn(login: string, pass: string): void {
+  signIn(login: string, pass: string, ): void {
     const singInObserver = {
       next: (obj: TokenObj) => {
         const currentUser = {
@@ -71,7 +71,7 @@ export class RestDataService {
   };
 
   signUp(name: string, login: string, pass: string): void {
-    const singUpObj = {
+    const singUpObj: NewUserObj = {
       name: name,
       login: login,
       password: pass,
@@ -89,6 +89,10 @@ export class RestDataService {
     this.http
       .post<UserApiObj>(REST_URL + 'auth/signup', singUpObj)
       .subscribe(singUpObserver);
+  }
+
+  getUser(userId: string) {
+    return  this.http.get<UserApiObj>(`${REST_URL}users/${userId}`, this.getHttpOptions());
   }
 
   getUsers() {
@@ -413,6 +417,25 @@ export class RestDataService {
     this.http
     .put<TaskApiObj>(`${REST_URL}boards/${boardId}/columns/${taskObj.columnId}/tasks/${taskId}`, taskObj, this.getHttpOptions())
     .subscribe(updateTaskObserver);
+  }
+
+  updateUser(newUser: NewUserObj, additionalHandler: Function) {
+    const userId = this.localStorageService.currentUserId;
+
+    const updateUserObserver = {
+      next: (user: UserApiObj) => {
+        console.log('User updated');
+        console.log(user);
+        additionalHandler(user.name, user.login);
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    this.http
+    .put<UserApiObj>(`${REST_URL}users/${userId}`, newUser, this.getHttpOptions())
+    .subscribe(updateUserObserver);
   }
 
 }

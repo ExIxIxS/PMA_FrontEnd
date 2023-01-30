@@ -12,7 +12,7 @@ import { FormConrolTypes } from '../app.interfeces';
 export class SignupPageComponent {
   hide = true;
 
-  checkoutForm = this.formService.getNewFormGroup('singUp');
+  checkoutForm = this.formService.getNewFormGroup({type: 'singUp'});
 
   constructor(
     private restAPI : RestDataService,
