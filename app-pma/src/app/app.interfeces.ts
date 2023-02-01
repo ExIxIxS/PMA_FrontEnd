@@ -151,6 +151,7 @@ interface OpenDialogArgs {
   deletedTask?: DeletedTask,
   updatedTasks?: TaskSetApiObj[],
   editableTask?: TaskApiObj,
+  additionalHandler?: Function,
 }
 
 interface DeletedBoard {
@@ -158,6 +159,18 @@ interface DeletedBoard {
   boardTitle: string,
   owner: string,
   rightToDelete: boolean
+}
+
+interface SearchTaskObj {
+  apiTask: TaskApiObj,
+  description: string,
+  owner: string,
+  executor: string,
+};
+
+interface HandleConfirmObj {
+  options: HandleConfirmOptions,
+  callBack?: Function,
 }
 
 type HandleConfirmOptions = NewColumn
@@ -185,7 +198,8 @@ type FormConrolTypes = 'columnTitle'
                       | 'password'
                       | 'newPassword'
                       | 'repeatedPassword'
-                      | 'userName';
+                      | 'userName'
+                      | 'searchRequest';
 
 export {
   CurUserObj,
@@ -217,5 +231,7 @@ export {
   DeletedBoard,
   HandleConfirmOptions,
   TaskDeletionOptions,
-  EditableTask
+  EditableTask,
+  SearchTaskObj,
+  HandleConfirmObj,
 }

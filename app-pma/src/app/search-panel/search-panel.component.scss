@@ -1,0 +1,27 @@
+.search-panel {
+  width: 50%;
+  min-width: 320px;
+  margin: 20px auto 0px auto;
+}
+
+.search-panel.mat-expanded {
+  position: absolute;
+  top: 100px;
+  z-index: 10;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: rgba(255, 254, 254, 0.5);
+}
+
+.panel-header {
+  height: 120px;
+}
+
+.search-field {
+  width: 100%;
+  margin: 20px auto 30px auto;
+}
+
+.task-card:hover {
+  cursor: pointer;
+}

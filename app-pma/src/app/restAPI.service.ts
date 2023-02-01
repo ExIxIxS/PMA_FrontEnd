@@ -402,12 +402,15 @@ export class RestDataService {
       .subscribe(updateColumnObserver);
   }
 
-  updateTask(boardId: string, taskId: string, taskObj: EditableTask) {
+  updateTask(boardId: string, taskId: string, taskObj: EditableTask, additionalHandler?: Function) {
     const updateTaskObserver = {
       next: (task: TaskApiObj) => {
         console.log('Task updated');
         console.log(task);
         this.localStorageService.updateBoardTasks([task]);
+        if (additionalHandler) {
+          additionalHandler();
+        }
       },
       error: (err: Error) => {
         this.errorHandlerService.handleError(err)
@@ -436,6 +439,52 @@ export class RestDataService {
     this.http
     .put<UserApiObj>(`${REST_URL}users/${userId}`, newUser, this.getHttpOptions())
     .subscribe(updateUserObserver);
+  }
+
+  search(rawRequest: string) {
+    const searchRequest = this.getSearchRequest(rawRequest);
+
+    return this.http
+      .get<TaskApiObj[]>(`${REST_URL}tasksSet?search=${searchRequest}`, this.getHttpOptions());
+  }
+
+  getSearchRequest(str: string) {
+    const request = str
+      .trim()
+      .split(' ')
+      .filter((word) => !!word)
+      .join('%20');
+
+    return request;
+  }
+
+  getBoardUsers(boardId: string, completeCallBack: Function) {
+    if (boardId) {
+      let boardObj: ApiBoardObj;
+      let users: UserApiObj[];
+      const getBoardUsersObserver = {
+        next: (result: ApiBoardObj | UserApiObj[]) => {
+          if (result.hasOwnProperty('length')) {
+            users = result as UserApiObj[];
+          } else {
+            boardObj = result as ApiBoardObj;
+          }
+        },
+        error: (err: Error) => {
+          this.errorHandlerService.handleError(err)
+        },
+        complete: () => {
+          if (completeCallBack) {
+            const boardUsersId = [boardObj.owner, ...boardObj.users];
+            const boardUsers = users.filter((user) => boardUsersId.includes(user._id));
+            completeCallBack(boardUsers);
+          }
+        }
+      }
+
+      merge(this.getBoard(boardId), this.getUsers())
+        .subscribe(getBoardUsersObserver);
+    }
   }
 
 }

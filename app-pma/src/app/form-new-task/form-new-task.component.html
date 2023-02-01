@@ -11,8 +11,7 @@
       <mat-label>Select an excecutor</mat-label>
       <mat-select (selectionChange)="checkInput($event)" formControlName="taskExecutor">
         <mat-option *ngFor="let user of availableUsers"
-                    [value]="user.name"
-                    aria-label="user.name">
+                    [value]="user.name">
           {{user.name}}
         </mat-option>
       </mat-select>

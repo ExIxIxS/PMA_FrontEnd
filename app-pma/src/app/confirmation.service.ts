@@ -6,7 +6,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
-import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, EditableTask, HandleConfirmOptions, NewBoardObj, NewColumnOption, NewTaskObj,
+import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, EditableTask, HandleConfirmObj, HandleConfirmOptions, NewBoardObj, NewColumnOption, NewTaskObj,
           NewTaskOptions, OpenDialogArgs, TaskApiObj, TaskDeletionOptions, UserApiObj } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 
@@ -37,7 +37,7 @@ export class ConfirmationService {
   }
 
   openDialog({type = 'default', ...rest}: OpenDialogArgs): void {
-    let handleOptions: HandleConfirmOptions;
+    let handleOptions: HandleConfirmObj;
     this.type = type;
     this.title = this.getTitle();
     this.isConfirmValid = false;
@@ -48,19 +48,23 @@ export class ConfirmationService {
         break;
       case 'createColumn':
         if (rest.newColumn) {
-          handleOptions = rest.newColumn;
+          handleOptions = {options: rest.newColumn};
         };
         break;
       case 'createTask':
         if (rest.newTask) {
-          handleOptions = rest.newTask;
+          handleOptions = {options: rest.newTask};
         };
         break;
       case 'editTask':
         if (rest.editableTask) {
           this.editableTask = rest.editableTask;
-          handleOptions = rest.editableTask;
+          handleOptions = {
+            options: rest.editableTask,
+            callBack: rest.additionalHandler
+          };
         };
+
         break;
       case 'deleteBoard': {
         if (rest.deletedBoard) {
@@ -77,19 +81,18 @@ export class ConfirmationService {
       case 'deleteColumn':
         if (rest.deletedColumn) {
           this.isConfirmValid = true;
-          handleOptions = rest.deletedColumn;
+          handleOptions = {options: rest.deletedColumn};
         }
         break;
       case 'deleteTask':
         if (rest.deletedTask) {
           this.isConfirmValid = true;
           handleOptions = {
-            deletedTask: rest.deletedTask
-          } as TaskDeletionOptions;
-
-          if (rest.updatedTasks) {
-            handleOptions['updatedTasks'] = rest.updatedTasks;
-          }
+            options: {
+              deletedTask: rest.deletedTask,
+              updatedTasks: rest.updatedTasks,
+            } as TaskDeletionOptions
+          };
         };
         break;
       default:
@@ -103,7 +106,7 @@ export class ConfirmationService {
       .subscribe((result) => this.handleConfirmation(result, handleOptions));
   }
 
-  handleConfirmation(result: true | undefined | '', handleOptions: HandleConfirmOptions) {
+  handleConfirmation(result: true | undefined | '', handleOptions: HandleConfirmObj) {
     if (!result) {
       return;
     }
@@ -120,7 +123,7 @@ export class ConfirmationService {
       case 'createColumn':
         if (handleOptions && this.newColumnTitle) {
           const columnOption = {
-            ...handleOptions,
+            ...handleOptions.options,
             columnTitle: this.newColumnTitle
           }
           this.restAPI.createColumn(columnOption as NewColumnOption);
@@ -131,7 +134,7 @@ export class ConfirmationService {
         break;
         case 'createTask':
           if (handleOptions  && this.newTaskTitle && this.newTaskExecutor) {
-            const taskOptions = handleOptions as NewTaskOptions;
+            const taskOptions = handleOptions.options as NewTaskOptions;
             const newTaskObj: NewTaskObj =
               {
                 title: this.newTaskTitle,
@@ -151,7 +154,7 @@ export class ConfirmationService {
           case 'editTask':
             console.log(handleOptions, this.newTaskTitle, this.newTaskExecutor)
             if (handleOptions  && this.newTaskTitle) {
-              const currentTask = handleOptions as TaskApiObj;
+              const currentTask = handleOptions.options as TaskApiObj;
               const newTaskObj: EditableTask =
                 {
                   title: this.newTaskTitle,
@@ -162,7 +165,11 @@ export class ConfirmationService {
                   users: [(this.newTaskExecutor) ? this.newTaskExecutor._id : currentTask.users[0]],
                 }
               console.log('Edit task!')
-              this.restAPI.updateTask(currentTask.boardId, currentTask._id, newTaskObj);
+              if (handleOptions.callBack) {
+                this.restAPI.updateTask(currentTask.boardId, currentTask._id, newTaskObj, handleOptions.callBack);
+              } else {
+                this.restAPI.updateTask(currentTask.boardId, currentTask._id, newTaskObj);
+              }
 
             } else {
               this.errorHandlerService
@@ -183,11 +190,11 @@ export class ConfirmationService {
             };
             break;
         case 'deleteColumn': {
-          this.restAPI.deleteColumn(handleOptions as DeletedColumnOption);
+          this.restAPI.deleteColumn(handleOptions.options as DeletedColumnOption);
           break;
         }
         case 'deleteTask': {
-          this.restAPI.deleteTask(handleOptions as TaskDeletionOptions);
+          this.restAPI.deleteTask(handleOptions.options as TaskDeletionOptions);
           break;
         }
         default:

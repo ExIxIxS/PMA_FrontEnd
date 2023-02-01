@@ -1,0 +1,39 @@
+<mat-expansion-panel
+  #panel
+  class="search-panel"
+  [hideToggle]="!panel.expanded"
+  (opened)="enableInput(input)"
+  (closed)="disableInput()">
+  <mat-expansion-panel-header class="panel-header">
+    <mat-form-field
+      appearance="fill"
+      class="search-field">
+      <mat-label>Search Task</mat-label>
+      <input #input matInput
+            [formControl]="searchFormControl">
+      <mat-error *ngIf="searchFormControl.invalid">{{getErrorMessage('searchRequest')}}</mat-error>
+    </mat-form-field>
+  </mat-expansion-panel-header>
+
+     <mat-card *ngFor="let task of foundTasks"
+              class="task-card"
+              (click)="editTask(task)">
+        <mat-card-header>
+          <mat-card-title matListItemTitle>{{task.apiTask.title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p matListItemLine>{{task.apiTask.description}}</p>
+          <p matListItemLine>Executor: {{task.executor}}</p>
+          <p matListItemLine>Owner: {{task.owner}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+
+        <a mat-fab color="warn" [routerLink]="['/boards', task.apiTask.boardId]">
+              <mat-icon>dashboard</mat-icon>
+        </a>
+
+        </mat-card-actions>
+    </mat-card>
+
+
+</mat-expansion-panel>

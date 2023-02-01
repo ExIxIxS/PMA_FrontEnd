@@ -20,9 +20,7 @@ function repeatedPasswordValidator(sourcePasswordControl: FormControl | Abstract
 })
 export class AppFormsService {
 
-  constructor(
-    private formBuilder: FormBuilder,
-  ) { }
+  constructor() { }
 
   validOptions = {
     columnTitle: {title: 'column title', minLength: 2, maxLength: 30, pattern: '[a-zA-Z_\. ]*'},
@@ -34,6 +32,7 @@ export class AppFormsService {
     password: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
     newPassword: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
     repeatedPassword: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
+    searchRequest: {title: 'search request', minLength: 1, maxLength: 50, pattern: '[a-zA-Z0-9 _\.]*'},
   }
 
   getValidators(type: FormConrolTypes, sourceControl?: AbstractControl<any, any>): ValidatorFn[] {
@@ -66,6 +65,11 @@ export class AppFormsService {
               : [];
       case 'taskExecutor':
         return [Validators.required];
+      case 'searchRequest':
+        return [
+          Validators.maxLength(this.validOptions[type].maxLength),
+          Validators.pattern(this.validOptions[type].pattern),
+        ];
       default:
         return [];
     }

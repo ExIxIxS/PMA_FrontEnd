@@ -5,6 +5,7 @@ import { LocalStorageService } from '../localStorage.service';
 import { FormConrolTypes, UserApiObj } from '../app.interfeces';
 import { AppFormsService } from '../app-forms.service';
 import { MatSelectChange } from '@angular/material/select';
+import { RestDataService } from '../restAPI.service';
 
 @Component({
   selector: 'app-form-new-task',
@@ -14,15 +15,57 @@ import { MatSelectChange } from '@angular/material/select';
 export class FormNewTaskComponent {
   hide = true;
   checkoutForm = this.getCheckoutForm();
+  _availableUsers: UserApiObj[] = [];
 
   constructor(
     private confirmationService: ConfirmationService,
     private localStorageService: LocalStorageService,
     private formService: AppFormsService,
-  ) {}
+    private restApi: RestDataService,
+  ) {
+    this.disableSelect()
+  }
 
   get availableUsers() {
-    return this.localStorageService.currentBoardUsers;
+    if (this.localStorageService.currentBoardUsers.length) {
+      this.enableSelect();
+      return this.localStorageService.currentBoardUsers;
+    } else {
+      if (!this._availableUsers.length && this.confirmationService.editableTask?.boardId) {
+        const getUsersHandler = (users: UserApiObj[]) => {
+            this._availableUsers = users;
+            this.checkoutForm.controls['taskExecutor']
+              .setValue(
+                users
+                .find((user) => user._id === this.confirmationService.editableTask?.users[0])
+                ?.name
+              )
+            this.enableSelect();
+          }
+
+        this.restApi.getBoardUsers(
+          this.confirmationService.editableTask?.boardId,
+          getUsersHandler.bind(this)
+        );
+      }
+
+      return this._availableUsers;
+    }
+
+  }
+
+  enableSelect() {
+    const formControl = this.checkoutForm.controls['taskExecutor'];
+    if (formControl.disabled) {
+      formControl.enable();
+    }
+  }
+
+  disableSelect() {
+    const formControl = this.checkoutForm.controls['taskExecutor'];
+    if (formControl.enabled) {
+      formControl.disable();
+    }
   }
 
   getCheckoutForm() {
