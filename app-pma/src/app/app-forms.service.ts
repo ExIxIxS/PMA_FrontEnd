@@ -23,17 +23,66 @@ export class AppFormsService {
 
   currentLanguage: AvalibleLanguages | undefined;
 
+  passwordOption = {
+    title: 'password',
+    minLength: 8,
+    maxLength: 96,
+    pattern: /^[\w\d!@#/$%/^&/*/?]+$/,
+    patternNote: 'latin letters, digits and !@#$%^&*?',
+  }
+
   validOptions = {
-    columnTitle: {title: 'column title', minLength: 2, maxLength: 30, pattern: '[a-zA-Z_\. ]*'},
-    boardTitle: {title: 'board title', minLength: 2, maxLength: 30, pattern: '[a-zA-Z_\. ]*'},
-    taskTitle: {title: 'task title', minLength: 2, maxLength: 30, pattern: '[a-zA-Z0-9_\.]*'},
-    taskDescription: {title: 'task description', minLength: 0, maxLength: 200, pattern: '[a-zA-Z0-9_\.]*'},
-    userName: {title: 'name', minLength: 2, maxLength: 30, pattern: '[a-zA-Z_\. ]*'},
-    login: {title: 'login', minLength: 4, maxLength: 30, pattern: '[a-zA-Z0-9_\.]*'},
-    password: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
-    newPassword: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
-    repeatedPassword: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
-    searchRequest: {title: 'search request', minLength: 1, maxLength: 50, pattern: '[a-zA-Z0-9 _\.]*'},
+    columnTitle: {
+      title: 'column title',
+      minLength: 2,
+      maxLength: 30,
+      pattern: /^[\p{L}\d"\+]+[\p{L}\d\s\-\.\+"]*[\p{L}\d"\+]+$/u,
+      patternNote: 'unicode letters, digits, ", +, spaces or -. (in the middle)',
+    },
+    boardTitle: {
+      title: 'board title',
+      minLength: 5,
+      maxLength: 30,
+      pattern: /^[\p{L}\d"\+]+[\p{L}\d\s\-\.\+"]*[\p{L}\d"\+]+$/u,
+      patternNote: 'unicode letters, digits, ", +, spaces or -. (in the middle)',
+    },
+    taskTitle: {
+      title: 'task title',
+      minLength: 2,
+      maxLength: 30,
+      pattern: /^[\p{L}\d"\+]+[\p{L}\d\s\-\.\+"]*[\p{L}\d"\+]+$/u,
+      patternNote: 'unicode letters, digits, ", +, spaces or -. (in the middle)',
+    },
+    taskDescription: {
+      title: 'task description',
+      minLength: 0,
+      maxLength: 200,
+      pattern: /^[\p{L}\d"\+]+[\p{L}\d\s\-\.\+"]*[\p{L}\d"\+\.]+$/u,
+      patternNote: 'unicode letters, digits, ", +, . and spaces or - (in the middle)',
+    },
+    userName: {
+      title: 'name',
+      minLength: 2,
+      maxLength: 30,
+      pattern: /^[A-Z]+[\w\d\s\-\."]*[\w\d]+$/,
+      patternNote: 'latin letters, digits and spaces or -. (in the middle)',
+    },
+    login: {
+      title: 'login',
+      minLength: 4,
+      maxLength: 30,
+      pattern: /^[\w\d]+[\w\d\-]*[\w\d]+$/,
+      patternNote: 'latin letters, digits and - (in the middle)',
+    },
+    password: this.passwordOption,
+    newPassword: this.passwordOption,
+    repeatedPassword: this.passwordOption,
+    searchRequest: {
+      title: 'search request',
+      minLength: 1, maxLength: 20,
+      pattern: /^[\p{L}\d\s\-\.\+"]+$/u,
+      patternNote: 'unicode letters, digits, spaces and .+-',
+    }
   }
 
   localize(value: string, ...args: unknown[]): unknown {
@@ -166,7 +215,7 @@ export class AppFormsService {
         case (!!formControlErrors?.['maxlength']):
           return `${this.localize('Max length of')} ${localizedTitle} - ${controlOption.maxLength} ${this.localize('chars')}`;
         case (!!formControlErrors?.['pattern']):
-          return `${this.localize('Allowed symbols for')} ${localizedTitle} - "${controlOption.pattern}"`;
+          return `${this.localize('Allowed symbols for')} ${localizedTitle} - "${controlOption.patternNote}"`;
         case (!!formControlErrors?.['passwordsMatch']):
             return `${this.localize('Passwords do not match')}`;
         default:
