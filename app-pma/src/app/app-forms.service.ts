@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-
-import { FormConrolTypes, TaskApiObj, UserApiObj } from './app.interfeces';
+import { AvalibleLanguages, FormConrolTypes, TaskApiObj, UserApiObj } from './app.interfeces';
+import { localizationLibrary } from './localizationLibrary';
 
 type FormGroupTypes = 'taskForm'
                     | 'singIn'
@@ -19,8 +19,9 @@ function repeatedPasswordValidator(sourcePasswordControl: FormControl | Abstract
   providedIn: 'root'
 })
 export class AppFormsService {
-
   constructor() { }
+
+  currentLanguage: AvalibleLanguages | undefined;
 
   validOptions = {
     columnTitle: {title: 'column title', minLength: 2, maxLength: 30, pattern: '[a-zA-Z_\. ]*'},
@@ -33,6 +34,16 @@ export class AppFormsService {
     newPassword: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
     repeatedPassword: {title: 'password', minLength: 8, maxLength: 96, pattern: '[a-zA-Z0-9_\.]*'},
     searchRequest: {title: 'search request', minLength: 1, maxLength: 50, pattern: '[a-zA-Z0-9 _\.]*'},
+  }
+
+  localize(value: string, ...args: unknown[]): unknown {
+    let localizedValue;
+    if (this.currentLanguage) {
+      const contentType = (args.length) ? 'articles' : 'strings';
+      localizedValue = localizationLibrary[this.currentLanguage][contentType][value];
+    }
+      return (localizedValue) ? localizedValue : value;
+
   }
 
   getValidators(type: FormConrolTypes, sourceControl?: AbstractControl<any, any>): ValidatorFn[] {
@@ -140,23 +151,26 @@ export class AppFormsService {
         ? controlOption.title
         : controlOption.title as keyof typeof controlObj.controls;
 
+      const localizedTitle = this.localize(controlOptionTitle.toString());
+
+
       const formControlErrors = (controlObj instanceof FormControl)
         ? controlObj.errors
         : controlObj.controls[formControlType].errors;
 
       switch(true) {
         case (!!formControlErrors?.['required']):
-          return `You must enter a ${controlOptionTitle}`;
+          return `${this.localize('You must enter a')} ${localizedTitle}`;
         case (!!formControlErrors?.['minlength']):
-          return `Min length of ${controlOptionTitle} is ${controlOption.minLength} chars`;
+          return `${this.localize('Min length of')} ${localizedTitle} - ${controlOption.minLength} ${this.localize('chars')}`;
         case (!!formControlErrors?.['maxlength']):
-          return `Max length of ${controlOptionTitle} is ${controlOption.maxLength} chars`;
+          return `${this.localize('Max length of')} ${localizedTitle} - ${controlOption.maxLength} ${this.localize('chars')}`;
         case (!!formControlErrors?.['pattern']):
-          return `Allowed symbols for ${controlOptionTitle} are "${controlOption.pattern}"`;
+          return `${this.localize('Allowed symbols for')} ${localizedTitle} - "${controlOption.pattern}"`;
         case (!!formControlErrors?.['passwordsMatch']):
-            return 'Passwords do not match';
+            return `${this.localize('Passwords do not match')}`;
         default:
-          return `Not valid ${controlOptionTitle}`;
+          return `${this.localize('Not valid')} ${localizedTitle}`;
       };
 
   }

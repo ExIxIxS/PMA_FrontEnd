@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { CurUserObj, ApiBoardObj, UserApiObj, AppBoardObj, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj } from './app.interfeces';
+import { CurUserObj, ApiBoardObj, UserApiObj, AppBoardObj, ColumnAppObj, ColumnApiObj, TaskApiObj, ColumnSetApiObj, LocalizationLibrary, AvalibleLanguages } from './app.interfeces';
 import { AppFormsService } from './app-forms.service';
+import { localizationLibrary } from './localizationLibrary';
 
 const emptyUserStr = JSON.stringify(
   {
@@ -24,10 +25,24 @@ export class LocalStorageService {
   public apiColumns: ColumnApiObj[] = [];
   public apiTasks: TaskApiObj[] = [];
   public isTaskDropDisabled: boolean = false;
+  public avalibleLanguages = Object.keys(localizationLibrary) as AvalibleLanguages[];
+  private _currentLanguage: AvalibleLanguages = this.getInitialLanguage();
 
   constructor(
     private formsService: AppFormsService,
-  ) {}
+  ) {this.formsService.currentLanguage = this.getInitialLanguage();}
+
+  set currentLanguage(lang: AvalibleLanguages) {
+    if (lang !== this._currentLanguage) {
+      this._currentLanguage = lang;
+      localStorage.setItem('currentLanguage', lang);
+      this.formsService.currentLanguage = lang;
+    }
+  }
+
+  get currentLanguage() {
+    return this._currentLanguage;
+  }
 
   get currentUser() {
     const localCurrentUser = localStorage.getItem('currentUser');
@@ -67,6 +82,14 @@ export class LocalStorageService {
 
   get currentBoardUsersNames() {
     return this.currentBoardUsers.map((user) => user.name);
+  }
+
+  getInitialLanguage() {
+    const localCurrentLanguage = localStorage.getItem('currentLanguage');
+
+    return (localCurrentLanguage)
+      ? localCurrentLanguage as AvalibleLanguages
+      : 'en';
   }
 
   getCurrentBoardUserById(userId: string) {

@@ -1,6 +1,6 @@
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
   <mat-form-field appearance="fill">
-    <mat-label>Enter your login</mat-label>
+    <mat-label>{{'Enter login' | localization}}</mat-label>
     <input matInput
           formControlName="login">
     <mat-error *ngIf="checkoutForm.invalid">{{getSignInErrorMessage('login')}}</mat-error>
@@ -9,7 +9,7 @@
   <br>
 
   <mat-form-field appearance="fill">
-    <mat-label>Enter your password</mat-label>
+    <mat-label>{{'Enter password' | localization}}</mat-label>
     <input matInput
           [type]="hide ? 'password' : 'text'"
           formControlName="password">
@@ -30,5 +30,5 @@
           color="primary"
           type="submit"
           [disabled]="checkoutForm.invalid"
-          (click)="submitSignIn()">Login</button>
+          (click)="submitSignIn()">{{'Login' | localization}}</button>
 </form>

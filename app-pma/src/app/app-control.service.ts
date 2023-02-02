@@ -17,4 +17,12 @@ export class AppControlService {
     this.router.navigate(['']);
   }
 
+  reloadPage() {
+    this.router.navigate([this.router.url]);
+  }
+
+  refreshPage() {
+    window.location.reload();
+  }
+
 }

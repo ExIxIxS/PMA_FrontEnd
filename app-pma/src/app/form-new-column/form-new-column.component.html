@@ -1,6 +1,6 @@
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
     <mat-form-field appearance="fill">
-      <mat-label>Enter a column title</mat-label>
+      <mat-label>{{'Enter a column title' | localization}}</mat-label>
       <input matInput formControlName="columnTitle" (input)="checkInput()">
       <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>

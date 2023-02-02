@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { AppFormsService } from '../app-forms.service';
-import { FormConrolTypes, SearchTaskObj, UserApiObj } from '../app.interfeces';
 import { RestDataService } from '../restAPI.service';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
+
+import { FormConrolTypes, SearchTaskObj, UserApiObj } from '../app.interfeces';
+
 
 @Component({
   selector: 'app-search-panel',

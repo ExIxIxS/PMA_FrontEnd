@@ -51,6 +51,8 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 import { FormNewColumnComponent } from './form-new-column/form-new-column.component';
 import { FormNewTaskComponent } from './form-new-task/form-new-task.component';
 import { SearchPanelComponent } from './search-panel/search-panel.component';
+import { LocalizationPipe } from './localization.pipe';
+import { LanquageMenuComponent } from './lanquage-menu/lanquage-menu.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,8 @@ import { SearchPanelComponent } from './search-panel/search-panel.component';
     FormNewColumnComponent,
     FormNewTaskComponent,
     SearchPanelComponent,
+    LocalizationPipe,
+    LanquageMenuComponent,
   ],
   imports: [
     BrowserModule,

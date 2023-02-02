@@ -1,14 +1,16 @@
-<h2>Welcome to Project Management Application!</h2>
+<h2>{{'welcome title' | localization : 'article'}}</h2>
 
 <mat-stepper orientation="vertical" [linear]="false" #stepper>
   <mat-step [stepControl]="firstFormGroup">
-    <ng-template matStepLabel>About project</ng-template>
-    <p>It`s very cool project</p>
+    <ng-template matStepLabel>{{'About project' | localization}}</ng-template>
+    <p>{{'project description' | localization : 'article'}}</p>
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
-    <ng-template matStepLabel>About course</ng-template>
+    <ng-template matStepLabel>{{'About course' | localization}}</ng-template>
+    <p>{{'course description' | localization : 'article'}}</p>
   </mat-step>
   <mat-step [stepControl]="thirdFormGroup">
-    <ng-template matStepLabel>Developer</ng-template>
+    <ng-template matStepLabel>{{'Developer' | localization}}</ng-template>
+    <p>{{'developer description' | localization : 'article'}}</p>
   </mat-step>
 

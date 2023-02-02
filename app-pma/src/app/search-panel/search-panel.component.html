@@ -8,7 +8,7 @@
     <mat-form-field
       appearance="fill"
       class="search-field">
-      <mat-label>Search Task</mat-label>
+      <mat-label>{{'Task search' | localization}}</mat-label>
       <input #input matInput
             [formControl]="searchFormControl">
       <mat-error *ngIf="searchFormControl.invalid">{{getErrorMessage('searchRequest')}}</mat-error>

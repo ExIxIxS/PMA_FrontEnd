@@ -16,7 +16,7 @@
                             [formControl]="column.titleFormControl"
                             (blur)="disableTitleInput(column)">
                     <mat-error *ngIf="column.titleFormControl.invalid">{{getErrorMessage(column)}}</mat-error>
-                    <mat-hint *ngIf="column.titleFormControl.dirty">*Please submit title changes</mat-hint>
+                    <mat-hint *ngIf="column.titleFormControl.dirty">{{'*Please submit title changes' | localization}}</mat-hint>
 
                     <button *ngIf="!titleInput.disabled"
                             mat-icon-button
@@ -56,8 +56,8 @@
                     (click)="editTask($event, task)">
 
                     <h3>{{task.title}} --> {{task.order}}</h3>
-                    <h4>Description: {{task.description}}</h4>
-                    <h4>Current task executor:</h4>
+                    <h4>{{'Description' | localization}}: {{task.description}}</h4>
+                    <h4>{{'Current task executor' | localization}}:</h4>
                     <p>{{getExecutorName(task)}}</p>
 
                     <button mat-flat-button
