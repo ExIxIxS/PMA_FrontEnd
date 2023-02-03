@@ -23,7 +23,7 @@ export class FormNewTaskComponent {
     private formService: AppFormsService,
     private restApi: RestDataService,
   ) {
-    this.disableSelect()
+    this.disableSelect();
   }
 
   get availableUsers() {

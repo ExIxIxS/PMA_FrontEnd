@@ -7,7 +7,8 @@ import { localizationLibrary } from './localizationLibrary';
 type FormGroupTypes = 'taskForm'
                     | 'singIn'
                     | 'singUp'
-                    | 'editUser';
+                    | 'editUser'
+                    | 'columnTitle';
 
 function repeatedPasswordValidator(sourcePasswordControl: FormControl | AbstractControl<any, any>): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -147,7 +148,7 @@ export class AppFormsService {
     return formControl;
   }
 
-  getNewFormGroup(groupArgs: {type: FormGroupTypes, sourceTask?: TaskApiObj | null, executorName?: string, editableUser?: UserApiObj}): FormGroup {
+  getNewFormGroup(groupArgs: {type: FormGroupTypes, sourceTask?: TaskApiObj | null, executorName?: string, editableUser?: UserApiObj, columnTitle?: string}): FormGroup {
     switch(groupArgs.type) {
       case 'taskForm': {
         const title = (groupArgs.sourceTask)
@@ -163,6 +164,15 @@ export class AppFormsService {
           taskTitle: this.getNewFormControl('taskTitle', title),
           taskDescription: this.getNewFormControl('taskDescription', description),
           taskExecutor: this.getNewFormControl('taskExecutor', executor),
+        })
+      }
+      case 'columnTitle': {
+        const title = (groupArgs.columnTitle)
+        ? groupArgs.columnTitle
+        : '';
+
+        return new FormGroup({
+          columnTitle: this.getNewFormControl('columnTitle', title, true),
         })
       }
       case 'singIn': {

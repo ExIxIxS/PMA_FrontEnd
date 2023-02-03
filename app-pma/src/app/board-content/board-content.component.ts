@@ -255,12 +255,12 @@ export class BoardContentComponent {
   }
 
   activateTitleInput(input: HTMLInputElement, column: ColumnAppObj) {
-    column.titleFormControl.enable();
+    column.titleForm.controls['columnTitle'].enable();
     input.focus();
   }
 
   disableTitleInput(column: ColumnAppObj, delay: number = 200) {
-    const formControl = column.titleFormControl;
+    const formControl = column.titleForm.controls['columnTitle'];
     if (formControl.valid) {
       setTimeout(()=> {
         if (formControl.untouched || formControl.pristine) {
@@ -272,12 +272,13 @@ export class BoardContentComponent {
 
   getErrorMessage(column: ColumnAppObj) {
     return this.formService
-      .getErrorMessage(column.titleFormControl, 'columnTitle')
+      .getErrorMessage(column.titleForm, 'columnTitle')
   }
 
-  submitTitleChanges(column: ColumnAppObj): void {
+  submitTitleChanges(event: Event, column: ColumnAppObj): void {
+    event.preventDefault();
     console.log('submited');
-    const formControl = column.titleFormControl;
+    const formControl = column.titleForm.controls['columnTitle'];
 
     if (formControl.valid) {
       if (formControl.dirty) {
@@ -295,7 +296,7 @@ export class BoardContentComponent {
   }
 
   restoreTitleInputValue(column: ColumnAppObj) {
-    const formControl = column.titleFormControl;
+    const formControl = column.titleForm.controls['columnTitle'];
     formControl.setValue(column.title);
     formControl.markAsUntouched();
     formControl.markAsPristine();

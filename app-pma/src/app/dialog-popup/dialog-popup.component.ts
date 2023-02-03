@@ -13,10 +13,8 @@ import { ConfirmationService } from '../confirmation.service';
 export class DialogPopupComponent {
 
   constructor(
-    private errorHandlerService: ErrorHandlerService,
     private confirmationService: ConfirmationService,
-    ) {
-  }
+    ) {}
 
   get type() {
     return this.confirmationService.type;

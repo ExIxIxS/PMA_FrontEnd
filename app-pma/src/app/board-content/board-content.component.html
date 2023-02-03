@@ -8,30 +8,33 @@
         <div class="board-column" *ngFor="let column of appColumns" cdkDrag>
             <p>{{column.order}}</p>
             <div class="title-container">
-                <mat-form-field class="title-form-field" appearance="outline"
-                (click)="activateTitleInput(titleInput, column)">
-                    <input  #titleInput
-                            matInput
-                            type="text"
-                            [formControl]="column.titleFormControl"
-                            (blur)="disableTitleInput(column)">
-                    <mat-error *ngIf="column.titleFormControl.invalid">{{getErrorMessage(column)}}</mat-error>
-                    <mat-hint *ngIf="column.titleFormControl.dirty">{{'*Please submit title changes' | localization}}</mat-hint>
+                <form [formGroup]="column.titleForm"
+                  (ngSubmit)="submitTitleChanges($event, column)">
+                  <mat-form-field class="title-form-field" appearance="outline"
+                  (click)="activateTitleInput(titleInput, column)">
+                      <input  #titleInput
+                              matInput
+                              type="text"
+                              [formControlName]="'columnTitle'"
+                              (blur)="disableTitleInput(column)">
+                      <mat-error *ngIf="column.titleForm.invalid">{{getErrorMessage(column)}}</mat-error>
+                      <mat-hint *ngIf="column.titleForm.dirty">{{'*Please submit title changes' | localization}}</mat-hint>
 
-                    <button *ngIf="!titleInput.disabled"
-                            mat-icon-button
-                            matPrefix
-                            (click)="submitTitleChanges(column)">
-                    <mat-icon>check</mat-icon>
-                    </button>
+                      <button *ngIf="!titleInput.disabled"
+                              type="submit"
+                              mat-icon-button
+                              matPrefix>
+                      <mat-icon>check</mat-icon>
+                      </button>
 
-                    <button *ngIf="!titleInput.disabled"
-                            mat-icon-button
-                            matPrefix
-                            (click)="restoreTitleInputValue(column)">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </mat-form-field>
+                      <button *ngIf="!titleInput.disabled"
+                              mat-icon-button
+                              matPrefix
+                              (click)="restoreTitleInputValue(column)">
+                          <mat-icon>close</mat-icon>
+                      </button>
+                  </mat-form-field>
+                </form>
             </div>
 
             <button mat-flat-button

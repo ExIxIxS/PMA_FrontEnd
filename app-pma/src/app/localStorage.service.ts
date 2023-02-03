@@ -178,7 +178,7 @@ export class LocalStorageService {
     return {
       ...apiColumn,
       tasks: [],
-      titleFormControl: this.formsService.getNewFormControl('columnTitle', apiColumn.title, true)
+      titleForm: this.formsService.getNewFormGroup({type: 'columnTitle', columnTitle: apiColumn.title})
     }
   }
 
@@ -202,9 +202,6 @@ export class LocalStorageService {
 
     this.currentBoardColumns = appColumns;
     console.log('Board columns updated');
-    console.log(JSON.parse(JSON.stringify(this.apiColumns)));
-    console.log(JSON.parse(JSON.stringify(this.currentBoardColumns)));
-    console.log(JSON.parse(JSON.stringify(this.apiTasks)));
   }
 
   fillAppBoardWithTasks(appColumns: ColumnAppObj[], columnIds: string[] = []): void {

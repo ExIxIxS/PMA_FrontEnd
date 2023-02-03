@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 
 interface CurUserObj {
   login: string,
@@ -70,7 +70,7 @@ interface TaskApiObj {
 
 interface ColumnAppObj extends ColumnApiObj {
   tasks: TaskApiObj[],
-  titleFormControl: FormControl,
+  titleForm: FormGroup,
 }
 
 interface PointApiObj {
