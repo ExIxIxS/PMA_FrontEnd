@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ActivatedRoute } from '@angular/router';
-import { merge } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { merge, filter } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTask, ColumnTitleInputObj, NewColumnApiObj, ApiBoardObj, UserApiObj, OpenDialogArgs } from '../app.interfeces';
+import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTask,
+          NewColumnApiObj, ApiBoardObj, UserApiObj, OpenDialogArgs } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -25,16 +26,35 @@ export class BoardContentComponent {
   }
 
   constructor(private activeRoute: ActivatedRoute,
+              private router: Router,
               private restAPI: RestDataService,
               private localStorageService: LocalStorageService,
               private errorHandlerService: ErrorHandlerService,
               private confirmationService: ConfirmationService,
               private formService: AppFormsService,
   ) {
-    this.localStorageService.clearColumns();
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
+    this.startComponent();
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe({
+        next: () => {
+          if (this.currentBoardId !== this.activeRoute.snapshot.params['id']) {
+            this.restartComponent();
+          }
+        }
+      });
+  }
+
+  startComponent() {
+    this.localStorageService.clearColumns();
     this.updateBoardUsers();
     this.createBoardColumns();
+  }
+
+  restartComponent() {
+    this.currentBoardId = this.activeRoute.snapshot.params['id'];
+    this.startComponent();
   }
 
   get columnsAmount() {

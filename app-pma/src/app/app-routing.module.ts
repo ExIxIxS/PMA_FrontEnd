@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: "signin", component: SigninPageComponent, title: 'Login' },
   { path: "signup", component: SignupPageComponent, title: 'Sign Up' },
   { path: "user", component: EditUserComponent, title: 'Edit User' },
-  { path: "boards/:id", component: BoardContentComponent, title: 'Board`s workshop' },
+  { path: "boards/:id", pathMatch: 'full', component: BoardContentComponent, title: 'Board`s workshop' },
   { path: "", pathMatch: 'full', component: WelcomePageComponent },
   { path: '**', component: PageNotFoundComponent, title: '404 Page Not Found' },
 ];
