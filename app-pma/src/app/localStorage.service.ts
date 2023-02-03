@@ -214,10 +214,12 @@ export class LocalStorageService {
 
     fillableColumns.forEach((column) => {
       const columnTasks = this.apiTasks.filter((apiTask) => apiTask.columnId === column._id);
-      columnTasks.sort(this.sortByOrder);
+
       if (columnTasks.length) {
-        column.tasks = columnTasks;
+        columnTasks.sort(this.sortByOrder);
       }
+
+      column.tasks = columnTasks;
     });
   }
 
@@ -294,7 +296,7 @@ export class LocalStorageService {
   deleteTask(taskObj: TaskApiObj): void {
     const taskIndex = this.apiTasks.findIndex((task) => task._id === taskObj._id);
 
-    if (taskIndex !== undefined && taskIndex >= 0) {
+    if (taskIndex >= 0) {
       this.apiTasks.splice(taskIndex, 1);
       this.fillAppBoardWithTasks(this.currentBoardColumns, [taskObj.columnId]);
     }
