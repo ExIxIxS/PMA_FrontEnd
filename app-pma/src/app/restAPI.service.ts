@@ -284,19 +284,22 @@ export class RestDataService {
         console.log('Column updating started')
         this.localStorageService.apiColumns = columns;
         this.localStorageService.updateBoardAppColumns();
-        if (isDeletion) {
-          this.localStorageService.updateBoardAppColumns();
-        }
       },
       error: (err: Error) => {
+        this.appControlService.reloadPage();
         this.errorHandlerService.handleError(err);
-        //  this.appControlService.refreshPage();
       },
     }
 
-    this.http
-      .patch<ColumnApiObj[]>(`${REST_URL}columnsSet`, columnsSet, this.getHttpOptions())
-      .subscribe(updateOrderObserver);
+    if (columnsSet.length) {
+      this.http
+        .patch<ColumnApiObj[]>(`${REST_URL}columnsSet`, columnsSet, this.getHttpOptions())
+        .subscribe(updateOrderObserver);
+    } else {
+      this.localStorageService.updateBoardAppColumns();
+    }
+
+
   }
 
   createTask(boardId: string, columnId: string, newTaskObj: NewTaskObj): void {
@@ -342,7 +345,6 @@ export class RestDataService {
         },
         error: (err: Error) => {
           this.errorHandlerService.handleError(err);
-          //  this.appControlService.refreshPage();
         },
       }
 
