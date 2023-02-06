@@ -5,7 +5,7 @@ import { merge, filter } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
 import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTask,
-          NewColumnApiObj, ApiBoardObj, UserApiObj, OpenDialogArgs } from '../app.interfeces';
+        NewColumnApiObj, ApiBoardObj, UserApiObj, OpenDialogArgs } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -18,6 +18,7 @@ import { AppFormsService } from '../app-forms.service';
 })
 export class BoardContentComponent {
   public currentBoardId: string;
+  public currentBoard: ApiBoardObj | undefined;
 
   validOptions = {
     columnTitle: {
@@ -46,15 +47,36 @@ export class BoardContentComponent {
       });
   }
 
+  get currentBoardTitle(): string {
+    return (this.currentBoard)
+      ? this.currentBoard.title
+      : '';
+  }
+
   startComponent() {
     this.localStorageService.clearColumns();
     this.updateBoardUsers();
     this.createBoardColumns();
+    this.updateBoardTitle();
   }
 
   restartComponent() {
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
     this.startComponent();
+  }
+
+  updateBoardTitle() {
+    const updateTitleObserver = {
+      next: (board: ApiBoardObj) => {
+        this.currentBoard = board;
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err)
+      },
+    }
+
+    this.restAPI.getBoard(this.currentBoardId)
+      .subscribe(updateTitleObserver);
   }
 
   get columnsAmount() {
