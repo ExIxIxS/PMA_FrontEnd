@@ -15,19 +15,19 @@
 
       <app-lanquage-menu></app-lanquage-menu>
 
-      <a *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signin">{{'Login' | localization}}</a>
-      <a *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signup">{{'Sign up' | localization}}</a>
-      <button *ngIf = "isUserLoggedIn" mat-raised-button (click)="logOut()">{{'Log out' | localization}}</button>
+      <a *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signin">{{'buttons.login' | translate}}</a>
+      <a *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signup">{{'buttons.signUp' | translate}}</a>
+      <button *ngIf = "isUserLoggedIn" mat-raised-button (click)="logOut()">{{'buttons.logOut' | translate}}</button>
       <button *ngIf = "isUserLoggedIn" mat-fab color="primary" aria-label="User profile" (click)="editUser()">
         <mat-icon>manage_accounts</mat-icon>
       </button>
     </mat-panel-description>
   </mat-expansion-panel-header>
 
-  <p>{{'error menu title' | localization : 'article'}}</p>
+  <p>{{'error.menuTitle' | translate}}</p>
   <mat-card class="example-card">
     <mat-card-header>
-      <mat-card-title>{{'Error' | localization}}</mat-card-title>
+      <mat-card-title>{{'error.title' | translate}}</mat-card-title>
       <mat-divider></mat-divider>
     </mat-card-header>
     <mat-card-content>
@@ -43,5 +43,5 @@
     hidePageSize="true"
     aria-label="Select page">
   </mat-paginator>
-  <button mat-flat-button color="warn" align="end" (click)="cleanErrors()">{{'Got it' | localization}}</button>
+  <button mat-flat-button color="warn" align="end" (click)="cleanErrors()">{{'buttons.gotIt' | translate}}</button>
 </mat-expansion-panel>

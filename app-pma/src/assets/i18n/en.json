@@ -1,0 +1,141 @@
+{
+  "project": {
+    "title": "About project",
+    "description": "Many words about project"
+  },
+
+  "course": {
+    "title": "About course",
+    "description": "Many words about course"
+  },
+
+  "developer": {
+    "title": "Developer",
+    "description": "Many words about developer"
+  },
+
+  "welcome": {
+    "title": "Welcome to Project Management Application (PMA)!"
+  },
+
+  "buttons": {
+    "login": "Login",
+    "signUp": "Sign up",
+    "logOut": "Log out",
+    "gotIt": "Got it",
+    "saveChanges": "Save",
+    "cancel": "Cancel",
+    "removeUser": "Remove User Account",
+    "confirm": "Confirm"
+  },
+
+  "error": {
+    "title": "Error",
+    "menuTitle": "Oops... Something went wrong!"
+  },
+
+  "forms": {
+    "changesNote": "*Please submit title changes",
+    "editNameTitle": "Change Name or Login",
+    "newNameField": "Enter new Name",
+    "nameField": "Enter your Name",
+    "newLoginField": "Enter new login",
+    "loginField": "Enter login",
+    "editPassTitle": "Change Password",
+    "newPassField": "Enter a new password",
+    "passField": "Enter password",
+    "repeatPassField": "Repeat new password",
+    "currentPassField": "Enter current password",
+    "boardTitleField": "Enter a board title",
+    "inviteUsersField": "Invite participants",
+    "userSelectionField": "Choose a name",
+    "columnTitleField": "Enter a column title",
+    "taskTitleField": "Task title",
+    "excecutorSelectionField": "Select an excecutor",
+    "taskDescriptionField": "Enter a task description",
+    "taskSearchField": "Task search"
+  },
+
+  "formErrors": {
+    "required": "You must enter a",
+    "minLength": "Min length of",
+    "maxLength": "Max length of",
+    "allowedSymbols": "Allowed symbols for",
+    "doNotMatch": "Passwords do not match",
+    "notValid": "Not valid",
+    "chars": "chars",
+    "columnTitle": "column title",
+    "boardTitle": "board title",
+    "taskTitle": "task title",
+    "taskDescription": "task description",
+    "taskExecutor": "task executor",
+    "userName": "name",
+    "login": "login",
+    "password": "password",
+    "newPassword": "password",
+    "repeatedPassword": "password",
+    "searchRequest": "search request",
+    "patternNote": {
+      "title": "unicode letters, digits, quotes +, spaces or -. (in the middle)",
+      "userName": "latin letters, digits and spaces or -. (in the middle)",
+      "login": "latin letters, digits and - (in the middle)",
+      "password": "latin letters, digits and !@#$%^&*?",
+      "searchRequest": "unicode letters, digits, spaces and .+-"
+    }
+  },
+
+  "board": {
+    "description": "Description",
+    "taskExecutor": "Current executor",
+    "taskTitle": "Task title",
+    "creator": "Creator",
+    "participants": "Participants"
+  },
+
+  "main": {
+    "title": "Create your first project",
+    "firstSubTitle": "Your own projects",
+    "secondSubTitle": "Projects you were invited to",
+    "thirdSubTitle": "Other projects",
+    "owner": "Owner"
+  },
+
+  "confirmation": {
+    "title": {
+      "createBoard": "Create a new board",
+      "createColumn": "Create a new column",
+      "createTask": "Create a new task",
+      "editTask": "Edit task",
+      "deleteBoard": "Board deletion",
+      "deleteUser": "User account removing",
+      "deleteColumn": "Column deletion",
+      "deleteTask": "Task deletion",
+      "default": "Confirmation service"
+    },
+    "deleteBoard": {
+      "title": "Board title",
+      "question": "Are you sure want to delete this board?",
+      "note": "There is no way to restore the board after deletion!",
+      "notOwnerNote": "Sorry deletion avaliable only for board`s owner",
+      "owner": "Board`s owner"
+    },
+    "deleteUser": {
+      "question": "Are you sure want to delete your User Account?",
+      "note": "There is no way to restore it after removing!"
+    },
+    "deleteColumn": {
+      "question": "Are you sure want to delete this Column?",
+      "note": "There is no way to restore it after deletion!"
+    },
+    "deleteTask": {
+      "question": "Are you sure want to delete this Task?",
+      "note": "There is no way to restore it after deletion!"
+    },
+    "error": "Sorry, this window has opened with mistake..."
+  },
+
+  "pageNotFound": {
+    "title": "Page not found"
+  }
+
+}

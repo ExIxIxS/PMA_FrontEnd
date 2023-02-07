@@ -39,7 +39,6 @@ export class ConfirmationService {
   openDialog({type = 'default', ...rest}: OpenDialogArgs): void {
     let handleOptions: HandleConfirmObj;
     this.type = type;
-    this.title = this.getTitle();
     this.isConfirmValid = false;
     this.editableTask = null;
 
@@ -200,29 +199,6 @@ export class ConfirmationService {
         default:
           break;
       }
-  }
-
-  getTitle() {
-    switch(this.type) {
-      case 'createBoard':
-        return 'Create a new board';
-      case 'createColumn':
-        return 'Create a new column';
-      case 'createTask':
-        return 'Create a new task';
-      case 'editTask':
-          return 'Edit task';
-      case 'deleteBoard':
-        return 'Board deletion';
-      case 'deleteBoard':
-        return 'User account removing';
-      case 'deleteColumn':
-        return 'Column deletion';
-      case 'deleteTask':
-          return 'Task deletion';
-      default:
-        return 'Confirmation Service';
-    }
   }
 
 }

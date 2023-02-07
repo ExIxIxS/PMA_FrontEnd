@@ -201,20 +201,6 @@ type FormConrolTypes = 'columnTitle'
                       | 'userName'
                       | 'searchRequest';
 
-type AvalibleLanguages = 'en'
-                        | 'ru';
-
-type LocalizationLibrary = {
-  [key in AvalibleLanguages]: {
-    strings: {
-      [key: string]: string;
-    };
-    articles: {
-      [key: string]: string;
-    };
-  };
-};
-
 export {
   CurUserObj,
   TokenObj,
@@ -248,6 +234,4 @@ export {
   EditableTask,
   SearchTaskObj,
   HandleConfirmObj,
-  AvalibleLanguages,
-  LocalizationLibrary,
 }

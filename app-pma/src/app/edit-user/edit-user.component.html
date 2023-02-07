@@ -1,7 +1,7 @@
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
-  <h2>{{'Change Name or Login' | localization}}</h2>
+  <h2>{{'forms.editNameTitle' | translate}}</h2>
   <mat-form-field appearance="fill">
-    <mat-label>{{'Enter new Name' | localization}}</mat-label>
+    <mat-label>{{'forms.newNameField' | translate}}</mat-label>
     <input matInput
       formControlName="userName">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('userName')}}</mat-error>
@@ -10,7 +10,7 @@
   <br>
 
   <mat-form-field appearance="fill">
-    <mat-label>{{'Enter new login' | localization}}</mat-label>
+    <mat-label>{{'forms.newLoginField' | translate}}</mat-label>
     <input matInput formControlName="login">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('login')}}</mat-error>
   </mat-form-field>
@@ -19,9 +19,9 @@
   <mat-divider></mat-divider>
   <br>
 
-  <h2>{{'Change Password' | localization}}</h2>
+  <h2>{{'forms.editPassTitle' | translate}}</h2>
   <mat-form-field appearance="fill">
-    <mat-label>{{'Enter a new password' | localization}}</mat-label>
+    <mat-label>{{'forms.newPassField' | translate}}</mat-label>
     <input matInput
           [type]="hideNewPass ? 'password' : 'text'"
           formControlName="newPassword">
@@ -39,7 +39,7 @@
   <br>
 
   <mat-form-field appearance="fill">
-    <mat-label>{{'Repeat new password' | localization}}</mat-label>
+    <mat-label>{{'forms.repeatPassField' | translate}}</mat-label>
     <input matInput
           [type]="hideNewPass ? 'password' : 'text'"
           formControlName="repeatedPassword">
@@ -57,7 +57,7 @@
   <br>
 
   <mat-form-field appearance="fill">
-    <mat-label>{{'Enter current password' | localization}}</mat-label>
+    <mat-label>{{'forms.currentPassField' | translate}}</mat-label>
     <input matInput
           [type]="hidePass ? 'password' : 'text'"
           formControlName="password">
@@ -76,16 +76,16 @@
           color="primary"
           type="submit"
           [disabled]="isSubmitDisabled()"
-          (click)="saveChanges()">{{'Save changes' | localization}}
+          (click)="saveChanges()">{{'buttons.saveChanges' | translate}}
   </button>
 
   <button mat-flat-button
     color="basic"
-    (click)="cancelEditing()">{{'Cancel' | localization}}
+    (click)="cancelEditing()">{{'buttons.cancel' | translate}}
   </button>
 </form>
 
 <button mat-fab extended color="warn" (click)="deleteUser()">
   <mat-icon>person_off</mat-icon>
-  {{'Remove User Account' | localization}}
+  {{'buttons.removeUser' | translate}}
 </button>

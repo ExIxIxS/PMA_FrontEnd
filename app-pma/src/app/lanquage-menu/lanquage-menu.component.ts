@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 
 import { LocalStorageService } from '../localStorage.service';
-import { AvalibleLanguages } from '../app.interfeces';
-import { AppControlService } from '../app-control.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-lanquage-menu',
@@ -10,7 +9,7 @@ import { AppControlService } from '../app-control.service';
   styleUrls: ['./lanquage-menu.component.scss']
 })
 export class LanquageMenuComponent {
-  avalibleLanguages = this.localStorageService.avalibleLanguages;
+  avalibleLanguages = this.translate.langs;
 
   get currentLanguage() {
     return this.localStorageService.currentLanguage;
@@ -18,12 +17,14 @@ export class LanquageMenuComponent {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private appControlService: AppControlService,
+    private translate: TranslateService,
   ) {};
 
-  changeLanguage(language: AvalibleLanguages) {
-    this.localStorageService.currentLanguage = language;
-    this.appControlService.refreshPage();
+  changeLanguage(lang: string) {
+    if (this.avalibleLanguages.includes(lang)) {
+      this.translate.use(lang);
+      this.localStorageService.currentLanguage = lang;
+    }
   }
 
 }

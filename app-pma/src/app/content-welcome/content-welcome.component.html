@@ -1,16 +1,16 @@
-<h2>{{'welcome title' | localization : 'article'}}</h2>
+<h2>{{'welcome.title' | translate }}</h2>
 
 <mat-stepper orientation="vertical" [linear]="false" #stepper>
   <mat-step [stepControl]="firstFormGroup">
-    <ng-template matStepLabel>{{'About project' | localization}}</ng-template>
-    <p>{{'project description' | localization : 'article'}}</p>
+    <ng-template matStepLabel>{{'project.title' | translate}}</ng-template>
+    <p>{{'project.description' | translate }}</p>
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
-    <ng-template matStepLabel>{{'About course' | localization}}</ng-template>
-    <p>{{'course description' | localization : 'article'}}</p>
+    <ng-template matStepLabel>{{'course.title' | translate}}</ng-template>
+    <p>{{'course.description' | translate }}</p>
   </mat-step>
   <mat-step [stepControl]="thirdFormGroup">
-    <ng-template matStepLabel>{{'Developer' | localization}}</ng-template>
-    <p>{{'developer description' | localization : 'article'}}</p>
+    <ng-template matStepLabel>{{'developer.title' | translate}}</ng-template>
+    <p>{{'developer.description' | translate }}</p>
   </mat-step>
 

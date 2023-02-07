@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{title}}</h2>
+<h2 mat-dialog-title>{{'confirmation.title.' + type | translate}}</h2>
 <mat-dialog-content [ngSwitch]="type" id="popup-content" class="mat-typography" >
 
   <app-form-new-board *ngSwitchCase="'createBoard'"></app-form-new-board>
@@ -11,35 +11,47 @@
 
   <div *ngSwitchCase="'deleteBoard'">
     <div *ngIf="isRightToDelete">
-      <p>Board title: "{{boardTitle}}"</p>
-      <p>Are you sure want to delete this board?</p>
-      <p>There is no way to restore the board after deletion!</p>
+      <p>{{'confirmation.' + type + '.title' | translate}}: "{{boardTitle}}"</p>
+      <p>{{'confirmation.' + type + '.question' | translate}}</p>
+      <p>{{'confirmation.' + type + '.note' | translate}}</p>
     </div>
     <div *ngIf="!isRightToDelete">
-      <p>Sorry deletion avaliable only for board`s owner</p>
-      <p>Board`s owner: "{{boardOwner}}"</p>
+      <p>{{'confirmation.' + type + '.notOwnerNote' | translate}}</p>
+      <p>{{'confirmation.' + type + '.owner' | translate}}: "{{boardOwner}}"</p>
     </div>
   </div>
 
   <div *ngSwitchCase="'deleteUser'">
-      <h2>Are you sure want to delete your User Account?</h2>
-      <h4>Note: there is no way to restore it after removing!</h4>
+      <h2>{{'confirmation.' + type + '.question' | translate}}</h2>
+      <h4>{{'confirmation.' + type + '.note' | translate}}</h4>
   </div>
 
   <div *ngSwitchCase="'deleteColumn'">
-    <h2>Are you sure want to delete this Column?</h2>
-    <h4>Note: there is no way to restore it after deletion!</h4>
+    <h2>{{'confirmation.' + type + '.question' | translate}}</h2>
+    <h4>{{'confirmation.' + type + '.note' | translate}}</h4>
   </div>
 
   <div *ngSwitchCase="'deleteTask'">
-    <h2>Are you sure want to delete this Task?</h2>
-    <h4>Note: there is no way to restore it after deletion!</h4>
+    <h2>{{'confirmation.' + type + '.question' | translate}}</h2>
+    <h4>{{'confirmation.' + type + '.note' | translate}}</h4>
   </div>
 
-  <h3 *ngSwitchDefault>Sorry, this window has opened with mistake...</h3>
+  <h3 *ngSwitchDefault>{{'confirmation.error' | translate}}</h3>
 
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-  <button mat-flat-button color="primary" [mat-dialog-close]="true" [disabled]="!isConfirmValid">Confirm</button>
-  <button mat-flat-button color="warn" mat-dialog-close cdkFocusInitial>Cancel</button>
+  <button mat-flat-button
+          color="primary"
+          [mat-dialog-close]="true"
+          [disabled]="!isConfirmValid">
+    {{'buttons.confirm' | translate}}
+  </button>
+
+  <button mat-flat-button
+          color="warn"
+          mat-dialog-close
+          cdkFocusInitial>
+    {{'buttons.cancel' | translate}}
+  </button>
 </mat-dialog-actions>

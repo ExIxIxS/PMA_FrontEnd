@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 
-import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 
 
@@ -20,10 +19,6 @@ export class DialogPopupComponent {
     return this.confirmationService.type;
   }
 
-  get title() {
-    return this.confirmationService.title;
-  }
-
   get isConfirmValid(): boolean {
     return this.confirmationService.isConfirmValid;
   }
@@ -39,6 +34,5 @@ export class DialogPopupComponent {
   get isRightToDelete() {
     return this.confirmationService.deletedBoard?.rightToDelete;
   }
-
 
 }

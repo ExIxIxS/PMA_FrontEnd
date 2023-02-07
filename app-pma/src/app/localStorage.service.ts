@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { CurUserObj, ApiBoardObj, UserApiObj, AppBoardObj, ColumnAppObj,
-        ColumnApiObj, TaskApiObj, ColumnSetApiObj, AvalibleLanguages
+        ColumnApiObj, TaskApiObj, ColumnSetApiObj,
 } from './app.interfeces';
 
 import { AppFormsService } from './app-forms.service';
-import { localizationLibrary } from './localizationLibrary';
 
 const emptyUserStr = JSON.stringify({login: '', token: '',});
 
@@ -13,6 +13,8 @@ const emptyUserStr = JSON.stringify({login: '', token: '',});
 export class LocalStorageService {
   private _currentUser: CurUserObj = this.getInitialCurrentUser();
   private _currentUserId: string = this.getInitialcurrentUserId();
+  private _currentLanguage: string = this.getInitialcurrentUserId();
+  private _avalibleLanguages = ['en', 'ru'];
   public isBoards: boolean = false;
   public apiBoards: ApiBoardObj[] = [];
   public currentAppBoards: AppBoardObj[] = [];
@@ -23,24 +25,24 @@ export class LocalStorageService {
   public apiColumns: ColumnApiObj[] = [];
   public apiTasks: TaskApiObj[] = [];
   public isTaskDropDisabled: boolean = false;
-  public avalibleLanguages = Object.keys(localizationLibrary) as AvalibleLanguages[];
-  private _currentLanguage: AvalibleLanguages = this.getInitialLanguage();
+  private _html = document.querySelector('html');
 
   constructor(
     private formsService: AppFormsService,
+    private translateService: TranslateService,
   ) {
-    this.formsService.currentLanguage = this.getInitialLanguage();
+    this.setLanguages();
   }
 
-  set currentLanguage(lang: AvalibleLanguages) {
+  set currentLanguage(lang: string) {
     if (lang !== this._currentLanguage) {
-      this._currentLanguage = lang;
-      this.formsService.currentLanguage = lang;
       localStorage.setItem('currentLanguage', lang);
+      this._currentLanguage = lang;
+      this._changeHtmlLang(lang);
     }
   }
 
-  get currentLanguage(): AvalibleLanguages {
+  get currentLanguage(): string {
     return this._currentLanguage;
   }
 
@@ -90,12 +92,23 @@ export class LocalStorageService {
     return (currentUserId) ? currentUserId : '';
   }
 
-  getInitialLanguage(): AvalibleLanguages {
-    const localCurrentLanguage = localStorage.getItem('currentLanguage');
+  setLanguages(): void {
+    this.translateService.addLangs(this._avalibleLanguages);
+    this.translateService.setDefaultLang('en');
 
-    return (localCurrentLanguage)
-      ? localCurrentLanguage as AvalibleLanguages
+    const localCurrentLanguage = localStorage.getItem('currentLanguage');
+    this._currentLanguage = (localCurrentLanguage)
+      ? localCurrentLanguage
       : 'en';
+
+    this.translateService.use(this._currentLanguage);
+    this._changeHtmlLang(this._currentLanguage);
+  }
+
+  private _changeHtmlLang(lang: string) {
+    if (this._html && this._avalibleLanguages.includes(lang)) {
+      this._html.lang = lang;
+    }
   }
 
   getCurrentBoardUserById(userId: string): UserApiObj | undefined {
@@ -127,7 +140,6 @@ export class LocalStorageService {
           .filter((user) => user) as UserApiObj[]
       : [];
   }
-
 
   updateBoardsStorage():void {
     const storageBoards = this.apiBoards.map((boardObj) => this._createStorageBoard(boardObj));

@@ -1,7 +1,7 @@
 <app-search-panel></app-search-panel>
 
 <button mat-flat-button *ngIf="!isBoards" (click)="createNewBoard()">
-  <mat-icon>add</mat-icon>{{'Create your first project' | localization}}
+  <mat-icon>add</mat-icon>{{'main.title' | translate}}
 </button>
 
 <ng-template #boardTemplate
@@ -15,8 +15,8 @@
       <mat-card-title matListItemTitle>{{boardTitle}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p matListItemLine>{{'Creator' | localization}}: {{boardOwner}}</p>
-      <p matListItemLine>{{'Participants' | localization}}: {{boardParticipants}}</p>
+      <p matListItemLine>{{'board.creator' | translate}}: {{boardOwner}}</p>
+      <p matListItemLine>{{'board.participants' | translate}}: {{boardParticipants}}</p>
     </mat-card-content>
     <mat-card-actions>
       <button (click)="deleteBoard(boardID, boardTitle, boardOwner)" mat-fab color="warn" aria-label="Icon button with a delete icon">
@@ -26,7 +26,7 @@
   </mat-card>
 </ng-template>
 
-<h3>{{'Your own projects' | localization}}</h3>
+<h3>{{'main.firstSubTitle' | translate}}</h3>
 <ng-template [ngTemplateOutlet]="boardTemplate"
               *ngFor="let board of ownBoardsOutput"
               [ngTemplateOutletContext]="
@@ -38,7 +38,7 @@
 </ng-template>
 <mat-divider class="boards-divider"></mat-divider>
 
-<h3>{{'Projects you were invited to' | localization}}</h3>
+<h3>{{'main.secondSubTitle' | translate}}</h3>
 <ng-template [ngTemplateOutlet]="boardTemplate"
               *ngFor="let board of participanceBoardsOutput"
               [ngTemplateOutletContext]="{title: board.title,
@@ -48,7 +48,7 @@
               }">
 </ng-template>
 <mat-divider class="boards-divider"></mat-divider>
-<h3>{{'Other projects' | localization}}</h3>
+<h3>{{'main.thirdSubTitle' | translate}}</h3>
 <ng-template [ngTemplateOutlet]="boardTemplate"
               *ngFor="let board of otherBoardsOutput"
               [ngTemplateOutletContext]="{title: board.title,

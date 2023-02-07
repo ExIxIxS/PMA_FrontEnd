@@ -1,6 +1,6 @@
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
   <mat-form-field appearance="fill">
-    <mat-label>{{'Enter a board title' | localization}}</mat-label>
+    <mat-label>{{'forms.boardTitleField' | translate}}</mat-label>
     <input matInput formControlName="boardTitle" (input)="checkInput()">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage()}}</mat-error>
   </mat-form-field>
@@ -8,7 +8,7 @@
   <br>
 
   <mat-form-field class="user-chip-list" appearance="fill">
-    <mat-label>{{'Invite participants' | localization}}</mat-label>
+    <mat-label>{{'forms.inviteUsersField' | translate}}</mat-label>
     <mat-chip-grid #chipGrid aria-label="Invited users">
       <mat-chip-row *ngFor="let participant of participants"
                     (removed)="remove(participant)"
@@ -22,7 +22,7 @@
       <br>
 
       <mat-form-field appearance="fill">
-        <mat-label>{{'Choose a name' | localization}}</mat-label>
+        <mat-label>{{'forms.userSelectionField' | translate}}</mat-label>
         <input type="text"
               placeholder=""
               aria-label="Number"
