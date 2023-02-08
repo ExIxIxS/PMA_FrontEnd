@@ -4,6 +4,7 @@
       <app-menu-header></app-menu-header>
       <a routerLink="">PMA</a>
     </mat-panel-title>
+
     <mat-panel-description class="action-panel">
       <button *ngIf = "isUserLoggedIn"
               (click)="createNewBoard()"
@@ -15,25 +16,45 @@
 
       <app-lanquage-menu></app-lanquage-menu>
 
-      <a *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signin">{{'buttons.login' | translate}}</a>
-      <a *ngIf = "!isUserLoggedIn" mat-raised-button routerLink="/signup">{{'buttons.signUp' | translate}}</a>
-      <button *ngIf = "isUserLoggedIn" mat-raised-button (click)="logOut()">{{'buttons.logOut' | translate}}</button>
-      <button *ngIf = "isUserLoggedIn" mat-fab color="primary" aria-label="User profile" (click)="editUser()">
+      <a *ngIf="!isUserLoggedIn"
+          mat-raised-button
+          routerLink="/signin">
+        {{'buttons.login' | translate}}
+      </a>
+
+      <a *ngIf="!isUserLoggedIn"
+          mat-raised-button
+          routerLink="/signup">
+        {{'buttons.signUp' | translate}}
+      </a>
+
+      <button *ngIf="isUserLoggedIn"
+              mat-raised-button
+              (click)="logOut()">
+        {{'buttons.logOut' | translate}}
+      </button>
+
+      <button *ngIf="isUserLoggedIn"
+              mat-fab color="primary"
+              aria-label="User profile"
+              (click)="editUser()">
         <mat-icon>manage_accounts</mat-icon>
       </button>
     </mat-panel-description>
   </mat-expansion-panel-header>
 
   <p>{{'error.menuTitle' | translate}}</p>
+
   <mat-card class="example-card">
     <mat-card-header>
       <mat-card-title>{{'error.title' | translate}}</mat-card-title>
       <mat-divider></mat-divider>
     </mat-card-header>
     <mat-card-content>
-      {{getError()}}
+      {{currentError}}
     </mat-card-content>
   </mat-card>
+
   <mat-paginator #paginator
     (page)="pageIndex = paginator.pageIndex"
     [pageIndex]="pageIndex"
@@ -43,5 +64,12 @@
     hidePageSize="true"
     aria-label="Select page">
   </mat-paginator>
-  <button mat-flat-button color="warn" align="end" (click)="cleanErrors()">{{'buttons.gotIt' | translate}}</button>
+
+  <button mat-flat-button
+          color="warn"
+          align="end"
+          (click)="cleanErrors()">
+    {{'buttons.gotIt' | translate}}
+  </button>
+
 </mat-expansion-panel>

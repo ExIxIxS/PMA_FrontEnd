@@ -7,12 +7,13 @@ import { ErrorHandlerService } from '../errorHandler.service'
 import { ConfirmationService } from '../confirmation.service';
 
 @Component({
-  selector: 'app-header',
+  selector: 'header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
+
 export class HeaderComponent {
-  pageIndex: number = 0;
+  public pageIndex: number = 0;
 
   constructor(
     private router: Router,
@@ -26,11 +27,6 @@ export class HeaderComponent {
       }
     }
 
-  logOut() {
-    console.log('Log Out!!!')
-    this.appControlService.logOut()
-  }
-
   get isUserLoggedIn() {
     return this.localStorageService.isUserLoggedIn;
   }
@@ -43,7 +39,7 @@ export class HeaderComponent {
     return this.errorHandlerService.currentErrors.length;
   }
 
-  getError() {
+  get currentError() {
     return this.errorHandlerService.currentErrors[this.pageIndex];
   }
 
@@ -58,5 +54,9 @@ export class HeaderComponent {
 
   editUser() {
     this.router.navigate(['user']);
+  }
+
+  logOut() {
+    this.appControlService.logOut()
   }
 }
