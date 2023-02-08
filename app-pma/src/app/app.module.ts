@@ -52,6 +52,7 @@ import { FormNewColumnComponent } from './form-new-column/form-new-column.compon
 import { FormNewTaskComponent } from './form-new-task/form-new-task.component';
 import { SearchPanelComponent } from './search-panel/search-panel.component';
 import { LanquageMenuComponent } from './lanquage-menu/lanquage-menu.component';
+import { FooterComponent } from './footer/footer.component';
 
 export function httpTranslateLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -75,6 +76,7 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
     FormNewTaskComponent,
     SearchPanelComponent,
     LanquageMenuComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
