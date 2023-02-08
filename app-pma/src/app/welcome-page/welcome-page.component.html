@@ -1,1 +1,44 @@
-<app-content-welcome></app-content-welcome>
+<h2>{{'welcome.title' | translate }}</h2>
+
+<mat-stepper orientation="vertical"
+            [linear]="false"
+            #stepper>
+
+  <mat-step [stepControl]="firstFormGroup"
+            state="project">
+    <ng-template matStepLabel>
+      {{'project.title' | translate}}</ng-template>
+    <p>{{'project.description' | translate }}</p>
+  </mat-step>
+
+  <mat-step [stepControl]="secondFormGroup"
+            state="course">
+    <ng-template matStepLabel>
+      {{'course.title' | translate}}</ng-template>
+    <p>{{'course.description' | translate }}</p>
+  </mat-step>
+
+  <mat-step [stepControl]="thirdFormGroup"
+            state="developer">
+    <ng-template matStepLabel>
+      {{'developer.title' | translate}}</ng-template>
+    <p>{{'developer.description' | translate }}</p>
+  </mat-step>
+
+  <!-- Icon overrides. -->
+  <ng-template matStepperIcon="edit">
+    <mat-icon>contact_support</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="project">
+    <mat-icon>terminal</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="course">
+    <mat-icon>school</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="developer">
+    <mat-icon>emoji_people</mat-icon>
+  </ng-template>
+
+</mat-stepper>
+
+

@@ -41,7 +41,6 @@ import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { HeaderComponent } from './header/header.component';
 import { MenuHeaderComponent } from './menu-header/menu-header.component';
-import { ContentWelcomeComponent } from './content-welcome/content-welcome.component';
 import { SigninPageComponent } from './signin-page/signin-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
 import { SignupPageComponent } from './signup-page/signup-page.component';
@@ -64,7 +63,6 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
     WelcomePageComponent,
     MainPageComponent,
     MenuHeaderComponent,
-    ContentWelcomeComponent,
     SigninPageComponent,
     PageNotFoundComponent,
     HeaderComponent,
