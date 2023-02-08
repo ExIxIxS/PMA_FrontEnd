@@ -62,7 +62,7 @@ export class RestDataService {
         this.autoSignIn();
        },
       error: (err: Error) => {
-        this.errorHandlerService.handleError(err)
+        this.errorHandlerService.handleError(err);
       },
     }
 
