@@ -9,7 +9,8 @@ type FormGroupTypes = 'taskForm'
                     | 'singIn'
                     | 'singUp'
                     | 'editUser'
-                    | 'columnTitle';
+                    | 'columnTitle'
+                    | 'newBoard';
 
 function repeatedPasswordValidator(sourcePasswordControl: FormControl | AbstractControl<any, any>): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -191,7 +192,14 @@ export class AppFormsService {
 
         const repeatedPasswordControl = this.getNewFormControl('repeatedPassword', '', true, formGroup.controls['newPassword'])
         formGroup.addControl('repeatedPassword', repeatedPasswordControl);
+
         return formGroup;
+      }
+      case 'newBoard': {
+        return new FormGroup({
+          boardTitle: this.getNewFormControl('boardTitle'),
+          participants: new FormControl(''),
+        });
       }
     }
   }

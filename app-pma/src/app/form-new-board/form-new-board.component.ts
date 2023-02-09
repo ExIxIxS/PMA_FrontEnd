@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormControl, FormGroup } from '@angular/forms';
 
 import { RestDataService } from '../restAPI.service';
 import { ConfirmationService } from '../confirmation.service';
@@ -9,6 +8,7 @@ import { ErrorHandlerService } from '../errorHandler.service';
 
 import { NewBoardObj, Participant, UserRestObj } from '../app.interfeces'
 import { AppFormsService } from '../app-forms.service';
+import { Observable, Observer } from 'rxjs';
 
 @Component({
   selector: 'app-form-new-board',
@@ -16,16 +16,15 @@ import { AppFormsService } from '../app-forms.service';
   styleUrls: ['./form-new-board.component.scss']
 })
 export class FormNewBoardComponent {
-  hide = true;
+  public hide = true;
 
-  titleFormControl = this.formService.getNewFormControl('boardTitle');
-  checkoutForm = new FormGroup({boardTitle: this.titleFormControl});
+  checkoutForm = this.formService.getNewFormGroup({type: 'newBoard'});
 
-  addOnBlur = true;
-  participants: Participant[] = [];
-  participantInput = new FormControl('');
-  availableUsers: string[] = [];
-  allUsers: UserRestObj[] | undefined;
+  public addOnBlur = true;
+  public participants: Participant[] = [];
+  public availableUsers: string[] = [];
+  public foundedUsers: Observable<string[]> | undefined;
+  public allUsers: UserRestObj[] | undefined;
 
   constructor(
     private restAPI: RestDataService,
@@ -34,7 +33,8 @@ export class FormNewBoardComponent {
     private errorHandlerService: ErrorHandlerService,
     private formService: AppFormsService,
   ) {
-    this.getUsers();
+    this._getUsers();
+    this._observeFormChanges();
   }
 
   get ownerId(): string | undefined {
@@ -52,32 +52,16 @@ export class FormNewBoardComponent {
     return this.formService.getErrorMessage(this.checkoutForm, 'boardTitle');
   }
 
-  getUsers(): void {
-    const usersObserver = {
-      next: (userObjArr: UserRestObj[]) => {
-        this.allUsers = userObjArr;
-        this.availableUsers = userObjArr
-          .filter((obj) => obj._id !== this.ownerId)
-          .map((obj) => obj.name);
-      },
-      error: (err: Error) => {
-        this.errorHandlerService.handleError(err);
-      },
-    }
-
-    this.restAPI.getUsers().subscribe(usersObserver)
-  }
-
   add(event: MatAutocompleteSelectedEvent): void {
     const name = event.option.value;
 
     if (name) {
       this.participants.push({name: name});
       this.availableUsers = this.availableUsers.filter((userName) => userName !== name)
-      this.participantInput.setValue('');
+      this.checkoutForm.controls['participants'].setValue('');
     }
 
-    this.updateNewBoard();
+    this._updateNewBoard();
   }
 
   remove(participant: Participant): void {
@@ -88,11 +72,35 @@ export class FormNewBoardComponent {
     }
 
     this.availableUsers.push(participant.name);
-    this.updateNewBoard();
+    this._updateNewBoard();
   }
 
-  createNewBoardObj(): NewBoardObj {
-    const title = this.checkoutForm.controls.boardTitle.value;
+  private _updateFoundedUsers(users: string[] = this.availableUsers): void {
+    this.foundedUsers = new Observable<string[]>((observer: Observer<string[]>) => {
+      observer.next((users));
+    });
+  }
+
+  private _getUsers(): void {
+    const usersObserver = {
+      next: (userObjArr: UserRestObj[]) => {
+        this.allUsers = userObjArr;
+        this.availableUsers = userObjArr
+          .filter((obj) => obj._id !== this.ownerId)
+          .map((obj) => obj.name);
+
+        this._updateFoundedUsers();
+      },
+      error: (err: Error) => {
+        this.errorHandlerService.handleError(err);
+      },
+    }
+
+    this.restAPI.getUsers().subscribe(usersObserver)
+  }
+
+  private _createNewBoardObj(): NewBoardObj {
+    const title = this.checkoutForm.controls['boardTitle'].value;
     let ownerID;
     let participantsIDs;
 
@@ -115,15 +123,44 @@ export class FormNewBoardComponent {
     return newBoard;
   }
 
-  checkInput(): void {
-    this.confirmationService.isConfirmValid = this.checkoutForm.valid;
-    this.updateNewBoard();
+  private _updateNewBoard(): void {
+    if (this.checkoutForm.valid) {
+      this.confirmationService.newBoard = this._createNewBoardObj();
+    }
   }
 
-  updateNewBoard(): void {
-    if (this.checkoutForm.valid) {
-      this.confirmationService.newBoard = this.createNewBoardObj();
+  private _observeFormChanges() {
+    this._observeTitleInputChanges();
+    this._observeUsersInputChanges();
+  }
+
+  private _observeUsersInputChanges(): void {
+    const changesObserver = {
+      next: (value: string | null) => {
+        if (value) {
+          const filteredUsers = this.availableUsers
+            .filter((user) => user.toLowerCase().includes(value.toLowerCase()));
+          this._updateFoundedUsers(filteredUsers);
+        } else {
+          this._updateFoundedUsers();
+        }
+      }
+    };
+
+    this.checkoutForm.controls['participants'].valueChanges
+      .subscribe(changesObserver);
+  }
+
+  private _observeTitleInputChanges(): void {
+    const changesObserver = {
+      next: () => {
+        this.confirmationService.isConfirmValid = this.checkoutForm.valid;
+        this._updateNewBoard();
+      }
     }
+
+    this.checkoutForm.controls['boardTitle'].valueChanges
+      .subscribe(changesObserver);
   }
 
 }

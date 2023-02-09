@@ -1,7 +1,8 @@
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.boardTitleField' | translate}}</mat-label>
-    <input matInput formControlName="boardTitle" (input)="checkInput()">
+    <input matInput
+          formControlName="boardTitle">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage()}}</mat-error>
   </mat-form-field>
 
@@ -10,13 +11,16 @@
   <mat-form-field class="user-chip-list" appearance="fill">
     <mat-label>{{'forms.inviteUsersField' | translate}}</mat-label>
     <mat-chip-grid #chipGrid aria-label="Invited users">
+
       <mat-chip-row *ngFor="let participant of participants"
                     (removed)="remove(participant)"
                     [editable]="false">
         {{participant.name}}
+
         <button matChipRemove [attr.aria-label]="'remove ' + participant">
           <mat-icon>cancel</mat-icon>
         </button>
+
       </mat-chip-row>
 
       <br>
@@ -27,15 +31,15 @@
               placeholder=""
               aria-label="Number"
               matInput
-              [formControl]="participantInput"
+              formControlName="participants"
               [matAutocomplete]="auto"
               [matChipInputFor]="chipGrid"
-              [matChipInputAddOnBlur]="addOnBlur"
-        >
+              [matChipInputAddOnBlur]="addOnBlur">
 
       <mat-autocomplete #auto="matAutocomplete"
-        (optionSelected)="add($event)">
-        <mat-option *ngFor="let userName of availableUsers" [value]="userName">
+                        (optionSelected)="add($event)">
+        <mat-option *ngFor="let userName of foundedUsers | async"
+                    [value]="userName">
           {{userName}}
         </mat-option>
       </mat-autocomplete>
