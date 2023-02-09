@@ -7,7 +7,7 @@ import { AppFormsService } from '../app-forms.service';
 import { LocalStorageService } from '../localStorage.service';
 import { ErrorHandlerService } from '../errorHandler.service';
 
-import { FormConrolTypes, NewUserObj, TokenObj, UserApiObj } from '../app.interfeces';
+import { FormConrolTypes, NewUserObj, TokenObj, UserRestObj } from '../app.interfeces';
 
 @Component({
   selector: 'app-edit-user',
@@ -42,7 +42,7 @@ export class EditUserComponent {
 
   fillFormWithUserValues() {
     const getCurrentUserObserver = {
-      next: (user: UserApiObj) => {
+      next: (user: UserRestObj) => {
         const nameFormControl = this.checkoutForm.controls['userName'];
         const loginFormControl = this.checkoutForm.controls['login'];
         nameFormControl.setValue(user.name);

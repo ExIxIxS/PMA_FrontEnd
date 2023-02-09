@@ -19,16 +19,16 @@
               class="task-card"
               (click)="editTask(task)">
         <mat-card-header>
-          <mat-card-title matListItemTitle>{{task.apiTask.title}}</mat-card-title>
+          <mat-card-title matListItemTitle>{{task.restTask.title}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p matListItemLine>{{task.apiTask.description}}</p>
+          <p matListItemLine>{{task.restTask.description}}</p>
           <p matListItemLine>Executor: {{task.executor}}</p>
           <p matListItemLine>Owner: {{task.owner}}</p>
         </mat-card-content>
         <mat-card-actions>
 
-        <a mat-fab color="warn" [routerLink]="['/boards', task.apiTask.boardId]">
+        <a mat-fab color="warn" [routerLink]="['/boards', task.restTask.boardId]">
               <mat-icon>dashboard</mat-icon>
         </a>
 

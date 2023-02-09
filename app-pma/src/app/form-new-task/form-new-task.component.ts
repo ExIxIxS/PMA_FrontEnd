@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
-import { FormConrolTypes, UserApiObj } from '../app.interfeces';
+import { FormConrolTypes, UserRestObj } from '../app.interfeces';
 import { AppFormsService } from '../app-forms.service';
 import { MatSelectChange } from '@angular/material/select';
 import { RestDataService } from '../restAPI.service';
@@ -15,13 +15,13 @@ import { RestDataService } from '../restAPI.service';
 export class FormNewTaskComponent {
   hide = true;
   checkoutForm = this.getCheckoutForm();
-  _availableUsers: UserApiObj[] = [];
+  _availableUsers: UserRestObj[] = [];
 
   constructor(
     private confirmationService: ConfirmationService,
     private localStorageService: LocalStorageService,
     private formService: AppFormsService,
-    private restApi: RestDataService,
+    private restRest: RestDataService,
   ) {
     this.disableSelect();
   }
@@ -32,7 +32,7 @@ export class FormNewTaskComponent {
       return this.localStorageService.currentBoardUsers;
     } else {
       if (!this._availableUsers.length && this.confirmationService.editableTask?.boardId) {
-        const getUsersHandler = (users: UserApiObj[]) => {
+        const getUsersHandler = (users: UserRestObj[]) => {
             this._availableUsers = users;
             this.checkoutForm.controls['taskExecutor']
               .setValue(
@@ -43,7 +43,7 @@ export class FormNewTaskComponent {
             this.enableSelect();
           }
 
-        this.restApi.getBoardUsers(
+        this.restRest.getBoardUsers(
           this.confirmationService.editableTask?.boardId,
           getUsersHandler.bind(this)
         );
@@ -83,7 +83,7 @@ export class FormNewTaskComponent {
   };
 
   checkInput(event?: MatSelectChange): void {
-    let executor: UserApiObj | undefined;
+    let executor: UserRestObj | undefined;
 
     if (event) {
       const indexArr = Object.entries(event.source._keyManager).find((propArr) => propArr[0] === '_activeItemIndex');

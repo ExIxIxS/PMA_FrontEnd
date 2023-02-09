@@ -7,7 +7,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
 import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, EditableTask, HandleConfirmObj, HandleConfirmOptions, NewBoardObj, NewColumnOption, NewTaskObj,
-          NewTaskOptions, OpenDialogArgs, TaskApiObj, TaskDeletionOptions, UserApiObj } from './app.interfeces';
+          NewTaskOptions, OpenDialogArgs, TaskRestObj, TaskDeletionOptions, UserRestObj } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 
 
@@ -25,8 +25,8 @@ export class ConfirmationService {
   newColumnTitle: string | undefined;
   newTaskTitle: string | undefined;
   newTaskDescription: string | undefined;
-  newTaskExecutor: UserApiObj | undefined;
-  editableTask: TaskApiObj | undefined | null;
+  newTaskExecutor: UserRestObj | undefined;
+  editableTask: TaskRestObj | undefined | null;
 
   constructor(public dialog: MatDialog,
               private restAPI: RestDataService,
@@ -153,7 +153,7 @@ export class ConfirmationService {
           case 'editTask':
             console.log(handleOptions, this.newTaskTitle, this.newTaskExecutor)
             if (handleOptions  && this.newTaskTitle) {
-              const currentTask = handleOptions.options as TaskApiObj;
+              const currentTask = handleOptions.options as TaskRestObj;
               const newTaskObj: EditableTask =
                 {
                   title: this.newTaskTitle,

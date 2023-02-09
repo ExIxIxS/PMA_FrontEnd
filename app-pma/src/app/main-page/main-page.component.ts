@@ -6,8 +6,6 @@ import { LocalStorageService } from '../localStorage.service';
 import { ConfirmationService } from '../confirmation.service';
 import { AppBoardObj } from '../app.interfeces';
 
-
-
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
@@ -38,7 +36,7 @@ export class MainPageComponent {
   }
 
   get participanceBoards() {
-    const participant = this.localStorageService.apiUsers
+    const participant = this.localStorageService.restUsers
       .find((userObj) => userObj._id === this.localStorageService.currentUserId);
 
     if (participant) {

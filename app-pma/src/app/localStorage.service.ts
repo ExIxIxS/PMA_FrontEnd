@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { CurUserObj, ApiBoardObj, UserApiObj, AppBoardObj, ColumnAppObj,
-        ColumnApiObj, TaskApiObj, ColumnSetApiObj,
+import { CurUserObj, RestBoardObj, UserRestObj, AppBoardObj, ColumnAppObj,
+        ColumnRestObj, TaskRestObj, ColumnSetRestObj,
 } from './app.interfeces';
 
 import { AppFormsService } from './app-forms.service';
@@ -16,14 +16,14 @@ export class LocalStorageService {
   private _currentLanguage: string = this.getInitialcurrentUserId();
   private _avalibleLanguages = ['en', 'ru'];
   public isBoards: boolean = false;
-  public apiBoards: ApiBoardObj[] = [];
+  public restBoards: RestBoardObj[] = [];
   public currentAppBoards: AppBoardObj[] = [];
-  public currentApiBoard: ApiBoardObj | undefined;
-  public apiUsers: UserApiObj[] = [];
-  public currentBoardUsers: UserApiObj[] = [];
+  public currentRestBoard: RestBoardObj | undefined;
+  public restUsers: UserRestObj[] = [];
+  public currentBoardUsers: UserRestObj[] = [];
   public currentBoardColumns: ColumnAppObj[] = [];
-  public apiColumns: ColumnApiObj[] = [];
-  public apiTasks: TaskApiObj[] = [];
+  public restColumns: ColumnRestObj[] = [];
+  public restTasks: TaskRestObj[] = [];
   public isTaskDropDisabled: boolean = false;
   private _html = document.querySelector('html');
 
@@ -111,7 +111,7 @@ export class LocalStorageService {
     }
   }
 
-  getCurrentBoardUserById(userId: string): UserApiObj | undefined {
+  getCurrentBoardUserById(userId: string): UserRestObj | undefined {
     if (this.currentBoardUsers.length) {
       return this.currentBoardUsers.find((user) => user._id === userId);
     }
@@ -121,10 +121,10 @@ export class LocalStorageService {
   updateCurrentBoardUsers(boardId: string): void {
     this.currentBoardUsers = (this.currentAppBoards.length)
       ? this._getCurrentBoardAppUsers(boardId)
-      : this._getCurrentBoardApiUsers()
+      : this._getCurrentBoardRestUsers()
   }
 
-  private _getCurrentBoardAppUsers(boardId: string): UserApiObj[] {
+  private _getCurrentBoardAppUsers(boardId: string): UserRestObj[] {
     const currentBoard = this.currentAppBoards
       .find((board) => board._id === boardId);
 
@@ -133,27 +133,27 @@ export class LocalStorageService {
       : [];
   }
 
-  private _getCurrentBoardApiUsers(): UserApiObj[]  {
-    return (this.apiUsers.length && this.currentApiBoard)
-      ? [...this.currentApiBoard.users, this.currentApiBoard.owner]
-          .map((userId) => this.apiUsers.find((user) => user._id === userId))
-          .filter((user) => user) as UserApiObj[]
+  private _getCurrentBoardRestUsers(): UserRestObj[]  {
+    return (this.restUsers.length && this.currentRestBoard)
+      ? [...this.currentRestBoard.users, this.currentRestBoard.owner]
+          .map((userId) => this.restUsers.find((user) => user._id === userId))
+          .filter((user) => user) as UserRestObj[]
       : [];
   }
 
   updateBoardsStorage():void {
-    const storageBoards = this.apiBoards.map((boardObj) => this._createStorageBoard(boardObj));
+    const storageBoards = this.restBoards.map((boardObj) => this._createStorageBoard(boardObj));
 
     this.currentAppBoards = storageBoards;
     this.updateCurrentUserId();
     this.isBoards = (!!storageBoards.length)
   }
 
-  private _createStorageBoard(boardObj: ApiBoardObj): AppBoardObj {
-    const ownerObj = this.apiUsers
+  private _createStorageBoard(boardObj: RestBoardObj): AppBoardObj {
+    const ownerObj = this.restUsers
       .find((userObj) => boardObj.owner === userObj._id);
 
-    const participantsObj = this.apiUsers
+    const participantsObj = this.restUsers
       .filter((userObj) => boardObj.users.includes(userObj._id));
 
     return {
@@ -166,13 +166,13 @@ export class LocalStorageService {
 
   clearColumns(): void {
     this.currentBoardColumns = [];
-    this.apiColumns = [];
-    this.apiTasks = [];
+    this.restColumns = [];
+    this.restTasks = [];
   }
 
   updateCurrentUserId(): void {
-    if (this.apiUsers.length !== 0 && this.currentUser.login) {
-      const currentUserId = this.apiUsers
+    if (this.restUsers.length !== 0 && this.currentUser.login) {
+      const currentUserId = this.restUsers
         .find((userObj) => userObj.login === this.currentUser.login)
         ?._id;
 
@@ -191,29 +191,29 @@ export class LocalStorageService {
     this.currentAppBoards.splice(boardIndex, 1);
   }
 
-  createAppColumn(apiColumn: ColumnApiObj): ColumnAppObj {
+  createAppColumn(restColumn: ColumnRestObj): ColumnAppObj {
     return {
-      ...apiColumn,
+      ...restColumn,
       tasks: [],
-      titleForm: this.formsService.getNewFormGroup({type: 'columnTitle', columnTitle: apiColumn.title})
+      titleForm: this.formsService.getNewFormGroup({type: 'columnTitle', columnTitle: restColumn.title})
     }
   }
 
-  addColumn(apiColumn: ColumnApiObj): void {
-    const appColumn = this.createAppColumn(apiColumn);
+  addColumn(restColumn: ColumnRestObj): void {
+    const appColumn = this.createAppColumn(restColumn);
 
-    this.apiColumns.push(apiColumn);
+    this.restColumns.push(restColumn);
     this.currentBoardColumns.push(appColumn);
   }
 
-  sortByOrder<T extends ColumnAppObj | ColumnApiObj | TaskApiObj>(a: T, b: T): number {
+  sortByOrder<T extends ColumnAppObj | ColumnRestObj | TaskRestObj>(a: T, b: T): number {
       return a.order - b.order;
   }
 
   updateBoardAppColumns(): void {
-    const appColumns: ColumnAppObj[] = this.apiColumns
+    const appColumns: ColumnAppObj[] = this.restColumns
       .sort(this.sortByOrder)
-      .map((apiColumn) => this.createAppColumn(apiColumn));
+      .map((restColumn) => this.createAppColumn(restColumn));
 
     this.fillAppBoardWithTasks(appColumns);
 
@@ -227,7 +227,7 @@ export class LocalStorageService {
       : appColumns;
 
     fillableColumns.forEach((column) => {
-      const columnTasks = this.apiTasks.filter((apiTask) => apiTask.columnId === column._id);
+      const columnTasks = this.restTasks.filter((restTask) => restTask.columnId === column._id);
 
       if (columnTasks.length) {
         columnTasks.sort(this.sortByOrder);
@@ -237,12 +237,12 @@ export class LocalStorageService {
     });
   }
 
-  deleteApiColumn(columnObj: ColumnApiObj): void {
-    const columnIndex = this.apiColumns.findIndex((column) => column._id === columnObj._id);
-    this.apiColumns.splice(columnIndex, 1);
+  deleteRestColumn(columnObj: ColumnRestObj): void {
+    const columnIndex = this.restColumns.findIndex((column) => column._id === columnObj._id);
+    this.restColumns.splice(columnIndex, 1);
   }
 
-  getColumnSet<T extends ColumnApiObj[] | ColumnAppObj[]>(columnsArr: T): ColumnSetApiObj[]  {
+  getColumnSet<T extends ColumnRestObj[] | ColumnAppObj[]>(columnsArr: T): ColumnSetRestObj[]  {
     const columnSet = columnsArr.map((columnObj, index) => {
       return {
               _id: columnObj._id,
@@ -253,31 +253,31 @@ export class LocalStorageService {
     return columnSet;
   }
 
-  getColumnApiSet(): ColumnSetApiObj[] {
-    return this.getColumnSet(this.apiColumns);
+  getColumnRestSet(): ColumnSetRestObj[] {
+    return this.getColumnSet(this.restColumns);
   }
 
-  getColumnAppSet(): ColumnSetApiObj[] {
+  getColumnAppSet(): ColumnSetRestObj[] {
     return this.getColumnSet(this.currentBoardColumns);
   }
 
-  addTask(columnId: string, taskObj: TaskApiObj): void {
-    this.apiTasks.push(taskObj);
+  addTask(columnId: string, taskObj: TaskRestObj): void {
+    this.restTasks.push(taskObj);
     this.fillAppBoardWithTasks(this.currentBoardColumns, [columnId]);
   }
 
-  updateBoardTasks(tasks: TaskApiObj[]): void {
+  updateBoardTasks(tasks: TaskRestObj[]): void {
     if (tasks.length) {
       tasks.forEach((task) => {
-        const targetTaskIndex = this.apiTasks
-            .findIndex((apiTask) => apiTask._id === task._id);
+        const targetTaskIndex = this.restTasks
+            .findIndex((restTask) => restTask._id === task._id);
 
-        const targetTask = this.apiTasks[targetTaskIndex] as TaskApiObj;
+        const targetTask = this.restTasks[targetTaskIndex] as TaskRestObj;
 
         if (targetTask) {
           this._updateObjValues(targetTask, task);
 
-          console.log('Task updated in ApiTasks');
+          console.log('Task updated in RestTasks');
           console.log(task.title);
         } else {
           this._updateTasksInAppColumns(task);
@@ -288,14 +288,14 @@ export class LocalStorageService {
     console.log('Updating ended');
   }
 
-  private _updateObjValues<T extends TaskApiObj>(targetObj: T, sourceObj: T): void {
+  private _updateObjValues<T extends TaskRestObj>(targetObj: T, sourceObj: T): void {
     for (let key in targetObj) {
       targetObj[key as keyof T] = sourceObj[key as keyof T];
     }
   }
 
-  private _updateTasksInAppColumns (task: TaskApiObj): void {
-    this.apiTasks.push(task);
+  private _updateTasksInAppColumns (task: TaskRestObj): void {
+    this.restTasks.push(task);
     const targetAppColumn = this.currentBoardColumns
       .find((appColumn) => appColumn.tasks
         .some((appTask) => appTask._id === task._id));
@@ -310,31 +310,31 @@ export class LocalStorageService {
     }
   }
 
-  deleteTask(taskObj: TaskApiObj): void {
-    const taskIndex = this.apiTasks.findIndex((task) => task._id === taskObj._id);
+  deleteTask(taskObj: TaskRestObj): void {
+    const taskIndex = this.restTasks.findIndex((task) => task._id === taskObj._id);
 
     if (taskIndex >= 0) {
-      this.apiTasks.splice(taskIndex, 1);
+      this.restTasks.splice(taskIndex, 1);
       this.fillAppBoardWithTasks(this.currentBoardColumns, [taskObj.columnId]);
     }
   }
 
-  updateColumnTitle(column: ColumnApiObj) {
+  updateColumnTitle(column: ColumnRestObj) {
     const newTitle = column.title;
-    const apiColumn = this._findColumnById(column, this.apiColumns);
+    const restColumn = this._findColumnById(column, this.restColumns);
     const appColumn = this._findColumnById(column, this.currentBoardColumns);
 
-    if (apiColumn && appColumn && newTitle) {
-      this._changeColumnTitle(apiColumn, newTitle);
+    if (restColumn && appColumn && newTitle) {
+      this._changeColumnTitle(restColumn, newTitle);
       this._changeColumnTitle(appColumn, newTitle);
     }
   }
 
-  private _findColumnById<T extends ColumnApiObj | ColumnAppObj>(column: T, columns: T[]): T | undefined {
+  private _findColumnById<T extends ColumnRestObj | ColumnAppObj>(column: T, columns: T[]): T | undefined {
     return columns.find((currentColumn) => currentColumn._id === column._id)
   };
 
-  private _changeColumnTitle(currentColumn: ColumnApiObj | ColumnAppObj, title: string): void {
+  private _changeColumnTitle(currentColumn: ColumnRestObj | ColumnAppObj, title: string): void {
     currentColumn.title = title;
   }
 

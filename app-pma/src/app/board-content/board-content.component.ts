@@ -4,8 +4,8 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { merge, filter } from 'rxjs';
 
 import { RestDataService } from '../restAPI.service';
-import { ColumnApiObj, ColumnAppObj, DeletedColumnOption, TaskApiObj, NewTaskOptions, TaskSetApiObj, DeletedTask,
-        NewColumnApiObj, ApiBoardObj, UserApiObj, OpenDialogArgs } from '../app.interfeces';
+import { ColumnRestObj, ColumnAppObj, DeletedColumnOption, TaskRestObj, NewTaskOptions, TaskSetRestObj, DeletedTask,
+        NewColumnRestObj, RestBoardObj, UserRestObj, OpenDialogArgs } from '../app.interfeces';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -18,7 +18,7 @@ import { AppFormsService } from '../app-forms.service';
 })
 export class BoardContentComponent {
   public currentBoardId: string;
-  public currentBoard: ApiBoardObj | undefined;
+  public currentBoard: RestBoardObj | undefined;
 
   validOptions = {
     columnTitle: {
@@ -67,7 +67,7 @@ export class BoardContentComponent {
 
   updateBoardTitle() {
     const updateTitleObserver = {
-      next: (board: ApiBoardObj) => {
+      next: (board: RestBoardObj) => {
         this.currentBoard = board;
       },
       error: (err: Error) => {
@@ -91,7 +91,7 @@ export class BoardContentComponent {
     this.localStorageService.currentBoardColumns = columns;
   }
 
-  getExecutorName(task: TaskApiObj): string {
+  getExecutorName(task: TaskRestObj): string {
     if (task.users.length) {
       const userObj = this.localStorageService.getCurrentBoardUserById(task.users[0]);
       if (userObj) {
@@ -108,11 +108,11 @@ export class BoardContentComponent {
       this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
     } else {
       const updateBoardUsersObserver = {
-        next: (apiObj: ApiBoardObj | UserApiObj[]) => {
-          if (apiObj.hasOwnProperty('length') ) {
-            this.localStorageService.apiUsers = apiObj as UserApiObj[];
+        next: (restObj: RestBoardObj | UserRestObj[]) => {
+          if (restObj.hasOwnProperty('length') ) {
+            this.localStorageService.restUsers = restObj as UserRestObj[];
           } else {
-            this.localStorageService.currentApiBoard = apiObj as ApiBoardObj;
+            this.localStorageService.currentRestBoard = restObj as RestBoardObj;
           }
         },
         error: (err: Error) => {
@@ -139,7 +139,7 @@ export class BoardContentComponent {
     };
   }
 
-  private getTasksSet(container: CdkDropList<TaskApiObj[]> | TaskApiObj[], newColumnId: string = ''): TaskSetApiObj[] {
+  private getTasksSet(container: CdkDropList<TaskRestObj[]> | TaskRestObj[], newColumnId: string = ''): TaskSetRestObj[] {
     const sourceObj = (container instanceof CdkDropList)
       ? container.data
       : container;
@@ -171,11 +171,11 @@ export class BoardContentComponent {
     this.confirmationService.openDialog(deleteOptions)
   }
 
-  dropTask(event: CdkDragDrop<TaskApiObj[]>, currentColumnId: string): void {
-    console.log('Api Tasks before moving -->');
-    console.log(JSON.parse(JSON.stringify(this.localStorageService.apiTasks)));
+  dropTask(event: CdkDragDrop<TaskRestObj[]>, currentColumnId: string): void {
+    console.log('Rest Tasks before moving -->');
+    console.log(JSON.parse(JSON.stringify(this.localStorageService.restTasks)));
 
-    let taskSet: TaskSetApiObj[] = [];
+    let taskSet: TaskSetRestObj[] = [];
 
     if (event.previousContainer === event.container) {
       if (event.previousIndex !== event.currentIndex) {
@@ -198,8 +198,8 @@ export class BoardContentComponent {
 
   createBoardColumns() {
     const getColumnsObserver = {
-      next: (columns: ColumnApiObj[]) => {
-        this.localStorageService.apiColumns = columns;
+      next: (columns: ColumnRestObj[]) => {
+        this.localStorageService.restColumns = columns;
         this.fillColumnsWithTasks();
       },
       error: (err: Error) => {
@@ -213,10 +213,10 @@ export class BoardContentComponent {
   }
 
   fillColumnsWithTasks() {
-    if (this.localStorageService.apiColumns.length) {
+    if (this.localStorageService.restColumns.length) {
       const tasksObserver = {
-        next: (tasks: TaskApiObj[]) => {
-          this.localStorageService.apiTasks.push(...tasks);
+        next: (tasks: TaskRestObj[]) => {
+          this.localStorageService.restTasks.push(...tasks);
         },
         error: (err: Error) => {
           this.errorHandlerService.handleError(err)
@@ -226,7 +226,7 @@ export class BoardContentComponent {
         }
       }
 
-      const observableTasksMap = this.localStorageService.apiColumns
+      const observableTasksMap = this.localStorageService.restColumns
         .map((columnObj) => {
           return this.restAPI.getColumnTasks(columnObj.boardId, columnObj._id)
         });
@@ -304,7 +304,7 @@ export class BoardContentComponent {
 
     if (formControl.valid) {
       if (formControl.dirty) {
-        const columnObj: NewColumnApiObj = {
+        const columnObj: NewColumnRestObj = {
           title: formControl.value,
           order: column.order,
         }
@@ -324,7 +324,7 @@ export class BoardContentComponent {
     formControl.markAsPristine();
   }
 
-  editTask(event: Event, task: TaskApiObj) {
+  editTask(event: Event, task: TaskRestObj) {
     if (event.target) {
       if (!(event.target as HTMLElement).classList.contains('mat-mdc-button-touch-target')) {
         console.log(`Edit task ${task.title}`);

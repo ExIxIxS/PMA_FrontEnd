@@ -4,7 +4,7 @@ import { RestDataService } from '../restAPI.service';
 import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 
-import { FormConrolTypes, SearchTaskObj, UserApiObj } from '../app.interfeces';
+import { FormConrolTypes, SearchTaskObj, UserRestObj } from '../app.interfeces';
 
 
 @Component({
@@ -14,13 +14,13 @@ import { FormConrolTypes, SearchTaskObj, UserApiObj } from '../app.interfeces';
 })
 export class SearchPanelComponent {
   foundTasks: SearchTaskObj[] = [];
-  allUsers: UserApiObj[] = [];
+  allUsers: UserRestObj[] = [];
   private _lastSearchRequest: string | undefined;
 
   searchFormControl = this.formsService.getNewFormControl('searchRequest', '', true)
 
   constructor(private formsService: AppFormsService,
-              private restApi: RestDataService,
+              private restRest: RestDataService,
               private errorHandlerService: ErrorHandlerService,
               private confirmationService: ConfirmationService,
               ) {
@@ -47,14 +47,14 @@ export class SearchPanelComponent {
   startSearch(value: string) {
     if (value === this.searchFormControl.value) {
       console.log(`start search for ${value}`);
-      this.restApi.search(value)
+      this.restRest.search(value)
         .subscribe(
           { next: (tasks) => {
               this._lastSearchRequest = value;
               this.foundTasks = [];
               tasks.map((task) => {
                 const searchTask: SearchTaskObj = {
-                  apiTask: task,
+                  restTask: task,
                   description: (task.description !== 'without description' ? task.description : ''),
                   owner: this._findUserNameById(task.userId),
                   executor: this._findUserNameById(task.users[0]),
@@ -74,7 +74,7 @@ export class SearchPanelComponent {
     }
 
     const getUsersObserver = {
-      next: (users: UserApiObj[]) => {
+      next: (users: UserRestObj[]) => {
         this.allUsers = users;
         enableAndFocus();
        },
@@ -86,7 +86,7 @@ export class SearchPanelComponent {
     if (this.allUsers.length) {
       enableAndFocus();
     } else {
-      this.restApi.getUsers().subscribe(getUsersObserver);
+      this.restRest.getUsers().subscribe(getUsersObserver);
     }
   }
 
@@ -120,7 +120,7 @@ export class SearchPanelComponent {
   editTask(task: SearchTaskObj) {
     this.confirmationService.openDialog({
       type: 'editTask',
-      editableTask: task.apiTask,
+      editableTask: task.restTask,
       additionalHandler: this.repeatSearch.bind(this)
     });
   }

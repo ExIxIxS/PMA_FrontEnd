@@ -7,7 +7,7 @@ import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
 import { ErrorHandlerService } from '../errorHandler.service';
 
-import { NewBoardObj, Participant, UserApiObj } from '../app.interfeces'
+import { NewBoardObj, Participant, UserRestObj } from '../app.interfeces'
 import { AppFormsService } from '../app-forms.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class FormNewBoardComponent {
   participants: Participant[] = [];
   participantInput = new FormControl('');
   availableUsers: string[] = [];
-  allUsers: UserApiObj[] | undefined;
+  allUsers: UserRestObj[] | undefined;
 
   constructor(
     private restAPI: RestDataService,
@@ -41,7 +41,7 @@ export class FormNewBoardComponent {
     if (this.allUsers) {
       const ownerLogin = this.localStorageService.currentUser.login;
       return this.allUsers
-        .find((UserApiObj) => UserApiObj.login === ownerLogin)
+        .find((UserRestObj) => UserRestObj.login === ownerLogin)
         ?._id;
     }
 
@@ -54,7 +54,7 @@ export class FormNewBoardComponent {
 
   getUsers(): void {
     const usersObserver = {
-      next: (userObjArr: UserApiObj[]) => {
+      next: (userObjArr: UserRestObj[]) => {
         this.allUsers = userObjArr;
         this.availableUsers = userObjArr
           .filter((obj) => obj._id !== this.ownerId)
@@ -99,11 +99,11 @@ export class FormNewBoardComponent {
     if (this.allUsers) {
       ownerID = this.ownerId;
       participantsIDs = this.allUsers
-        .filter((UserApiObj) => this.participants
+        .filter((UserRestObj) => this.participants
           .map((participant) => participant.name)
-          .includes(UserApiObj.name)
+          .includes(UserRestObj.name)
         )
-        .map((UserApiObj) => UserApiObj._id);
+        .map((UserRestObj) => UserRestObj._id);
     }
 
     const newBoard: NewBoardObj = {

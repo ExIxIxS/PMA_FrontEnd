@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
-import { FormConrolTypes, TaskApiObj, UserApiObj } from './app.interfeces';
+import { FormConrolTypes, TaskRestObj, UserRestObj } from './app.interfeces';
 
 
 type FormGroupTypes = 'taskForm'
@@ -141,7 +141,7 @@ export class AppFormsService {
     return formControl;
   }
 
-  getNewFormGroup(groupArgs: {type: FormGroupTypes, sourceTask?: TaskApiObj | null, executorName?: string, editableUser?: UserApiObj, columnTitle?: string}): FormGroup {
+  getNewFormGroup(groupArgs: {type: FormGroupTypes, sourceTask?: TaskRestObj | null, executorName?: string, editableUser?: UserRestObj, columnTitle?: string}): FormGroup {
     switch(groupArgs.type) {
       case 'taskForm': {
         const title = (groupArgs.sourceTask)

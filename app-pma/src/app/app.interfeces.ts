@@ -15,7 +15,7 @@ interface NewUserObj {
   password: string,
 }
 
-interface UserApiObj {
+interface UserRestObj {
   _id: string,
   name: string,
   login: string,
@@ -27,7 +27,7 @@ interface NewBoardObj {
   users: string[]
 }
 
-interface ApiBoardObj {
+interface RestBoardObj {
   _id: string, // board id
   title: string, // "Board title",
   owner: string, // "userId of owner",
@@ -37,27 +37,27 @@ interface ApiBoardObj {
 interface AppBoardObj {
   _id: string, // board id
   title: string, // "Board title",
-  owner: UserApiObj,
-  users: UserApiObj[],
+  owner: UserRestObj,
+  users: UserRestObj[],
 }
 
 interface Participant {
   name: string;
 }
 
-interface NewColumnApiObj {
+interface NewColumnRestObj {
   title: string, // "Column title"
   order: number,
 }
 
-interface ColumnApiObj {
+interface ColumnRestObj {
   _id: string, //"Column id"
   title: string, // "Column title"
   order: number,
   boardId: string, // "Id of boards"
 }
 
-interface TaskApiObj {
+interface TaskRestObj {
   _id: string, // "Task id"
   title: string, // "Task title"
   order: number,
@@ -68,12 +68,12 @@ interface TaskApiObj {
   users: string[], //  "Ids of responsible users"
 }
 
-interface ColumnAppObj extends ColumnApiObj {
-  tasks: TaskApiObj[],
+interface ColumnAppObj extends ColumnRestObj {
+  tasks: TaskRestObj[],
   titleForm: FormGroup,
 }
 
-interface PointApiObj {
+interface PointRestObj {
   _id: number, // "Point id",
   title: string, // "Point title",
   taskId: string, // "Id of task",
@@ -86,7 +86,7 @@ interface NewColumn {
   columnOrder: number,
 }
 
-interface ColumnSetApiObj {
+interface ColumnSetRestObj {
   _id: string,
   order: number,
 }
@@ -117,7 +117,7 @@ interface EditableTask extends NewTaskObj {
   columnId: string,
 }
 
-interface TaskSetApiObj {
+interface TaskSetRestObj {
   _id: string,
   order: number,
   columnId: string,
@@ -125,7 +125,7 @@ interface TaskSetApiObj {
 
 interface TasksSetConfig {
   columnId: string,
-  tasksColumn: TaskSetApiObj[],
+  tasksColumn: TaskSetRestObj[],
 }
 
 interface DeletedTask extends DeletedColumnOption {
@@ -134,7 +134,7 @@ interface DeletedTask extends DeletedColumnOption {
 
 interface TaskDeletionOptions {
   deletedTask: DeletedTask,
-  updatedTasks?: TaskSetApiObj[],
+  updatedTasks?: TaskSetRestObj[],
 }
 
 interface ColumnTitleInputObj {
@@ -149,8 +149,8 @@ interface OpenDialogArgs {
   deletedColumn?: DeletedColumnOption,
   newTask?: NewTaskOptions,
   deletedTask?: DeletedTask,
-  updatedTasks?: TaskSetApiObj[],
-  editableTask?: TaskApiObj,
+  updatedTasks?: TaskSetRestObj[],
+  editableTask?: TaskRestObj,
   additionalHandler?: Function,
 }
 
@@ -162,7 +162,7 @@ interface DeletedBoard {
 }
 
 interface SearchTaskObj {
-  apiTask: TaskApiObj,
+  restTask: TaskRestObj,
   description: string,
   owner: string,
   executor: string,
@@ -205,24 +205,24 @@ export {
   CurUserObj,
   TokenObj,
   NewUserObj,
-  UserApiObj,
+  UserRestObj,
   NewBoardObj,
-  ApiBoardObj,
+  RestBoardObj,
   AppBoardObj,
   Participant,
   ConfirmationTypes,
-  NewColumnApiObj,
-  ColumnApiObj,
-  TaskApiObj,
-  PointApiObj,
+  NewColumnRestObj,
+  ColumnRestObj,
+  TaskRestObj,
+  PointRestObj,
   ColumnAppObj,
   NewColumn,
   NewColumnOption,
-  ColumnSetApiObj,
+  ColumnSetRestObj,
   DeletedColumnOption,
   NewTaskOptions,
   NewTaskObj,
-  TaskSetApiObj,
+  TaskSetRestObj,
   TasksSetConfig,
   DeletedTask,
   ColumnTitleInputObj,
