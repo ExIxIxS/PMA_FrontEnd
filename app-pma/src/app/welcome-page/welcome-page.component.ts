@@ -4,6 +4,7 @@ import {FormBuilder, Validators} from '@angular/forms';
 import { RestDataService } from '../restAPI.service'
 import { LocalStorageService } from '../localStorage.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-welcome-page',
@@ -29,11 +30,10 @@ export class WelcomePageComponent {
     thirdCtrl: ['', Validators.required],
   });
 
-
   constructor(
     private _formBuilder: FormBuilder,
     private restAPI: RestDataService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
     ) {
       if (this.localStorageService.isUserLoggedIn) {
         console.log('storage --> User is Logged In')
@@ -42,4 +42,8 @@ export class WelcomePageComponent {
         console.log('storage --> User is Logged Out')
       }
     }
+
+  get navigation() {
+    return window.Navigator
+  }
 }

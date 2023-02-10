@@ -5,3 +5,15 @@
 .mat-mdc-form-field {
   margin-top: 16px;
 }
+
+.developer-card {
+  max-width: 800px;
+}
+
+.developer-header-image {
+  width: 100px;
+  height: 100px;
+  background-image: url('../../assets/img/photo_01.png');
+  background-size: cover;
+  border-radius: 15px;
+}

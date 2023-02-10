@@ -1,17 +1,109 @@
 {
+  "tooltips": {
+    "aboutDeveloper": "Learn more about the developer"
+  },
   "project": {
     "title": "About project",
-    "description": "Many words about project"
+    "description": {
+      "p1": "This application makes it easy to manage casual work`s or homes tasks with continuous connection with a team",
+      "featuresListTitle": "Main features of the application",
+      "featuresList":
+        [
+          {
+            "title": "Boards management",
+            "description": "Boards management according to user's role",
+            "iconName": "dashboard"
+          },
+          {
+            "title": "Columns management",
+            "description": "Manage board`s columns with user-friendly drag and drop interface",
+            "iconName": "view_week"
+          },
+          {
+            "title": "Tasks management",
+            "description": "Create, edit and delete tasks in native way",
+            "iconName": "task"
+          },
+          {
+            "title": "Multilanguage",
+            "description": "Сhange the language on the fly",
+            "iconName": "translate"
+          },
+          {
+            "title": "Adaptive layout",
+            "description": "The minimum page width of the application is 320px",
+            "iconName": "devices"
+          },
+          {
+            "title": "Modern design",
+            "description": "Handy, smooth and interactive interface for daily use",
+            "iconName": "design_services"
+          }
+        ],
+        "techListTitle": "Main technologies used in the the application",
+        "techList":
+        [
+                    {
+            "title": "Angular 15",
+            "iconName": "shield"
+          },
+          {
+            "title": "Angular material",
+            "iconName": "shield_moon"
+          },
+          {
+            "title": "JavaScript",
+            "iconName": "javascript"
+          },
+          {
+            "title": "TypeScript",
+            "iconName": "data_object"
+          },
+          {
+            "title": "RxJS",
+            "iconName": "source"
+          },
+          {
+            "title": "REST API",
+            "iconName": "api"
+          },
+          {
+            "title": "HTML5",
+            "iconName": "html"
+          },
+          {
+            "title": "SCSS",
+            "iconName": "css"
+          }
+        ],
+        "p2": "To get started with the application, please",
+        "p3": "This application is implemented as an educational pet project in accordance with",
+        "login": "login",
+        "signUp": "sign up",
+        "or": "or"
+    }
   },
 
   "course": {
     "title": "About course",
-    "description": "Many words about course"
+    "description": {
+      "p1": "Реализация приложения является практической частью",
+      "angularCourse": "'RS School. Angular Course'",
+      "p2": ", включенного в последний этап",
+      "feCourse": "FrontEnd 'RS School. UpSkill Me course'",
+      "p3": "В ходе курса, под контролем менторов, были получены теоретические знания и практические навыки по следующим темам",
+      "topics": ["Markdown", "HTML5", "CSS3",  "JS", "TypeScript", "Angular", "GIT", "NPM", "Figma", "DevTools", "Webpack", "HTTP/HTTPS. REST. WebSocket", "DOM API, Browser API", "Design Patterns", "Software Design Principles", "Unit tests", "Software Development Lifecycle"]
+    }
   },
 
   "developer": {
     "title": "Developer",
-    "description": "Many words about developer"
+    "name": "Denis Bondarenko",
+    "description": {
+      "p1": "I began my career after university (Bachelor of Engineering / Electrician Engineer) in the railway industry in 2011, where I took initial skills of working with technical documentation and a stack of plenty of technologies",
+      "p2": "The last 2 years I have been working in an International Company as lead technical writer, where the main point of my work was development and management technical documentation with different types of content",
+      "p3": "At the moment I have done a lot and go on to do every day with passion for learning to become an experienced Frontend developer"
+    }
   },
 
   "welcome": {
@@ -26,7 +118,8 @@
     "saveChanges": "Save",
     "cancel": "Cancel",
     "removeUser": "Remove User Account",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "seeRequirements": "project requirements"
   },
 
   "error": {

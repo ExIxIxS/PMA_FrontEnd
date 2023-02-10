@@ -52,10 +52,6 @@ export class HeaderComponent {
     this.confirmationService.openDialog({type: 'createBoard'});
   }
 
-  editUser() {
-    this.router.navigate(['user']);
-  }
-
   logOut() {
     this.appControlService.logOut()
   }

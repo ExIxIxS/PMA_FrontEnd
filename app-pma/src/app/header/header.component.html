@@ -34,12 +34,12 @@
         {{'buttons.logOut' | translate}}
       </button>
 
-      <button *ngIf="isUserLoggedIn"
+      <a *ngIf="isUserLoggedIn"
               mat-fab color="primary"
               aria-label="User profile"
-              (click)="editUser()">
+              routerLink="/user">
         <mat-icon>manage_accounts</mat-icon>
-      </button>
+      </a>
     </mat-panel-description>
   </mat-expansion-panel-header>
 
