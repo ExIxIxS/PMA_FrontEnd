@@ -5,8 +5,6 @@ import { LocalStorageService } from './localStorage.service';
 
 @Injectable()
 export class AppControlService {
-
-
   constructor(
     private router: Router,
     private localStorageService: LocalStorageService,

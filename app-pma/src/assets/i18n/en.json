@@ -36,7 +36,7 @@
           },
           {
             "title": "Modern design",
-            "description": "Handy, smooth and interactive interface for daily use",
+            "description": "Customizable, smooth and interactive interface for daily use",
             "iconName": "design_services"
           }
         ],
@@ -72,7 +72,7 @@
             "iconName": "html"
           },
           {
-            "title": "SCSS",
+            "title": "SASS",
             "iconName": "css"
           }
         ],

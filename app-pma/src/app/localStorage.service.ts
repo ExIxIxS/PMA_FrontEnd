@@ -15,6 +15,10 @@ export class LocalStorageService {
   private _currentUserId: string = this.getInitialcurrentUserId();
   private _currentLanguage: string = this.getInitialcurrentUserId();
   private _avalibleLanguages = ['en', 'ru'];
+  private _currentColorTheme: string = this._getInitialColorTheme();
+  private _html = document.documentElement;
+  private _body = document.body;
+
   public isBoards: boolean = false;
   public restBoards: RestBoardObj[] = [];
   public currentAppBoards: AppBoardObj[] = [];
@@ -25,13 +29,13 @@ export class LocalStorageService {
   public restColumns: ColumnRestObj[] = [];
   public restTasks: TaskRestObj[] = [];
   public isTaskDropDisabled: boolean = false;
-  private _html = document.querySelector('html');
 
   constructor(
     private formsService: AppFormsService,
     private translateService: TranslateService,
   ) {
-    this.setLanguages();
+    this._setLanguages();
+    this._setInitialColorTheme();
   }
 
   set currentLanguage(lang: string) {
@@ -76,6 +80,36 @@ export class LocalStorageService {
     return this.currentBoardUsers.map((user) => user.name);
   }
 
+  get currentColorTheme() {
+    return this._currentColorTheme;
+  }
+
+  private _changeBodyColorTheme(colorTheme: string) {
+    this._body.classList.remove(`${this._currentColorTheme}-theme`);
+    this._body.classList.add(`${colorTheme}-theme`);
+  }
+
+  set currentColorTheme(colorTheme: string) {
+    console.log(this._currentColorTheme);
+    if (colorTheme !== this._currentColorTheme) {
+      this._changeBodyColorTheme(colorTheme);
+      this._currentColorTheme = colorTheme;
+      localStorage.setItem('currentColorTheme', colorTheme);
+      console.log(this._currentColorTheme);
+
+    }
+  }
+
+  _setInitialColorTheme() {
+    this._changeBodyColorTheme(this._currentColorTheme);
+  }
+
+  private _getInitialColorTheme(): string {
+    const currentColorTheme = localStorage.getItem('currentColorTheme');
+
+    return (currentColorTheme) ? currentColorTheme : 'default';
+  }
+
   getInitialCurrentUser(): CurUserObj {
     const localCurrentUser = localStorage.getItem('currentUser');
 
@@ -92,7 +126,7 @@ export class LocalStorageService {
     return (currentUserId) ? currentUserId : '';
   }
 
-  setLanguages(): void {
+  private _setLanguages(): void {
     this.translateService.addLangs(this._avalibleLanguages);
     this.translateService.setDefaultLang('en');
 

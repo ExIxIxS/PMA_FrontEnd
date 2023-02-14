@@ -1,9 +1,27 @@
-<button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+<button mat-icon-button
+        [matMenuTriggerFor]="menu">
   <mat-icon>menu</mat-icon>
 </button>
+
 <mat-menu #menu="matMenu">
-  <button mat-menu-item>
+  <button mat-menu-item
+          [matMenuTriggerFor]="colors">
+    palettes
     <mat-icon>format_paint</mat-icon>
-    <span>App style</span>
   </button>
+</mat-menu>
+
+<mat-menu #colors="matMenu">
+    <button class="color-button"
+            *ngFor="let theme of colorThemes"
+            (click)="setColorTheme(theme.name)">
+      <span [class]="'color-wrapper-' + theme.name">
+        <span class="color-item color-item-primary"></span>
+        <span class="color-item color-item-accent"></span>
+        <span class="color-item color-item-warn"></span>
+        <mat-icon>{{(theme.isDark) ? 'dark_mode' : 'light_mode'}}</mat-icon>
+      </span>
+
+    </button>
+
 </mat-menu>
