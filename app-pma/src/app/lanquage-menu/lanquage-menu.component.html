@@ -1,4 +1,16 @@
-<button mat-button [matMenuTriggerFor]="menu">{{currentLanguage | uppercase}}</button>
+<button *ngIf="!isSmallScreen"
+        mat-button
+        [matMenuTriggerFor]="menu">{{currentLanguage | uppercase}}
+</button>
+
+<button *ngIf="isSmallScreen"
+  mat-icon-button
+  [matMenuTriggerFor]="menu"
+  matTooltip="{{'buttons.changeLanguage' | translate}}"
+  aria-label="Localization icon">
+  <mat-icon>language</mat-icon>
+</button>
+
 <mat-menu #menu="matMenu">
   <button *ngFor="let lang of avalibleLanguages"
           mat-menu-item

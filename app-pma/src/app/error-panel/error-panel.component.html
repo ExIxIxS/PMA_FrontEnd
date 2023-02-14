@@ -1,0 +1,37 @@
+<mat-expansion-panel hideToggle
+                    class="header-error-panel"
+                    [disabled]="true"
+                    [expanded]="isError">
+  <mat-expansion-panel-header class="error-panel-header mat-elevation-z2">
+  </mat-expansion-panel-header>
+
+  <h3 class="error-panel-title">{{'error.menuTitle' | translate}}</h3>
+
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>{{'error.title' | translate}}</mat-card-title>
+      <mat-divider></mat-divider>
+    </mat-card-header>
+    <mat-card-content>
+      {{currentError}}
+    </mat-card-content>
+  </mat-card>
+
+  <mat-paginator #paginator
+    (page)="pageIndex = paginator.pageIndex"
+    [pageIndex]="pageIndex"
+    [length]="this.errorAmount"
+    style-paginator
+    [pageSize]="1"
+    hidePageSize="true"
+    aria-label="Select page">
+  </mat-paginator>
+
+  <button mat-flat-button
+          color="warn"
+          align="end"
+          (click)="cleanErrors()">
+    {{'buttons.gotIt' | translate}}
+  </button>
+
+</mat-expansion-panel>

@@ -2,13 +2,19 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { LocalStorageService } from './localStorage.service';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Injectable()
 export class AppControlService {
+  public isSmallScreen = this.breakpointObserver.isMatched('(max-width: 539px)');
+
   constructor(
     private router: Router,
     private localStorageService: LocalStorageService,
-  ) { }
+    private breakpointObserver: BreakpointObserver,
+  ) {
+    this._observeLayoutChanges(539);
+  }
 
   logOut() {
     this.localStorageService.logOutUser();
@@ -22,5 +28,17 @@ export class AppControlService {
   refreshPage() {
     window.location.reload();
   }
+
+  private _observeLayoutChanges(maxWidth: number) {
+    const breakPoint = `(max-width: ${maxWidth}px)`;
+    const layoutChangesObservable = this.breakpointObserver.observe([
+      breakPoint,
+    ]);
+
+    layoutChangesObservable.subscribe(() => {
+      this.isSmallScreen = this.breakpointObserver.isMatched(breakPoint);
+    });
+  }
+
 
 }

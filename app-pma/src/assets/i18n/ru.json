@@ -73,7 +73,10 @@
     "cancel": "Отмена",
     "removeUser": "Удалить аккаунт",
     "confirm": "Подтвердить",
-    "seeRequirements": "требованиями"
+    "seeRequirements": "требованиями",
+    "userAccount": "Редакт. профиль",
+    "newBoard": "Создать новый проект",
+    "changeLanguage": "Сменить язык"
   },
   "error": {
     "title": "Ошибка",

@@ -1,11 +1,32 @@
-.spacer {
+.header-toolbar {
+  height: 60px;
+}
+
+.left-spacer {
   flex: 1 1 auto;
 }
 
-.header-header {
-  height: 80px;
+.right-spacer {
+  flex: 3 3 auto;
 }
 
-.action-panel {
-  height: 80px;
+.app-button {
+  font-size: 28px;
+  padding: 40px 16px;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+.fab-button {
+  margin: 0 5px;
+}
+
+.mini-fab-button {
+  margin: 0 2px;
+}
+
+@media (max-width: 539px) {
+  .app-button {
+    font-size: 20px;
+  }
 }

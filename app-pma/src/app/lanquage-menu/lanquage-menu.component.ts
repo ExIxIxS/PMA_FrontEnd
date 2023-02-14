@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { LocalStorageService } from '../localStorage.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AppControlService } from '../app-control.service';
 
 @Component({
   selector: 'app-lanquage-menu',
@@ -15,9 +16,14 @@ export class LanquageMenuComponent {
     return this.localStorageService.currentLanguage;
   }
 
+  get isSmallScreen() {
+    return this.appControlService.isSmallScreen;
+  }
+
   constructor(
     private localStorageService: LocalStorageService,
     private translate: TranslateService,
+    private appControlService: AppControlService,
   ) {};
 
   changeLanguage(lang: string) {

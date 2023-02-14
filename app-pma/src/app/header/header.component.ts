@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { AppControlService } from '../app-control.service';
 import { LocalStorageService } from '../localStorage.service';
@@ -13,10 +12,7 @@ import { ConfirmationService } from '../confirmation.service';
 })
 
 export class HeaderComponent {
-  public pageIndex: number = 0;
-
   constructor(
-    private router: Router,
     private appControlService: AppControlService,
     private localStorageService: LocalStorageService,
     private errorHandlerService: ErrorHandlerService,
@@ -25,27 +21,14 @@ export class HeaderComponent {
       if (!this.isUserLoggedIn) {
         this.logOut();
       }
-    }
+  }
 
   get isUserLoggedIn() {
     return this.localStorageService.isUserLoggedIn;
   }
 
-  get isError() {
-    return this.errorHandlerService.isError;
-  }
-
-  get errorAmount() {
-    return this.errorHandlerService.currentErrors.length;
-  }
-
-  get currentError() {
-    return this.errorHandlerService.currentErrors[this.pageIndex];
-  }
-
-  cleanErrors() {
-    this.errorHandlerService.clearErrors();
-    this.pageIndex = 0;
+  get isSmallScreen() {
+    return this.appControlService.isSmallScreen;
   }
 
   createNewBoard() {
@@ -55,4 +38,7 @@ export class HeaderComponent {
   logOut() {
     this.appControlService.logOut()
   }
+
 }
+
+

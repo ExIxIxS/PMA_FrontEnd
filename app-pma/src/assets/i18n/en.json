@@ -119,7 +119,10 @@
     "cancel": "Cancel",
     "removeUser": "Remove User Account",
     "confirm": "Confirm",
-    "seeRequirements": "project requirements"
+    "seeRequirements": "project requirements",
+    "userAccount": "Edit profile",
+    "newBoard": "Create a new project",
+    "changeLanguage": "Change Language"
   },
 
   "error": {
