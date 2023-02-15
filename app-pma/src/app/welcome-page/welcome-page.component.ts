@@ -4,7 +4,7 @@ import {FormBuilder, Validators} from '@angular/forms';
 import { RestDataService } from '../restAPI.service'
 import { LocalStorageService } from '../localStorage.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { Router } from '@angular/router';
+import { AppControlService } from '../app-control.service';
 
 @Component({
   selector: 'app-welcome-page',
@@ -20,20 +20,21 @@ import { Router } from '@angular/router';
 export class WelcomePageComponent {
   animationDuration = '1000';
 
-  firstFormGroup = this._formBuilder.group({
+  firstFormGroup = this.formBuilder.group({
     firstCtrl: ['', Validators.required],
   });
-  secondFormGroup = this._formBuilder.group({
+  secondFormGroup = this.formBuilder.group({
     secondCtrl: ['', Validators.required],
   });
-  thirdFormGroup = this._formBuilder.group({
+  thirdFormGroup = this.formBuilder.group({
     thirdCtrl: ['', Validators.required],
   });
 
   constructor(
-    private _formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     private restAPI: RestDataService,
     private localStorageService: LocalStorageService,
+    private appControlService: AppControlService,
     ) {
       if (this.localStorageService.isUserLoggedIn) {
         console.log('storage --> User is Logged In')
@@ -45,5 +46,13 @@ export class WelcomePageComponent {
 
   get navigation() {
     return window.Navigator
+  }
+
+  get isSmallScreen() {
+    return this.appControlService.isSmallScreen;
+  }
+
+  scrollToUp() {
+    this.appControlService.scrollToUp();
   }
 }

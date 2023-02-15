@@ -90,13 +90,10 @@ export class LocalStorageService {
   }
 
   set currentColorTheme(colorTheme: string) {
-    console.log(this._currentColorTheme);
     if (colorTheme !== this._currentColorTheme) {
       this._changeBodyColorTheme(colorTheme);
       this._currentColorTheme = colorTheme;
       localStorage.setItem('currentColorTheme', colorTheme);
-      console.log(this._currentColorTheme);
-
     }
   }
 

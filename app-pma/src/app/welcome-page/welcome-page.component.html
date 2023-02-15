@@ -1,108 +1,147 @@
-<h2>{{'welcome.title' | translate }}</h2>
+<div class="welcome-wrapper">
+  <h2>{{'welcome.title' | translate }}</h2>
 
-<mat-stepper orientation="vertical"
-            [linear]="false"
-            #stepper>
+  <mat-vertical-stepper class="welcome-stepper"
+              (selectionChange)="scrollToUp()"
+              animationDuration="800"
+              [linear]="false"
+              #stepper>
 
-  <mat-step [stepControl]="firstFormGroup"
-            state="project">
-    <ng-template matStepLabel>
-      {{'project.title' | translate}}</ng-template>
+    <mat-step class="welcome-step"
+              [stepControl]="firstFormGroup"
+              state="project">
+      <ng-template matStepLabel>
+        <span class="step-text">{{'project.title' | translate}}</span></ng-template>
 
-    <p>{{'project.description.p1' | translate }}.</p>
+      <p class="start-text">{{'project.description.p1' | translate }}.</p>
 
-    <h3>{{'project.description.featuresListTitle' | translate }}:</h3>
-    <mat-list>
-      <mat-list-item *ngFor="let listItem of ('project.description.featuresList' | translate)"
-                      lines="3">
-        <mat-icon matListItemIcon>{{listItem.iconName}}</mat-icon>
-        <span matListItemTitle>{{listItem.title}}</span>
-        {{listItem.description}}
+      <h3>{{'project.description.featuresListTitle' | translate }}:</h3>
+      <mat-list>
+        <mat-list-item *ngFor="let listItem of ('project.description.featuresList' | translate)"
+                        class="feature-item"
+                        lines="3">
+          <mat-icon matListItemIcon
+                    class="feature-icon">
+            {{listItem.iconName}}</mat-icon>
+          <span *ngIf="!isSmallScreen"
+                matListItemTitle>{{listItem.title}}</span>
+          <span *ngIf="!isSmallScreen">{{listItem.description}}</span>
+
+          <span *ngIf="isSmallScreen" class="step-text"
+                matListItemTitle
+                matTooltip="{{listItem.description}}">
+            {{listItem.title}}
+          </span>
+        </mat-list-item>
+      </mat-list>
+
+      <h3>{{'project.description.techListTitle' | translate}}:</h3>
+      <mat-list>
+        <mat-list-item *ngFor="let listItem of ('project.description.techList' | translate)"
+                        class="tech-item">
+          <mat-icon matListItemIcon
+                    class="tech-icon">
+            {{listItem.iconName}}
+          </mat-icon>
+          <span matListItemTitle class="step-text">{{listItem.title}}</span>
+        </mat-list-item>
+      </mat-list>
+
+      <p>
+        <span>{{'project.description.p2' | translate }} </span>
+        <a mat-flat-button
+          class="text-button"
+          routerLink="/signin">
+          {{'project.description.login' | translate}}
+        </a>
+        <span> {{'project.description.or' | translate }} </span>
+        <a mat-flat-button
+          class="text-button"
+          routerLink="/signup">
+          {{'project.description.signUp' | translate}}
+        </a>.
+      </p>
+      <p>{{'project.description.p3' | translate }}
+        <a mat-flat-button
+          class="text-button"
+          href="https://github.com/rolling-scopes-school/js-fe-course-en/blob/main/tasks/angular/project-management-system.md"
+          target="_blank">
+          {{'buttons.seeRequirements' | translate}}
+        </a>.
+      </p>
+
+    </mat-step>
+
+    <mat-step [stepControl]="secondFormGroup"
+              state="course">
+      <ng-template matStepLabel>
+        {{'course.title' | translate}}</ng-template>
+      <p class="start-text">{{'course.description.p1' | translate }}
+        <a mat-flat-button
+          class="text-button"
+          href="https://rs.school/angular/"
+          target="_blank">
+          {{'course.description.angularCourse' | translate}}
+        </a>{{'course.description.p2' | translate }}
+        <a mat-flat-button
+          class="text-button"
+          href="https://github.com/rolling-scopes-school/js-fe-course-en/blob/main/UpSkillMe/README.md"
+          target="_blank">
+          {{'course.description.feCourse' | translate}}
+       </a>.
+      </p>
+      <p>{{'course.description.p3' | translate }}:</p>
+      <mat-list role="list">
+        <mat-list-item *ngFor="let topic of ('course.description.topics' | translate)"
+                        class="topic-item"
+                        role="listitem">
+        <mat-icon matListItemIcon class="topic-icon">arrow_right</mat-icon>
+        <span class="step-text">{{topic}}</span>
       </mat-list-item>
-    </mat-list>
 
-    <h3>{{'project.description.techListTitle' | translate }}:</h3>
-    <mat-list>
-      <mat-list-item *ngFor="let listItem of ('project.description.techList' | translate)">
-        <mat-icon matListItemIcon>{{listItem.iconName}}</mat-icon>
-        <span matListItemTitle>{{listItem.title}}</span>
-      </mat-list-item>
-    </mat-list>
+      </mat-list>
+    </mat-step>
 
-    <p>
-      <span>{{'project.description.p2' | translate }} </span>
-      <a routerLink="/signin">{{'project.description.login' | translate}}</a>
-      <span> {{'project.description.or' | translate }} </span>
-      <a routerLink="/signup">{{'project.description.signUp' | translate}}</a>.
-    </p>
-    <p>{{'project.description.p3' | translate }}</p>
-    <a mat-flat-button href="https://github.com/rolling-scopes-school/js-fe-course-en/blob/main/tasks/angular/project-management-system.md"
-      target="_blank">
-      {{'buttons.seeRequirements' | translate}}</a>.
-  </mat-step>
-
-  <mat-step [stepControl]="secondFormGroup"
-            state="course">
-    <ng-template matStepLabel>
-      {{'course.title' | translate}}</ng-template>
-    <p>{{'course.description.p1' | translate }}
-      <a mat-flat-button href="https://rs.school/angular/"
+    <mat-step [stepControl]="thirdFormGroup"
+              state="developer">
+      <ng-template matStepLabel>
+        {{'developer.title' | translate}}</ng-template>
+      <a class="text-link"
+        href="https://exixixs.github.io/rsschool-cv/"
         target="_blank">
-        {{'course.description.angularCourse' | translate}}
+        <mat-card class=" developer-card"
+                  matTooltip="{{'tooltips.aboutDeveloper' | translate}}">
+          <mat-card-header>
+            <mat-card-title-group>
+              <mat-card-title>{{'developer.name' | translate }}</mat-card-title>
+              <div mat-card-avatar class="developer-header-image"></div>
+            </mat-card-title-group>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{'developer.description.p1' | translate}}.</p>
+            <p>{{'developer.description.p2' | translate}}.</p>
+            <p>{{'developer.description.p3' | translate}}.</p>
+          </mat-card-content>
+        </mat-card>
       </a>
-      {{'course.description.p2' | translate }}
-      <a mat-flat-button href="https://github.com/rolling-scopes-school/js-fe-course-en/blob/main/UpSkillMe/README.md"
-        target="_blank">
-        {{'course.description.feCourse' | translate}}
-     </a>.
-    </p>
-    <p>{{'course.description.p3' | translate }}:</p>
-    <mat-list role="list">
-      <mat-list-item *ngFor="let topic of ('course.description.topics' | translate)"
-                      role="listitem">{{topic}}</mat-list-item>
+    </mat-step>
 
-    </mat-list>
-  </mat-step>
+    <!-- Icon overrides. -->
+    <ng-template matStepperIcon="edit">
+      <mat-icon>contact_support</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="project">
+      <mat-icon>terminal</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="course">
+      <mat-icon>school</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="developer">
+      <mat-icon>emoji_people</mat-icon>
+    </ng-template>
 
-  <mat-step [stepControl]="thirdFormGroup"
-            state="developer">
-    <ng-template matStepLabel>
-      {{'developer.title' | translate}}</ng-template>
-    <a href="https://exixixs.github.io/rsschool-cv/" target="_blank">
-      <mat-card class="developer-card"
-                [matTooltip]="'tooltips.aboutDeveloper' | translate"
-                matTooltipPosition="below">
-        <mat-card-header>
-          <mat-card-title-group>
-            <mat-card-title>{{'developer.name' | translate }}</mat-card-title>
-            <div mat-card-avatar class="developer-header-image"></div>
-          </mat-card-title-group>
-        </mat-card-header>
-        <mat-card-content>
-          {{'developer.description.p1' | translate}}.
-          <br>
-          {{'developer.description.p2' | translate}}.
-          <br>
-          {{'developer.description.p3' | translate}}.
-        </mat-card-content>
-      </mat-card>
-    </a>
-  </mat-step>
+  </mat-vertical-stepper>
 
-  <!-- Icon overrides. -->
-  <ng-template matStepperIcon="edit">
-    <mat-icon>contact_support</mat-icon>
-  </ng-template>
-  <ng-template matStepperIcon="project">
-    <mat-icon>terminal</mat-icon>
-  </ng-template>
-  <ng-template matStepperIcon="course">
-    <mat-icon>school</mat-icon>
-  </ng-template>
-  <ng-template matStepperIcon="developer">
-    <mat-icon>emoji_people</mat-icon>
-  </ng-template>
-
-</mat-stepper>
+</div>
 
 

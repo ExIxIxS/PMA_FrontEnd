@@ -1,13 +1,21 @@
+@use '@angular/material' as mat;
+
+$small-text: 14px;
+
 .mat-stepper-vertical {
   margin-top: 8px;
 }
 
-.mat-mdc-form-field {
-  margin-top: 16px;
-}
-
 .developer-card {
-  max-width: 800px;
+  max-width: 880px;
+  margin: 30px auto 0 auto;
+  @include mat.elevation(8);
+
+  p {
+    line-height: 1.5em;
+    text-align: justify;
+    text-indent: 36px;
+  }
 }
 
 .developer-header-image {
@@ -16,4 +24,118 @@
   background-image: url('../../assets/img/photo_01.png');
   background-size: cover;
   border-radius: 15px;
+}
+
+.welcome-wrapper {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .welcome-stepper {
+    border-radius: 20px;
+    padding: 0;
+    margin: 8px 0;
+  }
+
+  .start-text {
+    margin-top: 10px;
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+  }
+
+  .feature-item {
+    height: 60px;
+  }
+
+  .tech-item {
+    height: 40px;
+  }
+
+  .feature-icon {
+    margin: 20px 16px 0 16px;
+  }
+
+  .tech-icon {
+    margin: 0 16px;
+  }
+
+  .welcome-step {
+    margin: 0;
+    padding: 24px 0;
+  }
+
+  .text-button {
+    height: 26px;
+    padding: 2px;
+    min-width: 30px;
+    line-height: 26px;
+  }
+
+  .topic-item {
+    height: 24px;
+  }
+
+  .topic-icon {
+    margin: 0 6px 0 0;
+  }
+
+}
+
+.welcome-wrapper .welcome-step .features-list .feature-item {
+  font-size: $small-text;
+}
+
+@media (max-width: 779px) {
+  .welcome-wrapper {
+    .feature-item {
+      height: 80px;
+    }
+  }
+}
+
+@media (max-width: 539px) {
+  .welcome-wrapper {
+    h2 {
+      font-size: 16px;
+      margin: 0;
+      padding: 0 5px;
+    }
+
+    h3, p {
+      font-size: $small-text;
+    }
+
+    .step-text {
+      font-size: $small-text;
+    }
+
+    .feature-item {
+      height: 40px;
+    }
+
+    .feature-icon {
+      margin: 11px 16px 0 16px;
+    }
+
+    .developer-card {
+      p {
+        text-indent: 24px;
+        line-height: 1.2em;
+      }
+    }
+
+  }
 }
