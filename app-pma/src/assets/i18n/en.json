@@ -6,7 +6,7 @@
     "title": "About project",
     "description": {
       "p1": "This application makes it easy to manage casual work`s or homes tasks with continuous connection with a team",
-      "featuresListTitle": "Main features of the application",
+      "featuresListTitle": "Main application features",
       "featuresList":
         [
           {
@@ -87,12 +87,12 @@
   "course": {
     "title": "About course",
     "description": {
-      "p1": "Реализация приложения является практической частью",
-      "angularCourse": "'RS School. Angular Course'",
-      "p2": ", включенного в последний этап",
-      "feCourse": "FrontEnd 'RS School. UpSkill Me course'",
-      "p3": "В ходе курса, под контролем менторов, были получены теоретические знания и практические навыки по следующим темам",
-      "topics": ["Markdown", "HTML5", "CSS3",  "JS", "TypeScript", "Angular", "GIT", "NPM", "Figma", "DevTools", "Webpack", "HTTP/HTTPS. REST. WebSocket", "DOM API, Browser API", "Design Patterns", "Software Design Principles", "Unit tests", "Software Development Lifecycle"]
+      "p1": "Implimentation of the application is a practical part of the course",
+      "angularCourse": "'RS School. Angular'",
+      "p2": ", that included in final stage of",
+      "feCourse": "FE 'RS School. UpSkill Me'",
+      "p3": "During the 'UpSkill Me' course, under the supervision of mentors, theoretical and practical skills were obtained on the following topics",
+      "topics": ["Markdown", "HTML5", "CSS3",  "JS", "TypeScript", "Angular", "GIT", "NPM", "Figma", "DevTools", "Webpack", "HTTP/HTTPS, WebSocket", "REST API", "DOM API, Browser API", "Design Patterns", "Software Design Principles", "Unit tests", "Software Development Lifecycle"]
     }
   },
 
@@ -107,7 +107,7 @@
   },
 
   "welcome": {
-    "title": "Welcome to Project Management Application (PMA)!"
+    "title": "Welcome to the Project Management Application (PMA)!"
   },
 
   "buttons": {
@@ -119,7 +119,7 @@
     "cancel": "Cancel",
     "removeUser": "Remove User Account",
     "confirm": "Confirm",
-    "seeRequirements": "project requirements",
+    "seeRequirements": "requirements",
     "userAccount": "Edit profile",
     "newBoard": "Create a new project",
     "changeLanguage": "Change Language"
