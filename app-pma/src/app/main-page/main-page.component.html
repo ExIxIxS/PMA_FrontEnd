@@ -1,6 +1,9 @@
 <app-search-panel></app-search-panel>
 
-<button mat-flat-button *ngIf="!isBoards" (click)="createNewBoard()">
+<button mat-flat-button
+        *ngIf="!isBoards"
+        type="button"
+        (click)="createNewBoard()">
   <mat-icon>add</mat-icon>{{'main.title' | translate}}
 </button>
 
@@ -19,7 +22,11 @@
       <p matListItemLine>{{'board.participants' | translate}}: {{boardParticipants}}</p>
     </mat-card-content>
     <mat-card-actions>
-      <button (click)="deleteBoard(boardID, boardTitle, boardOwner)" mat-fab color="warn" aria-label="Icon button with a delete icon">
+      <button mat-fab
+              type="button"
+              color="warn"
+              (click)="deleteBoard(boardID, boardTitle, boardOwner)"
+              aria-label="Icon button with a delete icon">
         <mat-icon>delete</mat-icon>
       </button>
     </mat-card-actions>

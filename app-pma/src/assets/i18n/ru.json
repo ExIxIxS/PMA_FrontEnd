@@ -83,11 +83,14 @@
     "seeRequirements": "требованиями",
     "userAccount": "Редакт. профиль",
     "newBoard": "Создать новый проект",
-    "changeLanguage": "Сменить язык"
+    "changeLanguage": "Сменить язык",
+    "openBoard": "Открыть проект",
+    "editTask": "Редактировать задачу"
   },
   "error": {
     "title": "Ошибка",
-    "menuTitle": "Упс! Что-то пошло не так!"
+    "menuTitle": "Упс! Что-то пошло не так!",
+    "noResults": "Задачи не найдена"
   },
   "forms": {
     "changesNote": "*Пожалуйста, подтвердите изменения",
@@ -106,7 +109,7 @@
     "userSelectionField": "Выберите имя",
     "columnTitleField": "Введите название столбца",
     "taskTitleField": "Название задачи",
-    "excecutorSelectionField": "Выберите экскутор",
+    "excecutorSelectionField": "Выберите исполнителя",
     "taskDescriptionField": "Введите описание задачи",
     "taskSearchField": "Поиск задачи"
   },

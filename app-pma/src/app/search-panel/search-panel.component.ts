@@ -5,6 +5,7 @@ import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 
 import { FormConrolTypes, SearchTaskObj, UserRestObj } from '../app.interfeces';
+import { AppControlService } from '../app-control.service';
 
 
 @Component({
@@ -13,16 +14,19 @@ import { FormConrolTypes, SearchTaskObj, UserRestObj } from '../app.interfeces';
   styleUrls: ['./search-panel.component.scss']
 })
 export class SearchPanelComponent {
-  foundTasks: SearchTaskObj[] = [];
-  allUsers: UserRestObj[] = [];
+  public foundTasks: SearchTaskObj[] = [];
+  public allUsers: UserRestObj[] = [];
+  public isNoResult: boolean = false;
+  public isSearchInProgress: boolean = false;
   private _lastSearchRequest: string | undefined;
 
-  searchFormControl = this.formsService.getNewFormControl('searchRequest', '', true)
+  searchFormControl = this.formsService.getNewFormControl('searchRequest', '', true);
 
   constructor(private formsService: AppFormsService,
               private restRest: RestDataService,
               private errorHandlerService: ErrorHandlerService,
               private confirmationService: ConfirmationService,
+              private appControlService: AppControlService
               ) {
     this.observeInputChanges();
   }
@@ -47,6 +51,8 @@ export class SearchPanelComponent {
   startSearch(value: string) {
     if (value === this.searchFormControl.value) {
       console.log(`start search for ${value}`);
+      this.isNoResult = false;
+      this.isSearchInProgress = true;
       this.restRest.search(value)
         .subscribe(
           { next: (tasks) => {
@@ -61,6 +67,13 @@ export class SearchPanelComponent {
                 };
                 this.foundTasks.push(searchTask);
               })
+            },
+            complete: () => {
+              this.isSearchInProgress = false;
+
+              if (!this.foundTasks.length) {
+                this.isNoResult = true;
+              }
             }
           });
     }
@@ -93,7 +106,8 @@ export class SearchPanelComponent {
   disableInput() {
     this.clearInput();
     this.foundTasks = [];
-    this.searchFormControl.disable();
+    this.isNoResult = false;
+    setTimeout(() => this.searchFormControl.disable(), 100);
   }
 
   observeInputChanges(delay: number = 1000) {
@@ -113,10 +127,6 @@ export class SearchPanelComponent {
     return this.formsService.getErrorMessage(this.searchFormControl, type);
   };
 
-  openBoard(boardId: string) {
-    console.log(`open board with ID: ${boardId}`)
-  }
-
   editTask(task: SearchTaskObj) {
     this.confirmationService.openDialog({
       type: 'editTask',
@@ -130,4 +140,12 @@ export class SearchPanelComponent {
       this.startSearch(this._lastSearchRequest);
     }
   }
+
+  refactorForOutput(str: string): string {
+    return str
+      .split(' ')
+      .map((word) => this.appControlService.limitSpacer(word))
+      .join(' ');
+  }
+
 }

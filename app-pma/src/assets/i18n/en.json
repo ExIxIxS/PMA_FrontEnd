@@ -122,12 +122,15 @@
     "seeRequirements": "requirements",
     "userAccount": "Edit profile",
     "newBoard": "Create a new project",
-    "changeLanguage": "Change Language"
+    "changeLanguage": "Change Language",
+    "openBoard": "Open the board",
+    "editTask": "Edit task"
   },
 
   "error": {
     "title": "Error",
-    "menuTitle": "Oops... Something went wrong!"
+    "menuTitle": "Oops... Something went wrong!",
+    "noResult": "Tasks not found"
   },
 
   "forms": {

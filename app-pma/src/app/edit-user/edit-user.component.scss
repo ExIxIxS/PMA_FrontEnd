@@ -19,6 +19,6 @@ $buttons-width: $field-width - 60px;
 }
 
 .remove-button {
-  width: $buttons-width;
+  width: calc($buttons-width + 20px);
   margin: 42px 0 0 0;
 }

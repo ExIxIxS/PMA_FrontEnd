@@ -1,27 +1,84 @@
+@use '@angular/material' as mat;
+
+$panel-width: 440px;
+$min-panel-width: 300px;
+
 .search-panel {
-  width: 50%;
-  min-width: 320px;
+  width: $panel-width;
+  min-width: $min-panel-width;
   margin: 20px auto 0px auto;
-}
+  padding: 0;
+  @include mat.elevation(0);
 
-.search-panel.mat-expanded {
-  position: absolute;
-  top: 100px;
-  z-index: 10;
-  max-height: 80vh;
-  overflow-y: auto;
-  background-color: rgba(255, 254, 254, 0.5);
-}
-
-.panel-header {
-  height: 120px;
+  .hidden-progress {
+    visibility: hidden;
+  }
 }
 
 .search-field {
+  margin: 6px auto;
   width: 100%;
-  margin: 20px auto 30px auto;
 }
 
-.task-card:hover {
-  cursor: pointer;
+.search-results {
+  @include mat.elevation(6);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: $panel-width;
+  max-height: 60vh;
+  padding: 0;
+  position: absolute;
+  overflow-y: auto;
+  top: 110px;
+  z-index: 9;
+
+  .task-card {
+    margin: 10px 0 10px 10px;
+    width: 89%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 0 15px 15px 0;
+
+    .buttons-wrapper {
+      min-height: 80%;
+      visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      right: -30px;
+    }
+  }
+
+  .task-card:hover {
+    .buttons-wrapper {
+      visibility: visible;
+    }
+  }
+
+}
+
+@media (max-width: 539px) {
+  $small-width: calc((100vw/539px)*$panel-width);
+
+  .search-panel {
+    width: $small-width;
+    margin: 20px auto 0px auto;
+    padding: 0;
+  }
+
+  .search-results {
+    width: $small-width;
+    min-width: $min-panel-width;
+    max-height: calc(100vh - 212px);
+
+    .task-card {
+      width: 85%;
+    }
+  }
+
 }

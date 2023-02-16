@@ -118,14 +118,33 @@ $dark-pink-theme: mat.define-dark-theme((
 
 }
 
-@mixin additional-theme($theme) {
-  @include mat.all-component-colors($theme);
-  @include links-color($theme);
+@mixin search-color($theme) {
+  $color-config: mat.get-color-config($theme);
+  $is-dark-theme: map.get($color-config, 'is-dark');
+  $primary-palette: map.get($color-config, 'primary');
+  $background-contrast: mat.get-color-from-palette($primary-palette, 50-contrast);
+  $background-color: rgba($background-contrast, 0.1);
+
+  @if $is-dark-theme {
+    $background-color: rgba($background-contrast, 0.4);
+  }
+
+  .search-results {
+    background-color: $background-color;
+  }
+
 }
 
 @mixin default-theme($theme) {
   @include mat.all-component-themes($theme);
   @include links-color($theme);
+  @include search-color($theme);
+}
+
+@mixin additional-theme($theme) {
+  @include mat.all-component-colors($theme);
+  @include links-color($theme);
+  @include search-color($theme);
 }
 
 body {
