@@ -1,3 +1,4 @@
+<div class="content-wrapper">
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
   <h2>{{'forms.editNameTitle' | translate}}</h2>
   <mat-form-field appearance="fill">
@@ -7,17 +8,13 @@
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('userName')}}</mat-error>
   </mat-form-field>
 
-  <br>
-
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.newLoginField' | translate}}</mat-label>
     <input matInput formControlName="login">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('login')}}</mat-error>
   </mat-form-field>
 
-  <br>
   <mat-divider></mat-divider>
-  <br>
 
   <h2>{{'forms.editPassTitle' | translate}}</h2>
   <mat-form-field appearance="fill">
@@ -27,16 +24,13 @@
           formControlName="newPassword">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('newPassword')}}</mat-error>
     <button mat-icon-button
+            type="button"
             matSuffix (click)="hideNewPass = !hideNewPass"
             [attr.aria-label]="'Hide password'"
             [attr.aria-pressed]="hideNewPass">
       <mat-icon>{{hideNewPass ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
   </mat-form-field>
-
-  <br>
-
-  <br>
 
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.repeatPassField' | translate}}</mat-label>
@@ -45,6 +39,7 @@
           formControlName="repeatedPassword">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('repeatedPassword')}}</mat-error>
     <button mat-icon-button
+            type="button"
             matSuffix (click)="hideNewPass = !hideNewPass"
             [attr.aria-label]="'Hide password'"
             [attr.aria-pressed]="hideNewPass">
@@ -52,9 +47,7 @@
     </button>
   </mat-form-field>
 
-  <br>
   <mat-divider></mat-divider>
-  <br>
 
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.currentPassField' | translate}}</mat-label>
@@ -63,6 +56,7 @@
           formControlName="password">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('password')}}</mat-error>
     <button mat-icon-button
+            type="button"
             matSuffix (click)="hidePass = !hidePass"
             [attr.aria-label]="'Hide password'"
             [attr.aria-pressed]="hidePass">
@@ -70,22 +64,31 @@
     </button>
   </mat-form-field>
 
-  <br>
+  <div class="buttons-wrapper">
+    <button mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="isSubmitDisabled()"
+            (click)="saveChanges()">{{'buttons.saveChanges' | translate}}
+    </button>
 
-  <button mat-flat-button
-          color="primary"
-          type="submit"
-          [disabled]="isSubmitDisabled()"
-          (click)="saveChanges()">{{'buttons.saveChanges' | translate}}
-  </button>
+    <button mat-flat-button
+      color="basic"
+      type="button"
+      (click)="cancelEditing()">{{'buttons.cancel' | translate}}
+    </button>
+  </div>
 
-  <button mat-flat-button
-    color="basic"
-    (click)="cancelEditing()">{{'buttons.cancel' | translate}}
-  </button>
 </form>
 
-<button mat-fab extended color="warn" (click)="deleteUser()">
+<button mat-fab
+        class="remove-button"
+        type="button"
+        extended
+        color="warn"
+        (click)="deleteUser()">
   <mat-icon>person_off</mat-icon>
   {{'buttons.removeUser' | translate}}
 </button>
+
+</div>

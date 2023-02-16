@@ -1,4 +1,4 @@
-@use '../../styles/_app-mixins' as colors;
+@use '../../styles/_app-mixins' as mix;
 @use '../../styles' as styles;
 
 .color-button {
@@ -6,10 +6,10 @@
 }
 
 .color-wrapper-default {
-  @include colors.color-wrapper(styles.$default-theme)
+  @include mix.color-wrapper(styles.$default-theme)
 }
 
 .color-wrapper-dark-pink {
-  @include colors.color-wrapper(styles.$dark-pink-theme)
+  @include mix.color-wrapper(styles.$dark-pink-theme)
 }
 

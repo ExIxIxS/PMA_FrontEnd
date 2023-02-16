@@ -26,3 +26,37 @@
     background-color:  mat.get-color-from-palette($warn-palette);
   }
 }
+
+@mixin sign-form($field-width: 290px, $margin-top: 15vh) {
+  form {
+    margin: $margin-top auto 0 auto;
+    padding: 0;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    mat-form-field {
+      width: $field-width;
+      margin-bottom: 20px;
+    }
+
+    mat-form-field.ng-invalid.ng-dirty{
+      margin-bottom: 46px;
+    }
+
+    mat-divider {
+      width: calc($field-width + 150px);
+      margin: 0 0 30px 0;
+    }
+  }
+
+  @media (max-width: 539px) {
+    form {
+      mat-divider {
+        min-width: 300px;
+        width: calc(100vw - 60px);
+      }
+    }
+  }
+}

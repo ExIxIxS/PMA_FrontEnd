@@ -1,12 +1,11 @@
-<form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
+<form [formGroup]="checkoutForm"
+      (ngSubmit)="$event.preventDefault()">
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.loginField' | translate}}</mat-label>
     <input matInput
           formControlName="login">
     <mat-error *ngIf="checkoutForm.invalid">{{getSignInErrorMessage('login')}}</mat-error>
   </mat-form-field>
-
-  <br>
 
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.passField' | translate}}</mat-label>
@@ -17,14 +16,13 @@
     <mat-error *ngIf="checkoutForm.invalid">{{getSignInErrorMessage('password')}}</mat-error>
 
     <button mat-icon-button
+            type="button"
             matSuffix (click)="hide = !hide"
             [attr.aria-label]="'Hide password'"
             [attr.aria-pressed]="hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
   </mat-form-field>
-
-  <br>
 
   <button mat-flat-button
           color="primary"
