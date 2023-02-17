@@ -5,6 +5,7 @@ import { RestDataService } from '../restAPI.service';
 import { LocalStorageService } from '../localStorage.service';
 import { ConfirmationService } from '../confirmation.service';
 import { AppBoardObj } from '../app.interfeces';
+import { AppControlService } from '../app-control.service';
 
 @Component({
   selector: 'app-main-page',
@@ -17,6 +18,7 @@ export class MainPageComponent {
     private restAPI : RestDataService,
     private localStorageService: LocalStorageService,
     private confirmationService: ConfirmationService,
+    private appControlService: AppControlService,
   ) {
     this.restAPI.updateBoardsStorage();
   }
@@ -97,6 +99,10 @@ export class MainPageComponent {
 
   openBoard(boardId: string) {
     this.router.navigate(['boards', boardId]);
+  }
+
+  refactorForOutput(str: string): string {
+    return this.appControlService.refactorForOutput(str);
   }
 
 }

@@ -1,6 +1,7 @@
 {
   "tooltips": {
-    "aboutDeveloper": "Узнайте больше о разработчике"
+    "aboutDeveloper": "Узнайте больше о разработчике",
+    "noProjects": "Нет проектов"
   },
 
   "project": {
@@ -85,7 +86,8 @@
     "newBoard": "Создать новый проект",
     "changeLanguage": "Сменить язык",
     "openBoard": "Открыть проект",
-    "editTask": "Редактировать задачу"
+    "editTask": "Редактировать задачу",
+    "deleteBoard": "Удалить проект"
   },
   "error": {
     "title": "Ошибка",

@@ -1,6 +1,7 @@
 {
   "tooltips": {
-    "aboutDeveloper": "Learn more about the developer"
+    "aboutDeveloper": "Learn more about the developer",
+    "noProjects": "No projects"
   },
   "project": {
     "title": "About project",
@@ -124,7 +125,8 @@
     "newBoard": "Create a new project",
     "changeLanguage": "Change Language",
     "openBoard": "Open the board",
-    "editTask": "Edit task"
+    "editTask": "Edit task",
+    "deleteBoard": "Delete board"
   },
 
   "error": {

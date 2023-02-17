@@ -142,10 +142,7 @@ export class SearchPanelComponent {
   }
 
   refactorForOutput(str: string): string {
-    return str
-      .split(' ')
-      .map((word) => this.appControlService.limitSpacer(word))
-      .join(' ');
+    return this.appControlService.refactorForOutput(str);
   }
 
 }

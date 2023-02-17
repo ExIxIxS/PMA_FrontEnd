@@ -48,7 +48,14 @@ export class AppControlService {
     });
   }
 
-  limitSpacer(str: string, lengthLimit = 20): string {
+  refactorForOutput(str: string, lengthLimit = 20): string {
+    return str
+      .split(' ')
+      .map((word) => this._limitSpacer(word, lengthLimit))
+      .join(' ');
+  }
+
+  private _limitSpacer(str: string, lengthLimit: number): string {
     const spacedArr = [];
     let subStr = '';
     if (str.length > lengthLimit) {
