@@ -1,7 +1,8 @@
 {
   "tooltips": {
     "aboutDeveloper": "Узнайте больше о разработчике",
-    "noProjects": "Нет проектов"
+    "noProjects": "Нет проектов",
+    "swapColumn": "Переместить столбец"
   },
 
   "project": {
@@ -87,7 +88,11 @@
     "changeLanguage": "Сменить язык",
     "openBoard": "Открыть проект",
     "editTask": "Редактировать задачу",
-    "deleteBoard": "Удалить проект"
+    "deleteBoard": "Удалить проект",
+    "deleteTask": "Удалить задачу",
+    "newTask": "Добавить задачу",
+    "deleteColumn": "Удалить столбец",
+    "newColumn": "Добавить столбец"
   },
   "error": {
     "title": "Ошибка",

@@ -1,49 +1,113 @@
+$min-width: 300px;
+
+.board-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: $min-width;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.columns-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.columns-container {
+  width: max-content;
+  margin: 0 auto;
+}
+
 .board-column {
-    width: 300px;
-    max-width: 100%;
-    margin: 20px 20px;
-    display: inline-block;
-    vertical-align: top;
+  width: $min-width;
+  max-height: calc(100vh - 240px);
+  margin: 20px 10px 0 10px;
+  display: inline-block;
+  vertical-align: top;
+
+  .column-title-input {
+    text-align: center;
+  }
+}
+
+.title-container {
+  height: 70px;
+}
+
+.title-container.invalid {
+  height: 110px;
+}
+
+.title-form-field {
+  width: 100%;
+}
+
+.up-buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .drag-handle:hover {
+    cursor:move;
   }
 
-  .title-container {
-    height: 140px;
+  .drag-handle {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 36px;
+  }
+}
+
+.tasks-list {
+  border: solid 1px;
+  max-height: calc(100vh - 460px);
+  min-height: 60px;
+  border-radius: 4px;
+  display: block;
+  overflow-y: auto;
+}
+
+.tasks-list-item {
+  padding: 20px 10px;
+  border-bottom: solid 1px;
+  box-sizing: border-box;
+  cursor: move;
+
+  .delete-task-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
   }
 
-  .title-form-field {
-    width: 100%;
+  mat-expansion-panel-header {
+    height: 70px;
   }
+}
 
-  .list {
-    border: solid 1px #ccc;
-    min-height: 60px;
-    background: white;
-    border-radius: 4px;
-    display: block;
-    overflow: hidden;
-  }
+.tasks-list-item:last-child {
+  border: none;
+}
 
-  .list-item {
-    padding: 20px 10px;
-    border-bottom: solid 1px #ccc;
-    box-sizing: border-box;
-    cursor: move;
-    background: white;
-    color: black;
-    font-size: 14px;
-  }
-
-  .list-item:last-child {
-    border: none;
-  }
-
-  /* Highlight the list item that is being dragged. */
-  .cdk-drag-preview {
-    border-radius: 4px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
-  }
+/* Highlight the list item that is being dragged. */
+.cdk-drag-preview {
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
 
   /* Animate items as they're being sorted. */
   .cdk-drop-list-dragging .cdk-drag {
@@ -57,9 +121,4 @@
 
   .cdk-drag-placeholder {
     opacity: 0;
-  }
-
-  .add-column-button {
-    width: 100px;
-    height: 100px;
   }

@@ -10,6 +10,7 @@ import { ErrorHandlerService } from '../errorHandler.service';
 import { ConfirmationService } from '../confirmation.service';
 import { LocalStorageService } from '../localStorage.service';
 import { AppFormsService } from '../app-forms.service';
+import { AppControlService } from '../app-control.service';
 
 @Component({
   selector: 'app-board-content',
@@ -33,6 +34,7 @@ export class BoardContentComponent {
               private errorHandlerService: ErrorHandlerService,
               private confirmationService: ConfirmationService,
               private formService: AppFormsService,
+              private appControlService: AppControlService,
   ) {
     this.currentBoardId = this.activeRoute.snapshot.params['id'];
     this.startComponent();
@@ -332,6 +334,10 @@ export class BoardContentComponent {
         this.confirmationService.openDialog({type: 'editTask', editableTask: task});
       }
     }
+  }
+
+  refactorForOutput(str: string, limit?: number): string {
+    return this.appControlService.refactorForOutput(str, limit);
   }
 
 }

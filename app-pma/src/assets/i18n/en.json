@@ -1,7 +1,8 @@
 {
   "tooltips": {
     "aboutDeveloper": "Learn more about the developer",
-    "noProjects": "No projects"
+    "noProjects": "No projects",
+    "swapColumn": "Swap column"
   },
   "project": {
     "title": "About project",
@@ -126,7 +127,11 @@
     "changeLanguage": "Change Language",
     "openBoard": "Open the board",
     "editTask": "Edit task",
-    "deleteBoard": "Delete board"
+    "deleteBoard": "Delete board",
+    "deleteTask": "Delete task",
+    "newTask": "Add a task",
+    "deleteColumn": "Delete column",
+    "newColumn": "Add a column"
   },
 
   "error": {
