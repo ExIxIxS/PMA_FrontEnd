@@ -9,8 +9,12 @@ import { LocalStorageService } from '../localStorage.service';
 export class MenuHeaderComponent {
 
   colorThemes = [
-    { name:'default', isDark: false },
-    { name:'dark-pink', isDark: true },
+    { className:'default', title: 'Indigo', isDark: false },
+    { className:'dark-peace', title: 'Eclectic Peace', isDark: true },
+    { className:'light-teal', title: 'Tea Party', isDark: false },
+    { className:'dark-green', title: 'Fresh Apple', isDark: true },
+    { className:'light-desert', title: 'Desert Morning', isDark: false },
+    { className:'dark-pink', title: 'Night Pink', isDark: true },
   ];
 
   constructor(

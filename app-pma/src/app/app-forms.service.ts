@@ -47,7 +47,7 @@ export class AppFormsService {
     boardTitle: {
       title: 'board title',
       minLength: 5,
-      maxLength: 30,
+      maxLength: 20,
       pattern: /^[\p{L}\d'"\+]+[\p{L}\d\s\-\.\+'"]*[\p{L}\d'"\+]+$/u,
       patternError: 'title',
     },

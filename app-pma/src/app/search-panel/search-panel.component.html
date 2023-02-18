@@ -41,7 +41,7 @@
               class="task-card">
         <div>
         <mat-card-header>
-          <mat-card-title>{{task.restTask.title}}</mat-card-title>
+          <mat-card-title>{{refactorForOutput(task.restTask.title)}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <p>{{'board.creator' | translate}}: {{refactorForOutput(task.owner)}}</p>
@@ -52,7 +52,7 @@
 
         <div class="buttons-wrapper">
           <a mat-fab
-            color="accent"
+            color="primary"
             class="board-button"
             matTooltip="{{'buttons.openBoard' | translate}}"
             matTooltipPosition="above"

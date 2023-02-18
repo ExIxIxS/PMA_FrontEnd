@@ -8,18 +8,17 @@
       PMA
     </a>
 
-  <span class="left-spacer"></span>
+    <span class="left-spacer"></span>
+    <button *ngIf = "isUserLoggedIn" mat-mini-fab
+            type="button"
+            (click)="createNewBoard()"
+            color="accent"
+            aria-label="Add project"
+            matTooltip="{{'buttons.newBoard' | translate}}">
+      <mat-icon>add</mat-icon>
+    </button>
 
-  <button *ngIf = "isUserLoggedIn"
-          (click)="createNewBoard()"
-          mat-mini-fab
-          color="accent"
-          aria-label="Add project"
-          matTooltip="{{'buttons.newBoard' | translate}}">
-    <mat-icon>add</mat-icon>
-  </button>
-
-  <span class="right-spacer"></span>
+    <span *ngIf = "isUserLoggedIn" class="right-spacer"></span>
 
   <app-lanquage-menu></app-lanquage-menu>
 

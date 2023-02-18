@@ -1,25 +1,30 @@
 <button mat-icon-button
-        [matMenuTriggerFor]="menu">
+        [matMenuTriggerFor]="menu"
+        type="button">
   <mat-icon>menu</mat-icon>
 </button>
 
 <mat-menu #menu="matMenu">
   <button mat-menu-item
-          [matMenuTriggerFor]="colors">
+          [matMenuTriggerFor]="colors"
+          type="button">
     palettes
     <mat-icon>format_paint</mat-icon>
   </button>
 </mat-menu>
 
 <mat-menu #colors="matMenu">
-    <button class="color-button"
-            *ngFor="let theme of colorThemes"
-            (click)="setColorTheme(theme.name)">
-      <span [class]="'color-wrapper-' + theme.name">
+    <button *ngFor="let theme of colorThemes"
+            class="color-theme-button"
+            type="button"
+            [matTooltip]="theme.title"
+            matTooltipPosition="left"
+            (click)="setColorTheme(theme.className)">
+      <span [class]="'color-wrapper ' + theme.className">
         <span class="color-item color-item-primary"></span>
         <span class="color-item color-item-accent"></span>
         <span class="color-item color-item-warn"></span>
-        <mat-icon>{{(theme.isDark) ? 'dark_mode' : 'light_mode'}}</mat-icon>
+        <mat-icon color="primary">{{(theme.isDark) ? 'dark_mode' : 'light_mode'}}</mat-icon>
       </span>
 
     </button>

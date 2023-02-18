@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-
 @use "@angular/material" as mat;
 @use 'sass:map';
+@import "styles/themes";
+@import "styles/app-mixins";
 
 @include mat.core();
 
@@ -29,153 +30,7 @@ main {
   }
 }
 
-/* App themes */
-
-$default-theme: mat.define-light-theme((
-  color: (
-    primary: mat.define-palette(mat.$indigo-palette),
-    accent: mat.define-palette(mat.$pink-palette),
-  ),
-  // Only include `typography` and `density` in the default theme.
-  typography: mat.define-typography-config(),
-  density: 0,
-));
-
-$dark-pink-theme: mat.define-dark-theme((
-  color: (
-    primary: mat.define-palette(mat.$pink-palette, 600),
-    accent: mat.define-palette(mat.$blue-grey-palette),
- ),
-));
-
 /* default theme */
-
-@mixin all-links-text-decoration($value: none) {
-  a {
-    text-decoration: $value;
-  }
-  a:visited {
-    text-decoration: $value;
-  }
-  a:hover, a:active, a:focus {
-    text-decoration: $value;
-  }
-
-}
-
-@mixin footer-links-color($color) {
-  .footer-toolbar {
-    a {
-      color: $color;
-    }
-
-    a {
-      color: $color;
-    }
-
-    a:hover, a:active, a:focus {
-      color:$color;
-    }
-  }
-
-  #github-logo {
-    fill: $color;
-  }
-
-}
-
-@mixin text-link($color) {
-  a.text-link {
-    color: $color;
-  }
-
-  a.text-link {
-    color: $color;
-  }
-
-  a.text-link:hover, a.text-link:active, a.text-link:focus {
-    color:$color;
-  }
-}
-
-@mixin links-color($theme) {
-  $color-config: mat.get-color-config($theme);
-  $primary-palette: map.get($color-config, 'primary');
-  $is-dark-theme: map.get($color-config, 'is-dark');
-  $color: #000;
-  $contrast: mat.get-color-from-palette($primary-palette, A200-contrast);
-
-  @if $is-dark-theme {
-    $color: mat.get-color-from-palette($primary-palette, A200-contrast);
-  } @else {
-    $color: mat.get-color-from-palette($primary-palette, A100-contrast);
-  }
-
-  @include all-links-text-decoration();
-  @include text-link($color);
-  @include footer-links-color($contrast);
-
-}
-
-@mixin search-color($theme) {
-  $color-config: mat.get-color-config($theme);
-  $is-dark-theme: map.get($color-config, 'is-dark');
-  $primary-palette: map.get($color-config, 'primary');
-  $background-contrast: mat.get-color-from-palette($primary-palette, 50-contrast);
-  $background-color: rgba($background-contrast, 0.1);
-
-  @if $is-dark-theme {
-    $background-color: rgba($background-contrast, 0.4);
-  }
-
-  .search-results {
-    background-color: $background-color;
-  }
-
-}
-
-@mixin column-color($theme) {
-  $color-config: mat.get-color-config($theme);
-  $primary-palette: map.get($color-config, 'primary');
-  $is-dark-theme: map.get($color-config, 'is-dark');
-  $contrast: mat.get-color-from-palette($primary-palette, A100-contrast);
-  $task-background-color: mat.get-color-from-palette($primary-palette, 300);
-  $task-border-color: mat.get-color-from-palette($primary-palette, A200-contrast);
-
-  @if $is-dark-theme {
-    $contrast: mat.get-color-from-palette($primary-palette, A200-contrast);
-    $task-background-color: mat.get-color-from-palette($primary-palette, 700);
-    $task-border-color: $contrast;
-  }
-
-  .title-container .title-form-field .column-title-input {
-    color: $contrast;
-  }
-
-  .board-column .tasks-list {
-    background: $task-background-color;
-    border-color: $task-border-color;
-
-    .tasks-list-item {
-      background: $task-background-color;
-      border-color: $task-border-color;
-    }
-  }
-}
-
-@mixin default-theme($theme) {
-  @include mat.all-component-themes($theme);
-  @include links-color($theme);
-  @include search-color($theme);
-  @include column-color($theme);
-}
-
-@mixin additional-theme($theme) {
-  @include mat.all-component-colors($theme);
-  @include links-color($theme);
-  @include search-color($theme);
-  @include column-color($theme);
-}
 
 body {
   @include default-theme($default-theme);
@@ -185,4 +40,20 @@ body {
 
 .dark-pink-theme {
   @include additional-theme($dark-pink-theme);
+}
+
+.dark-green-theme {
+  @include additional-theme($dark-green-theme);
+}
+
+.light-desert-theme {
+  @include additional-theme($light-desert-theme);
+}
+
+.dark-peace-theme {
+  @include additional-theme($dark-peace-theme);
+}
+
+.light-teal-theme {
+  @include additional-theme($light-teal-theme);
 }

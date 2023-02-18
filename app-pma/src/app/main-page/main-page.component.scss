@@ -34,21 +34,30 @@ $icon-size: 56px;
   }
 }
 
-
-
 .board-card {
   width: 94%;
   margin-bottom: 10px;
   min-height: $min-card-height;
+  overflow-x: auto;
 
   mat-card-header {
     display: flex;
     justify-content: space-between;
   }
+
+  .delete-board-button {
+    visibility: hidden;
+  }
 }
+
+
 
 .board-card:hover {
   cursor: pointer;
+
+  .delete-board-button {
+    visibility: visible;
+  }
 }
 
 @media (max-width: calc(($column-width * 3) + 120px)) {

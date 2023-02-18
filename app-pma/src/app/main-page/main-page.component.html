@@ -69,10 +69,12 @@
             let-boardParticipants="participants"
             let-delete="deleteBoard"
             let-boardId="boardId">
-  <mat-card class="board-card" (click)="openBoard(boardId)">
+  <mat-card class="board-card"
+            (click)="openBoard(boardId)">
     <mat-card-header>
-      <mat-card-title matListItemTitle>{{boardTitle}}</mat-card-title>
-      <button mat-mini-fab
+      <mat-card-title matListItemTitle>{{refactorForOutput(boardTitle, 15)}}</mat-card-title>
+      <button mat-icon-button
+              class="delete-board-button"
               type="button"
               color="warn"
               (click)="deleteBoard(boardId, boardTitle, boardOwner)"

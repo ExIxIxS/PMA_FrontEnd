@@ -1,13 +1,16 @@
 @use '@angular/material' as mat;
 
 $small-text: 14px;
+$avatar-normal-size: 100px;
+$avatar-small-size: 50px;
+$developer-card-width: 880px;
 
 .mat-stepper-vertical {
   margin-top: 8px;
 }
 
 .developer-card {
-  max-width: 880px;
+  max-width: $developer-card-width;
   margin: 30px auto 0 auto;
   @include mat.elevation(8);
 
@@ -19,8 +22,8 @@ $small-text: 14px;
 }
 
 .developer-header-image {
-  width: 100px;
-  height: 100px;
+  width: $avatar-normal-size;
+  height: $avatar-normal-size;
   background-image: url('../../assets/img/photo_01.png');
   background-size: cover;
   border-radius: 15px;
@@ -34,6 +37,7 @@ $small-text: 14px;
   align-items: center;
 
   .welcome-stepper {
+    max-width: calc(100vw/320 * 300);
     border-radius: 20px;
     padding: 0;
     margin: 8px 0;
@@ -107,6 +111,11 @@ $small-text: 14px;
 }
 
 @media (max-width: 539px) {
+  .developer-header-image {
+    width: $avatar-small-size;
+    height: $avatar-small-size;
+  }
+
   .welcome-wrapper {
     h2 {
       font-size: 16px;
@@ -124,10 +133,23 @@ $small-text: 14px;
 
     .feature-item {
       height: 40px;
+      padding: 0;
     }
 
     .feature-icon {
-      margin: 11px 16px 0 16px;
+      margin: 11px 10px 0 8px;
+    }
+
+    .tech-icon {
+      margin: 0 10px 0 8px;
+    }
+
+    .topic-item {
+      padding: 0;
+    }
+
+    .topic-icon {
+      margin: 0;
     }
 
     .developer-card {

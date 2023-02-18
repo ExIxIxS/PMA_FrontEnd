@@ -1,0 +1,48 @@
+$default-theme: mat.define-light-theme((
+  color: (
+    primary: mat.define-palette(mat.$indigo-palette),
+    accent: mat.define-palette(mat.$blue-gray-palette, 500),
+  ),
+  // Only include `typography` and `density` in the default theme.
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+
+$dark-pink-theme: mat.define-dark-theme((
+  color: (
+    primary: mat.define-palette(mat.$pink-palette, 600),
+    accent: mat.define-palette(mat.$blue-grey-palette),
+ ),
+));
+
+$dark-green-theme: mat.define-dark-theme((
+  color: (
+    primary: mat.define-palette(mat.$light-green-palette, 800),
+    accent: mat.define-palette(mat.$deep-orange-palette, 600),
+    warn: mat.define-palette(mat.$red-palette, 700),
+ ),
+));
+
+$light-desert-theme: mat.define-light-theme((
+  color: (
+    primary: mat.define-palette(mat.$deep-orange-palette, 900),
+    accent: mat.define-palette(mat.$light-blue-palette, 800),
+    warn: mat.define-palette(mat.$red-palette, A200),
+ ),
+));
+
+$dark-peace-theme: mat.define-dark-theme((
+  color: (
+    primary: mat.define-palette(mat.$blue-grey-palette, 700),
+    accent: mat.define-palette(mat.$light-blue-palette, 800),
+    warn: mat.define-palette(mat.$red-palette, 700),
+ ),
+));
+
+$light-teal-theme: mat.define-light-theme((
+  color: (
+    primary: mat.define-palette(mat.$teal-palette, 500),
+    accent: mat.define-palette(mat.$green-palette, 600),
+    warn: mat.define-palette(mat.$red-palette, 700),
+ ),
+));

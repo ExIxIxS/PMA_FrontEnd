@@ -1,15 +1,43 @@
 @use '../../styles/_app-mixins' as mix;
 @use '../../styles' as styles;
 
-.color-button {
+.color-theme-button {
   display: block;
+  margin: 2px 5px;
+  padding: 2px;
+  border: 0;
 }
 
-.color-wrapper-default {
+.color-theme-button:hover {
+  cursor: pointer;
+}
+
+.color-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.color-wrapper.default {
   @include mix.color-wrapper(styles.$default-theme)
 }
 
-.color-wrapper-dark-pink {
+.color-wrapper.dark-pink {
   @include mix.color-wrapper(styles.$dark-pink-theme)
 }
 
+.color-wrapper.dark-green {
+  @include mix.color-wrapper(styles.$dark-green-theme)
+}
+
+.color-wrapper.light-desert {
+  @include mix.color-wrapper(styles.$light-desert-theme)
+}
+
+.color-wrapper.dark-peace {
+  @include mix.color-wrapper(styles.$dark-peace-theme)
+}
+
+.color-wrapper.light-teal {
+  @include mix.color-wrapper(styles.$light-teal-theme)
+}

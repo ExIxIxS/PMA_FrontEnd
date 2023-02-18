@@ -101,8 +101,8 @@ export class MainPageComponent {
     this.router.navigate(['boards', boardId]);
   }
 
-  refactorForOutput(str: string): string {
-    return this.appControlService.refactorForOutput(str);
+  refactorForOutput(str: string, limit?: number): string {
+    return this.appControlService.refactorForOutput(str, limit);
   }
 
 }
