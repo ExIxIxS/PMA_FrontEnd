@@ -16,6 +16,7 @@ export class LocalStorageService {
   private _currentLanguage: string = this.getInitialcurrentUserId();
   private _avalibleLanguages = ['en', 'ru'];
   private _currentColorTheme: string = this._getInitialColorTheme();
+  private _currentTypography: string = this._getInitialTypography();
   private _html = document.documentElement;
   private _body = document.body;
 
@@ -36,6 +37,7 @@ export class LocalStorageService {
   ) {
     this._setLanguages();
     this._setInitialColorTheme();
+    this._setInitialTypography();
   }
 
   set currentLanguage(lang: string) {
@@ -85,8 +87,13 @@ export class LocalStorageService {
   }
 
   private _changeBodyColorTheme(colorTheme: string) {
-    this._body.classList.remove(`${this._currentColorTheme}-theme`);
-    this._body.classList.add(`${colorTheme}-theme`);
+    if (this._currentColorTheme !== 'default') {
+      this._body.classList.remove(`${this._currentColorTheme}-theme`);
+    }
+
+    if (colorTheme !== 'default') {
+      this._body.classList.add(`${colorTheme}-theme`);
+    }
   }
 
   set currentColorTheme(colorTheme: string) {
@@ -97,7 +104,7 @@ export class LocalStorageService {
     }
   }
 
-  _setInitialColorTheme() {
+  private _setInitialColorTheme() {
     this._changeBodyColorTheme(this._currentColorTheme);
   }
 
@@ -105,6 +112,39 @@ export class LocalStorageService {
     const currentColorTheme = localStorage.getItem('currentColorTheme');
 
     return (currentColorTheme) ? currentColorTheme : 'default';
+  }
+
+  private _setInitialTypography() {
+    this._changeTypography(this._currentTypography);
+  }
+
+  private _getInitialTypography(): string {
+    const currentTypography = localStorage.getItem('currentTypography');
+
+    return (currentTypography) ? currentTypography : 'default';
+  }
+
+  private _changeTypography(typography: string) {
+    if (this._currentTypography !== 'default') {
+      this._body.classList.remove(`${this._currentTypography}-typography`);
+    }
+
+    if (typography !== 'default') {
+      this._body.classList.add(`${typography}-typography`);
+    }
+
+  }
+
+  set currentTypography(typography: string) {
+    if (typography !== this._currentTypography) {
+      this._changeTypography(typography);
+      this._currentTypography = typography;
+      localStorage.setItem('currentTypography', typography);
+    }
+  }
+
+  get currentTypography() {
+    return this._currentTypography;
   }
 
   getInitialCurrentUser(): CurUserObj {

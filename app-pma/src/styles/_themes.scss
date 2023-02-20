@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 $default-theme: mat.define-light-theme((
   color: (
     primary: mat.define-palette(mat.$indigo-palette),
@@ -46,3 +48,11 @@ $light-teal-theme: mat.define-light-theme((
     warn: mat.define-palette(mat.$red-palette, 700),
  ),
 ));
+
+$shantell-sans-typography: mat.define-typography-config(
+    $font-family: "'Shantell Sans', sans-serif"
+);
+
+$comfortaa-typography: mat.define-typography-config(
+    $font-family: "'Comfortaa', sans-serif"
+);

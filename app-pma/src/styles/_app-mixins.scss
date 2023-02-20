@@ -200,3 +200,17 @@
   @include column-color($theme);
   @include theme-menu-colors($theme)
 }
+
+@mixin additional-typography($typography) {
+  @include mat.all-component-typographies($typography);
+
+  $font-family: mat.font-family($typography, 'body-1');
+
+  .welcome-wrapper .welcome-stepper {
+    font-family: $font-family;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+      font-family: $font-family;
+    }
+}

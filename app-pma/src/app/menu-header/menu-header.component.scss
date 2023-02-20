@@ -1,5 +1,6 @@
+@use "@angular/material" as mat;
 @use '../../styles/_app-mixins' as mix;
-@use '../../styles' as styles;
+@use '../../styles/themes' as themes;
 
 .color-theme-button {
   display: block;
@@ -18,26 +19,48 @@
   align-items: center;
 }
 
+.font-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .color-wrapper.default {
-  @include mix.color-wrapper(styles.$default-theme)
+  @include mix.color-wrapper(themes.$default-theme)
 }
 
 .color-wrapper.dark-pink {
-  @include mix.color-wrapper(styles.$dark-pink-theme)
+  @include mix.color-wrapper(themes.$dark-pink-theme)
 }
 
 .color-wrapper.dark-green {
-  @include mix.color-wrapper(styles.$dark-green-theme)
+  @include mix.color-wrapper(themes.$dark-green-theme)
 }
 
 .color-wrapper.light-desert {
-  @include mix.color-wrapper(styles.$light-desert-theme)
+  @include mix.color-wrapper(themes.$light-desert-theme)
 }
 
 .color-wrapper.dark-peace {
-  @include mix.color-wrapper(styles.$dark-peace-theme)
+  @include mix.color-wrapper(themes.$dark-peace-theme)
 }
 
 .color-wrapper.light-teal {
-  @include mix.color-wrapper(styles.$light-teal-theme)
+  @include mix.color-wrapper(themes.$light-teal-theme)
+}
+
+@mixin typography-button($typography) {
+  $font-family: mat.font-family($typography, 'body-1');
+  font-family: $font-family;
+}
+
+.typography-button {
+  font-family: 'Roboto', sans-serif;
+}
+
+.typography-button.shantell-sans-typography {
+  @include typography-button(themes.$shantell-sans-typography);
+}
+
+.typography-button.comfortaa-typography {
+  @include typography-button(themes.$comfortaa-typography);
 }

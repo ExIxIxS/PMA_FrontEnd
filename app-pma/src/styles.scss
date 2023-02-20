@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
 @use 'sass:map';
-@import "styles/themes";
-@import "styles/app-mixins";
+@use "styles/themes" as themes;
+@use "styles/app-mixins" as mix;
 
 @include mat.core();
 
@@ -33,27 +33,37 @@ main {
 /* default theme */
 
 body {
-  @include default-theme($default-theme);
+  @include mix.default-theme(themes.$default-theme);
 }
 
 /* additional App theme classes */
 
 .dark-pink-theme {
-  @include additional-theme($dark-pink-theme);
+  @include mix.additional-theme(themes.$dark-pink-theme);
 }
 
 .dark-green-theme {
-  @include additional-theme($dark-green-theme);
+  @include mix.additional-theme(themes.$dark-green-theme);
 }
 
 .light-desert-theme {
-  @include additional-theme($light-desert-theme);
+  @include mix.additional-theme(themes.$light-desert-theme);
 }
 
 .dark-peace-theme {
-  @include additional-theme($dark-peace-theme);
+  @include mix.additional-theme(themes.$dark-peace-theme);
 }
 
 .light-teal-theme {
-  @include additional-theme($light-teal-theme);
+  @include mix.additional-theme(themes.$light-teal-theme);
+}
+
+/* additional Typography classes */
+
+.shantell-sans-typography {
+  @include mix.additional-typography(themes.$shantell-sans-typography);
+}
+
+.comfortaa-typography {
+  @include mix.additional-typography(themes.$comfortaa-typography);
 }

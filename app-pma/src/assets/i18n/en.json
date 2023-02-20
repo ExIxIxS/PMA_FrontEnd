@@ -23,7 +23,7 @@
           },
           {
             "title": "Tasks management",
-            "description": "Create, edit and delete tasks in native way",
+            "description": "Create, search, edit and delete tasks in native way",
             "iconName": "task"
           },
           {
@@ -92,7 +92,7 @@
       "p1": "Implimentation of the application is a practical part of the course",
       "angularCourse": "'RS School. Angular'",
       "p2": ", that included in final stage of",
-      "feCourse": "FE 'RS School. UpSkill Me'",
+      "feCourse": "'RS School. UpSkill Me'",
       "p3": "During the 'UpSkill Me' course, under the supervision of mentors, theoretical and practical skills were obtained on the following topics",
       "topics": ["Markdown", "HTML5", "CSS3",  "JS", "TypeScript", "Angular", "GIT", "NPM", "Figma", "DevTools", "Webpack", "HTTP/HTTPS, WebSocket", "REST API", "DOM API, Browser API", "Design Patterns", "Software Design Principles", "Unit tests", "Software Development Lifecycle"]
     }
@@ -131,7 +131,9 @@
     "deleteTask": "Delete task",
     "newTask": "Add a task",
     "deleteColumn": "Delete column",
-    "newColumn": "Add a column"
+    "newColumn": "Add a column",
+    "palette": "palette",
+    "font": "font"
   },
 
   "error": {
