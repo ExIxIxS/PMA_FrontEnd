@@ -222,7 +222,7 @@
     },
     "deleteBoard": {
       "title": "Board title",
-      "question": "Are you sure want to delete this board?",
+      "question": "Are you sure want to delete this board",
       "note": "There is no way to restore the board after deletion!",
       "notOwnerNote": "Sorry deletion avaliable only for board`s owner",
       "owner": "Board`s owner"

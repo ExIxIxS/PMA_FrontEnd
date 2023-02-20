@@ -6,7 +6,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 
 import { DialogPopupComponent } from './dialog-popup/dialog-popup.component';
 
-import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, EditableTask, HandleConfirmObj, HandleConfirmOptions, NewBoardObj, NewColumnOption, NewTaskObj,
+import { ConfirmationTypes, DeletedBoard, DeletedColumnOption, EditableTask, HandleConfirmObj, NewBoardObj, NewColumnOption, NewTaskObj,
           NewTaskOptions, OpenDialogArgs, TaskRestObj, TaskDeletionOptions, UserRestObj } from './app.interfeces';
 import { LocalStorageService } from './localStorage.service';
 

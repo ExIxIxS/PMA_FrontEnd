@@ -1,0 +1,25 @@
+.confirmation-wrapper {
+  width: 100vw/540 * 432;
+  max-width: 540px;
+  min-width: 256px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow-y: auto;
+
+  mat-dialog-content {
+    margin: 0;
+    padding: 0;
+  }
+
+  p, h2, h3, h4 {
+    padding: 0 10px;
+    text-align: center;
+  }
+
+  .board-title {
+    font-weight: 600;
+  }
+}

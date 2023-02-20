@@ -1,0 +1,3 @@
+@use '../../styles/_app-mixins' as mix;
+
+@include mix.confirmation-form();

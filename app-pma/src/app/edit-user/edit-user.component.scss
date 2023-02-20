@@ -6,7 +6,6 @@ $buttons-width: $field-width - 60px;
 @include mix.sign-form($field-width, 1vh);
 
 .buttons-wrapper {
-  width: calc($buttons-width);
   display: flex;
   justify-content: space-between;
 }
@@ -19,6 +18,5 @@ $buttons-width: $field-width - 60px;
 }
 
 .remove-button {
-  width: calc($buttons-width + 20px);
   margin: 42px 0 0 0;
 }
