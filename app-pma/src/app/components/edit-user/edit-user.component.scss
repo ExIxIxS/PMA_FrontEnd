@@ -1,0 +1,29 @@
+@use '../../../styles/_app-mixins' as mix;
+
+$field-width: 290px;
+$buttons-width: $field-width - 60px;
+
+@include mix.sign-form($field-width, 1vh);
+
+.buttons-wrapper {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-button {
+  margin: 42px 0 0 0;
+}
+
+@media (max-width: 539px) {
+  .buttons-wrapper {
+    width: 70%;
+  }
+}

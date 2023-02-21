@@ -173,6 +173,12 @@ interface HandleConfirmObj {
   callBack?: Function,
 }
 
+interface ObserverTemplate {
+  next?: (value: any) => void,
+  error?: (error: Error) => void,
+  complete?: () => void,
+}
+
 type HandleConfirmOptions = NewColumn
                             | DeletedColumnOption
                             | NewTaskOptions
@@ -200,6 +206,13 @@ type FormConrolTypes = 'columnTitle'
                       | 'repeatedPassword'
                       | 'userName'
                       | 'searchRequest';
+
+type FormGroupTypes = 'taskForm'
+                    | 'singIn'
+                    | 'singUp'
+                    | 'editUser'
+                    | 'columnTitle'
+                    | 'newBoard';
 
 export {
   CurUserObj,
@@ -234,4 +247,6 @@ export {
   EditableTask,
   SearchTaskObj,
   HandleConfirmObj,
+  ObserverTemplate,
+  FormGroupTypes,
 }

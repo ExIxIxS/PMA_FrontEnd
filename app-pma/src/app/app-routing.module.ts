@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { WelcomePageComponent } from './welcome-page/welcome-page.component';
-import { MainPageComponent } from './main-page/main-page.component';
-import { SigninPageComponent } from './signin-page/signin-page.component';
-import { SignupPageComponent } from './signup-page/signup-page.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { BoardContentComponent } from './board-content/board-content.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
+import { WelcomePageComponent } from './components/welcome-page/welcome-page.component';
+import { MainPageComponent } from './components/main-page/main-page.component';
+import { SigninPageComponent } from './components/signin-page/signin-page.component';
+import { SignupPageComponent } from './components/signup-page/signup-page.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { BoardContentComponent } from './components/board-content/board-content.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: "main", component: MainPageComponent },
