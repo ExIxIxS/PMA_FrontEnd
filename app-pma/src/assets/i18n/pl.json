@@ -1,0 +1,208 @@
+{
+  "tooltips": {
+    "aboutDeveloper": "Dowiedz się więcej o deweloperze",
+    "noProjects": "Brak projektów",
+    "swapColumn": "Przenieś kolumnę"
+  },
+
+  "project": {
+    "title": "O projekcie",
+    "description": {
+      "p1": "Ta aplikacja pozwala łatwo zarządzać codziennymi zadaniami domowymi lub pracą w ciągłej komunikacji z zespołem",
+      "featuresListTitle": "Główne funkcje aplikacji",
+      "featuresList":
+        [
+          {
+            "title": "Zarządzanie tablicami",
+            "description": "Kontrola tablic Biorąc pod uwagę rolę użytkownika",
+            "iconName": "dashboard"
+          },
+          {
+            "title": "Zarządzanie kolumnami",
+            "description": "Zarządzanie kolumnami z wygodnym przeciągnięciem",
+            "iconName": "view_week"
+          },
+          {
+            "title": "Zarządzanie zadaniami",
+            "description": "Utwórz, patrz, edytuj, usuwaj zadania szybko i po prostu",
+            "iconName": "task"
+          },
+          {
+            "title": "Wielojęzyczny",
+            "description": "Zmień język w locie",
+            "iconName": "translate"
+          },
+          {
+            "title": "Układ adaptacyjny",
+            "description": "Minimalna szerokość strony 320px",
+            "iconName": "devices"
+          },
+          {
+            "title": "Nowoczesny design",
+            "description": "Konfigurowalny, gładki i interaktywny interfejs do codziennego użytku",
+            "iconName": "design_services"
+          }
+        ],
+        "techListTitle": "Główne technologie stosowane w aplikacji",
+        "p2": "Aby rozpocząć pracę z aplikacją, proszę",
+        "p3": "Aplikacja jest wdrażana jako edukacyjny projekt zgodnie z",
+        "login": "zaloguj sie",
+        "signUp": "zarejestruj się",
+        "or": "lub"
+    }
+  },
+
+  "course": {
+    "title": "O kursie",
+    "description": {
+      "p1": "Wdrożenie aplikacji jest praktyczną częścią kursu",
+      "p2": " zawarte w ostatnim etapie kursu",
+      "p3": "W trakcie 'Upskill Me' wiedza teoretyczna i praktyczne umiejętności na następujące tematy uzyskano pod kontrolą mentorów"
+    }
+  },
+
+  "developer": {
+    "title": "Deweloper",
+    "name": "Denis Bondarenko",
+    "description": {
+      "p1": "Rozpocząłem karierę po uniwersytecie (licencjat / inżynier elektroechaniczny) w branży kolejowej w 2011 roku, gdzie otrzymałem niezbędne umiejętności w pracy z dokumentacją techniczną i wieloma technologiami",
+      "p2": "Przez ostatnie 2 lata pracowałem w międzynarodowej firmie jako wiodący pisarz techniczny, w której moje główne obowiązki były opracowanie i zarządzanie dokumentacją techniczną z różnymi rodzajami treści",
+      "p3": "Już dużo zrobiłem i nadal robię wszystko każdego dnia, aby stać się doświadczonym programistą Front-Endu"
+    }
+  },
+  "welcome": {
+    "title": "Witamy w aplikacji zarządzania projektem (PMA)!"
+  },
+  "buttons": {
+    "login": "Wejść",
+    "signUp": "Zarejestr.",
+    "logOut": "Wyloguj",
+    "gotIt": "Jasne",
+    "saveChanges": "Ratować",
+    "cancel": "Anulować",
+    "removeUser": "Usuń konto",
+    "confirm": "Potwierdzać",
+    "seeRequirements": "wymaganiami",
+    "userAccount": "Edytuj profil",
+    "newBoard": "Stwórz nowy projekt",
+    "changeLanguage": "Zmień język",
+    "openBoard": "Otwórz projekt",
+    "editTask": "Edytuj zadanie",
+    "deleteBoard": "Usuń projekt",
+    "deleteTask": "Usuń zadanie",
+    "newTask": "Dodaj zadanie",
+    "deleteColumn": "Usuń kolumnę",
+    "newColumn": "Dodaj kolumnę",
+    "palette": "paleta",
+    "font": "czcionka"
+  },
+  "error": {
+    "title": "Błąd",
+    "menuTitle": "Ups! Coś poszło nie tak!",
+    "noResults": "Zadania nie można znaleźć"
+  },
+  "forms": {
+    "changesNote": "*Proszę potwierdzić zmiany",
+    "editNameTitle": "Zmień Imię lub Zaloguj się",
+    "newNameField": "Wprowadź nową imię",
+    "nameField": "Wpisz swoje imię",
+    "newLoginField": "Wprowadź nowy login",
+    "loginField": "Wprowadź login",
+    "editPassTitle": "Zmień hasło",
+    "newPassField": "Wpisz nowe hasło",
+    "passField": "Wprowadź hasło",
+    "repeatPassField": "Powtórz nowe hasło",
+    "currentPassField": "Wprowadź bieżące hasło",
+    "boardTitleField": "Wprowadź nazwę projektu",
+    "inviteUsersField": "Zaproś uczestników",
+    "userSelectionField": "Wybierz imię",
+    "columnTitleField": "Wprowadź nazwę kolumny",
+    "taskTitleField": "Nazwa zadania",
+    "excecutorSelectionField": "Wybierz wykonawcę",
+    "taskDescriptionField": "Wprowadź opis problemu",
+    "taskSearchField": "Poszukaj zadania"
+  },
+
+  "formErrors": {
+    "required": "Musisz przedstawić",
+    "minLength": "Minimalna długość",
+    "maxLength": "Maksymalna długość",
+    "allowedSymbols": "Dozwolone symbole",
+    "doNotMatch": "Hasło różni się",
+    "notValid": "Nieważny",
+    "chars": "Symbol(s)",
+    "columnTitle": "Nazwa kolumny",
+    "boardTitle": "Nazwa Projektu",
+    "taskTitle": "Nazwa zadania",
+    "taskDescription": "Opis zadania",
+    "taskExecutor": "Wkonawca zadaniau",
+    "userName": "'Nazwa'",
+    "login": "'Login'",
+    "password": "'hasło'",
+    "newPassword": "'hasło'",
+    "repeatedPassword": "'hasło'",
+    "searchRequest": "Prośba o wyszukiwanie",
+    "patternNote": {
+      "title": "Litery Unicode, liczby, cytaty +, luki lub -. (W środku)",
+      "userName": "Łacińskie litery (z tytułem), liczby i luki lub -. (W środku)",
+      "login": "Łacińskie litery, liczby i - (w środku)",
+      "password": "Łacińskie litery, liczby i!@$%^&*?",
+      "searchRequest": "Litery Unicode, liczby, przestrzenie i.+-"
+    }
+  },
+
+  "board": {
+    "description": "Opis",
+    "taskExecutor": "Aktualny wykonawca",
+    "taskTitle": "Nazwa zadania",
+    "creator": "Twórca",
+    "participants": "Uczestnicy"
+  },
+
+  "main": {
+    "title": "Stwórz swój pierwszy projekt",
+    "firstSubTitle": "Twoje własne projekty",
+    "secondSubTitle": "Projekty, do których zostałeś zaproszony",
+    "thirdSubTitle": "Inne projekty",
+    "owner": "Twórca"
+  },
+
+  "confirmation": {
+    "title": {
+      "createBoard": "Stwórz nowy projekt",
+      "createColumn": "Utwórz nową kolumnę",
+      "createTask": "Utwórz nowe zadanie",
+      "editTask": "Edytuj zadanie",
+      "deleteBoard": "Usuwanie projektu",
+      "deleteUser": "Usuwanie konta",
+      "deleteColumn": "Usuwanie kolumny",
+      "deleteTask": "Usuwanie zadania",
+      "default": "Usługa potwierdzenia"
+    },
+    "deleteBoard": {
+      "title": "Nazwa Projektu",
+      "question": "Jesteś pewien, że chcesz usunąć ten projekt",
+      "note": "Nie ma sposobu na przywrócenie projektu po usunięciu!",
+      "notOwnerNote": "Przepraszam, ale usunięcie jest dostępne tylko dla twórcy projektu",
+      "owner": "Project Creator"
+    },
+    "deleteUser": {
+      "question": "Czy na pewno chcesz usunąć swoje konto?",
+      "note": "Nie można go przywrócić po usunięciu!"
+    },
+    "deleteColumn": {
+      "question": "Czy na pewno chcesz usunąć tę kolumnę?",
+      "note": "Nie można go przywrócić po usunięciu!"
+    },
+    "deleteTask": {
+      "question": "Czy na pewno chcesz usunąć to zadanie?",
+      "note": "Nie można go przywrócić po usunięciu!"
+    },
+    "error": "Przepraszam, to okno otworzyło się z błędem ..."
+  },
+
+  "pageNotFound": {
+    "title": "Strona nie znaleziona"
+  }
+
+}

@@ -184,7 +184,7 @@
     "repeatedPassword": "password",
     "searchRequest": "search request",
     "patternNote": {
-      "title": "unicode letters, digits, quotes +, spaces or -. (in the middle)",
+      "title": "unicode letters, digits, quotes +, spaces or -., (in the middle)",
       "userName": "latin letters (starts with upper), digits and spaces or -. (in the middle)",
       "login": "latin letters, digits and - (in the middle)",
       "password": "latin letters, digits and !@#$%^&*?",

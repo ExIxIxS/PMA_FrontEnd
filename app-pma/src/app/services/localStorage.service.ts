@@ -14,7 +14,7 @@ export class LocalStorageService {
   private _currentUser: CurUserObj = this.getInitialCurrentUser();
   private _currentUserId: string = this.getInitialcurrentUserId();
   private _currentLanguage: string = this.getInitialcurrentUserId();
-  private _avalibleLanguages = ['en', 'ru'];
+  private _avalibleLanguages = ['en', 'pl', 'be', 'ru'];
   private _currentColorTheme: string = this._getInitialColorTheme();
   private _currentTypography: string = this._getInitialTypography();
   private _html = document.documentElement;
