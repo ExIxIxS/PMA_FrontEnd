@@ -64,3 +64,12 @@
 .typography-button.comfortaa-typography {
   @include typography-button(themes.$comfortaa-typography);
 }
+
+@media (max-width: 539px) {
+  .font-buttons-wrapper {
+    .font-button {
+      padding: 0 6px;
+    }
+  }
+
+}

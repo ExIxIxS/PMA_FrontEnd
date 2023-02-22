@@ -51,7 +51,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.currentPassField' | translate}}</mat-label>
-    <input matInput
+    <input matInput #currentPassInput
           [type]="hidePass ? 'password' : 'text'"
           formControlName="password">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('password')}}</mat-error>
@@ -75,7 +75,7 @@
     <button mat-flat-button
       color="basic"
       type="button"
-      (click)="cancelEditing()">{{'buttons.cancel' | translate}}
+      (click)="endEditing()">{{'buttons.cancel' | translate}}
     </button>
   </div>
 

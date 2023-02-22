@@ -361,7 +361,7 @@ export class RestDataService {
     .subscribe(updateTaskObserver);
   }
 
-  updateUser<T extends UserRestObj>(newUser: NewUserObj, additionalHandler: Function) {
+  updateUser<T extends UserRestObj>(updatedUser: NewUserObj, additionalHandler: Function) {
     const userId = this.localStorageService.currentUserId;
 
     const updateUserObserver = this.getRestObserver<T>({
@@ -374,7 +374,7 @@ export class RestDataService {
     });
 
     this.http
-    .put<T>(`${REST_URL}users/${userId}`, newUser, this.getHttpOptions())
+    .put<T>(`${REST_URL}users/${userId}`, updatedUser, this.getHttpOptions())
     .subscribe(updateUserObserver);
   }
 

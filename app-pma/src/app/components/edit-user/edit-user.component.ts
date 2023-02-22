@@ -16,14 +16,14 @@ import { FormConrolTypes, NewUserObj, TokenObj, UserRestObj } from '../../app.in
 })
 export class EditUserComponent {
 
-  hidePass: boolean = true;
-  hideNewPass: boolean = true;
-  initialName: string = '';
-  initialLogin: string = '';
+  public hidePass: boolean = true;
+  public hideNewPass: boolean = true;
+  public initialName: string = '';
+  public initialLogin: string = '';
 
-  checkoutForm = this.formService.getNewFormGroup({type: 'editUser'});
+  public checkoutForm = this.formService.getNewFormGroup({type: 'editUser'});
 
-  passwordFormControls = [
+  public passwordFormControls = [
     this.checkoutForm.controls['password'],
     this.checkoutForm.controls['newPassword'],
     this.checkoutForm.controls['repeatedPassword'],
@@ -72,11 +72,6 @@ export class EditUserComponent {
   };
 
   saveChanges(): void {
-    const updateInitials = (name: string, login: string) => {
-      this.initialName = name;
-      this.initialLogin = login;
-    }
-
     if (this.checkoutForm.valid) {
       const currentPass = this.checkoutForm.controls['password'].value;
       const userName = this.checkoutForm.controls['userName'].value;
@@ -84,13 +79,11 @@ export class EditUserComponent {
       const newPass = this.checkoutForm.controls['newPassword'].value;
 
       const singInObserver = {
-        next: (obj: TokenObj) => {
-          const currentUser = {
+        next: (token: TokenObj) => {
+          this.localStorageService.currentUser = {
             login: this.initialLogin,
-            token: obj.token
-          }
-
-          this.localStorageService.currentUser = currentUser;
+            token: token.token
+          };
 
           const updatedUser: NewUserObj = {
             name: userName,
@@ -98,8 +91,8 @@ export class EditUserComponent {
             password: (newPass) ? newPass : currentPass,
           }
 
-          this.restAPI.updateUser(updatedUser, updateInitials.bind(this));
-          this.clearPasswordInputs();
+          this.restAPI.updateUser(updatedUser, this._updateCurentUser.bind(this));
+          this.endEditing();
          },
         error: (err: Error) => {
           this.errorHandlerService.handleError(err)
@@ -110,6 +103,12 @@ export class EditUserComponent {
         .subscribe(singInObserver);
     }
   };
+
+  private _updateCurentUser = (name: string, login: string) => {
+    this.initialName = name;
+    this.initialLogin = login;
+    this.localStorageService.currentUser.login = login;
+  }
 
   observeNewPasswordChanges() {
     const changesObserver = {
@@ -130,7 +129,7 @@ export class EditUserComponent {
       .subscribe(changesObserver);
   }
 
-  cancelEditing() {
+  endEditing() {
     this.location.back();
   }
 
@@ -147,10 +146,6 @@ export class EditUserComponent {
             && (this.isNameChanged()
                 || this.isLoginChanged()
                 || this.checkoutForm.controls['newPassword'].value));
-  }
-
-  clearPasswordInputs() {
-    this.passwordFormControls.forEach((control) => control.setValue(''));
   }
 
 }

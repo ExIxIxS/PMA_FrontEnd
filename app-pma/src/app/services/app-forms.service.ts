@@ -47,14 +47,14 @@ export class AppFormsService {
       title: 'task title',
       minLength: 2,
       maxLength: 30,
-      pattern: /^[\p{L}\d'"\+]+[\p{L}\d\s\-\.\+'"]*[\p{L}\d'"\+]+$/u,
+      pattern: /^[\p{L}\d'"\+]+[\p{L}\d\s\-\.\+',"]*[\p{L}\d'"\+]+$/u,
       patternError: 'title',
     },
     taskDescription: {
       title: 'task description',
       minLength: 0,
       maxLength: 200,
-      pattern: /^[\p{L}\d'"\+]+[\p{L}\d\s\-\.\+'"]*[\p{L}\d'"\+\.]+$/u,
+      pattern: /^[\p{L}\d'"\+]+[\p{L}\d\s\-\.\+',"]*[\p{L}\d'"\+\.]+$/u,
       patternError: 'title',
     },
     userName: {

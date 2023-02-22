@@ -38,6 +38,7 @@
 <mat-menu #fonts="matMenu">
   <div class="font-buttons-wrapper">
     <button *ngFor="let typography of typographies"
+            class="font-button"
             mat-flat-button
             [ngClass]="'typography-button ' + typography.className + '-typography'"
             type="button"
