@@ -1,5 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormNewBoardComponent } from './form-new-board.component';
+import { TestBed } from '@angular/core/testing';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -20,13 +19,11 @@ import { AppControlService } from 'src/app/services/app-control.service';
 import { AppFormsService } from 'src/app/services/app-forms.service';
 import { ConfirmationService } from 'src/app/services/confirmation.service';
 
-describe('FormNewBoardComponent', () => {
-  let component: FormNewBoardComponent;
-  let fixture: ComponentFixture<FormNewBoardComponent>;
+describe('LocalStorageService', () => {
+  let service: LocalStorageService;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ FormNewBoardComponent ],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         BrowserModule,
         HttpClientModule,
@@ -43,15 +40,11 @@ describe('FormNewBoardComponent', () => {
         }),
       ],
       providers: [RestDataService, LocalStorageService, AppControlService, ErrorHandlerService, ConfirmationService, AppFormsService, Location, ],
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(FormNewBoardComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    });
+    service = TestBed.inject(LocalStorageService);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 });
