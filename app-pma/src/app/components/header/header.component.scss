@@ -25,6 +25,10 @@
   margin: 0 2px;
 }
 
+.hidden-progress {
+  visibility: hidden;
+}
+
 @media (max-width: 539px) {
   .app-button {
     font-size: 16px;

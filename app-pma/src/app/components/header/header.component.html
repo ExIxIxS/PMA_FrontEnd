@@ -93,4 +93,9 @@
   </span>
 </mat-toolbar>
 
+<mat-progress-bar [ngClass]="{'hidden-progress': !isInProgress}"
+                  color="accent"
+                  mode="indeterminate">
+</mat-progress-bar>
+
 <app-error-panel></app-error-panel>

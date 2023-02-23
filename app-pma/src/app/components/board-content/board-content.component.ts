@@ -71,12 +71,16 @@ export class BoardContentComponent {
   }
 
   updateBoardTitle() {
+    this.restAPI.startProgress();
+
     const updateTitleObserver = {
       next: (board: RestBoardObj) => {
         this.currentBoard = board;
+        this.restAPI.stopProgress();
       },
       error: (err: Error) => {
-        this.errorHandlerService.handleError(err)
+        this.errorHandlerService.handleError(err);
+        this.restAPI.stopProgress();
       },
     }
 
@@ -112,6 +116,8 @@ export class BoardContentComponent {
     if (this.localStorageService.currentAppBoards.length) {
       this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
     } else {
+      this.restAPI.startProgress();
+
       const updateBoardUsersObserver = {
         next: (restObj: RestBoardObj | UserRestObj[]) => {
           if (restObj.hasOwnProperty('length') ) {
@@ -121,10 +127,12 @@ export class BoardContentComponent {
           }
         },
         error: (err: Error) => {
-          this.errorHandlerService.handleError(err)
+          this.errorHandlerService.handleError(err);
+          this.restAPI.stopProgress();
         },
         complete: () => {
           this.localStorageService.updateCurrentBoardUsers(this.currentBoardId);
+          this.restAPI.stopProgress();
         }
       }
 
@@ -202,13 +210,17 @@ export class BoardContentComponent {
   }
 
   createBoardColumns() {
+    this.restAPI.startProgress();
+
     const getColumnsObserver = {
       next: (columns: ColumnRestObj[]) => {
         this.localStorageService.restColumns = columns;
         this.fillColumnsWithTasks();
+        this.restAPI.stopProgress();
       },
       error: (err: Error) => {
-        this.errorHandlerService.handleError(err)
+        this.errorHandlerService.handleError(err);
+        this.restAPI.stopProgress();
       },
     }
 
@@ -219,15 +231,19 @@ export class BoardContentComponent {
 
   fillColumnsWithTasks() {
     if (this.localStorageService.restColumns.length) {
+      this.restAPI.startProgress();
+
       const tasksObserver = {
         next: (tasks: TaskRestObj[]) => {
           this.localStorageService.restTasks.push(...tasks);
         },
         error: (err: Error) => {
-          this.errorHandlerService.handleError(err)
+          this.errorHandlerService.handleError(err);
+          this.restAPI.stopProgress();
         },
         complete: () => {
           this.localStorageService.updateBoardAppColumns();
+          this.restAPI.stopProgress();
         }
       }
 
