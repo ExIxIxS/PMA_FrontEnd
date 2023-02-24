@@ -14,7 +14,7 @@
         [
           {
             "title": "Управление досками",
-            "description": "Управление досками с учетом роли пользователя",
+            "description": "Управление досками с учетом роли пользователя, готовые шаблоны",
             "iconName": "dashboard"
           },
           {
@@ -120,7 +120,9 @@
     "taskTitleField": "Название задачи",
     "excecutorSelectionField": "Выберите исполнителя",
     "taskDescriptionField": "Введите описание задачи",
-    "taskSearchField": "Поиск задачи"
+    "taskSearchField": "Поиск задачи",
+    "templateField": "Шаблон проекта",
+    "useTemplateNote": "Вы можете использовать шаблон"
   },
 
   "formErrors": {
@@ -203,6 +205,58 @@
 
   "pageNotFound": {
     "title": "Страница не найдена"
+  },
+
+  "boardTemplates": {
+    "kanban": {
+      "title": "kanban",
+      "columns": {
+        "backlog": "BackLog",
+        "design": "Design",
+        "toDo": "To Do",
+        "doing": "Doing",
+        "codeReview": "Code review",
+        "testing": "Testing",
+        "done": "Done"
+      }
+    },
+
+    "weekPlan": {
+      "title": "недельный план",
+      "columns": {
+        "monday": "Понедельник",
+        "tuesday": "Вторник",
+        "wednesday": "Среда",
+        "thursday": "Четверг",
+        "friday": "Пятница",
+        "saturday": "Суббота",
+        "sunday": "Воскресенье"
+      }
+    },
+
+    "projectManagment": {
+      "title": "управление проектом",
+      "columns": {
+        "projectResources": "Ресурсы",
+        "questionsForMeeting": "Вопросы для встречи",
+        "toDo": "Сделать",
+        "pending": "Задержка",
+        "blocked": "Заблокировано",
+        "done": "Выполнено"
+      }
+    },
+
+    "designHuddle": {
+      "title": "обсуждение дизайна",
+      "columns": {
+        "concept": "Концепт",
+        "notes": "Заметки",
+        "positives": "Плюсы",
+        "negatives": "Минусы",
+        "questions": "Вопросы",
+        "potentialBlockers": "Потенциальные проблемы"
+      }
+    }
   }
 
 }

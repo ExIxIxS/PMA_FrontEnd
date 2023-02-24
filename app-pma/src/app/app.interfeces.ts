@@ -82,17 +82,17 @@ interface PointRestObj {
 }
 
 interface NewColumn {
-  boardID: string,
+  boardId: string,
   columnOrder: number,
+}
+
+interface NewColumnOption extends NewColumn {
+  columnTitle: string,
 }
 
 interface ColumnSetRestObj {
   _id: string,
   order: number,
-}
-
-interface NewColumnOption extends NewColumn {
-  columnTitle: string,
 }
 
 interface DeletedColumnOption {

@@ -12,6 +12,7 @@ import { TokenObj, UserRestObj, NewBoardObj, RestBoardObj, ColumnRestObj, TaskRe
         NewColumnOption, NewColumnRestObj, DeletedColumnOption, NewTaskObj, TaskSetRestObj,
         TaskDeletionOptions, EditableTask, NewUserObj, ObserverTemplate,
       } from '../app.interfeces';
+import { TranslateService } from '@ngx-translate/core';
 
 //  const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 const REST_URL = 'http://localhost:3000/';
@@ -19,6 +20,7 @@ const REST_URL = 'http://localhost:3000/';
 @Injectable()
 export class RestDataService {
   public isInProgress: boolean = false;
+  public isNewBoard: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -26,6 +28,7 @@ export class RestDataService {
     private localStorageService: LocalStorageService,
     private errorHandlerService: ErrorHandlerService,
     private appControlService: AppControlService,
+    private translateService: TranslateService,
   ) {}
 
   startProgress() {
@@ -34,6 +37,12 @@ export class RestDataService {
 
   stopProgress() {
     this.isInProgress = false;
+  }
+
+  translate(localeKey: string): string {
+    const localizedValue = this.translateService.instant(localeKey)
+
+    return (localizedValue) ? localizedValue : localeKey;
   }
 
   getRestObserver<T>(options: ObserverTemplate = {}): Observer<T> {
@@ -127,13 +136,18 @@ export class RestDataService {
       .subscribe(updateRestUsersObserver);
   }
 
-  createBoard(newBoard: NewBoardObj) {
+  createBoard(newBoard: NewBoardObj, templateName?: string) {
     this.startProgress();
     const createBoardObserver = this.getRestObserver<RestBoardObj>({
       next: (boardObj: RestBoardObj) => {
+        this.isNewBoard = true;
         this.localStorageService.restBoards.push(boardObj);
         this.localStorageService.updateBoardsStorage();
         this.router.navigateByUrl(`boards/${boardObj._id}`);
+
+        if (templateName) {
+          this._createColumnsFromTemplate(templateName, boardObj._id);
+        }
         this.stopProgress();
       }
     });
@@ -141,6 +155,21 @@ export class RestDataService {
     this.http
       .post<RestBoardObj>(REST_URL + 'boards', newBoard, this.getHttpOptions())
       .subscribe(createBoardObserver);
+  }
+
+  private _createColumnsFromTemplate(templateName: string, boardId: string) {
+    const boardTemplates = this.appControlService.boardTemplates;
+    const template = boardTemplates.find((temp) => temp.name === templateName);
+    if (template) {
+      template.columns.forEach((columnName, index) => {
+        const newColumnOption = {
+          boardId: boardId,
+          columnOrder: index,
+          columnTitle: this.translate('boardTemplates.' + template.name + '.columns.' + columnName),
+        }
+        this.createColumn(newColumnOption);
+      })
+    }
   }
 
   updateBoardsStorage(completeCallBack?: Function) {
@@ -245,7 +274,7 @@ export class RestDataService {
       },
     });
 
-    const boardId = columnOption.boardID;
+    const boardId = columnOption.boardId;
     const newColumn: NewColumnRestObj = {
       title: columnOption.columnTitle,
       order: columnOption.columnOrder,

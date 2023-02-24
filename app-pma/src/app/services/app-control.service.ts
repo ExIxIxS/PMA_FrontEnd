@@ -7,6 +7,12 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 @Injectable()
 export class AppControlService {
   public isSmallScreen = this.breakpointObserver.isMatched('(max-width: 539px)');
+  public boardTemplates = [
+    {name: 'weekPlan', columns: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']},
+    {name: 'kanban', columns: ['backlog', 'design', 'toDo', 'doing', 'codeReview', 'testing', 'done']},
+    {name: 'projectManagment', columns: ['projectResources', 'questionsForMeeting', 'toDo', 'pending', 'blocked', 'done']},
+    {name: 'designHuddle', columns: ['concept', 'notes', 'positives', 'negatives', 'questions', 'potentialBlockers']},
+  ]
 
   constructor(
     private router: Router,

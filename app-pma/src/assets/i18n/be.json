@@ -14,7 +14,7 @@
         [
           {
             "title": "Кіраванне дошкамі",
-            "description": "Кантроль дошак з улікам ролі карыстальніка",
+            "description": "Кантроль дошак з улікам ролі карыстальніка, гатовыя шаблоны",
             "iconName": "dashboard"
           },
           {
@@ -120,7 +120,9 @@
     "taskTitleField": "Імя задачы",
     "excecutorSelectionField": "Выберыце выканаўцу",
     "taskDescriptionField": "Увядзіце апісанне задачы",
-    "taskSearchField": "Пошук задачы"
+    "taskSearchField": "Пошук задачы",
+    "templateField": "Шаблон праекта",
+    "useTemplateNote": "Вы можаце выкарыстаць шаблон"
   },
 
   "formErrors": {
@@ -203,6 +205,58 @@
 
   "pageNotFound": {
     "title": "Старонка не знойдзена"
+  },
+
+  "boardTemplates": {
+    "kanban": {
+      "title": "kanban",
+      "columns": {
+        "backlog": "BackLog",
+        "design": "Design",
+        "toDo": "To Do",
+        "doing": "Doing",
+        "codeReview": "Code review",
+        "testing": "Testing",
+        "done": "Done"
+      }
+    },
+
+    "weekPlan": {
+      "title": "тыднёвы план",
+      "columns": {
+        "monday": "Панядзелак",
+        "tuesday": "Аўторак",
+        "wednesday": "Серада",
+        "thursday": "Чацвер",
+        "friday": "Пятніца",
+        "saturday": "Субота",
+        "sunday": "Нядзеля"
+      }
+    },
+
+    "projectManagment": {
+      "title": "кіраваньне праектам",
+      "columns": {
+        "projectResources": "Рэсурсы",
+        "questionsForMeeting": "Пытанні для сустрэчы",
+        "toDo": "Зрабіць",
+        "pending": "Затрымка",
+        "blocked": "Заблакавана",
+        "done": "Зроблена"
+      }
+    },
+
+    "designHuddle": {
+      "title": "Абмеркаванне дызайну",
+      "columns": {
+        "concept": "Канцэпцыя",
+        "notes": "Нататкі",
+        "positives": "Плюсы",
+        "negatives": "Мінусы",
+        "questions": "Пытанні",
+        "potentialBlockers": "Патэнцыйныя праблемы"
+      }
+    }
   }
 
 }

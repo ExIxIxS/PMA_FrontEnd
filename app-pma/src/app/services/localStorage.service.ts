@@ -11,10 +11,10 @@ const emptyUserStr = JSON.stringify({login: '', token: '',});
 
 @Injectable()
 export class LocalStorageService {
+  private _avalibleLanguages = ['en', 'pl', 'be', 'ru'];
   private _currentUser: CurUserObj = this.getInitialCurrentUser();
   private _currentUserId: string = this.getInitialcurrentUserId();
   private _currentLanguage: string = this.getInitialcurrentUserId();
-  private _avalibleLanguages = ['en', 'pl', 'be', 'ru'];
   private _currentColorTheme: string = this._getInitialColorTheme();
   private _currentTypography: string = this._getInitialTypography();
   private _html = document.documentElement;
@@ -276,6 +276,8 @@ export class LocalStorageService {
 
     this.restColumns.push(restColumn);
     this.currentBoardColumns.push(appColumn);
+
+    this.currentBoardColumns.sort(this.sortByOrder);
   }
 
   sortByOrder<T extends ColumnAppObj | ColumnRestObj | TaskRestObj>(a: T, b: T): number {

@@ -192,6 +192,7 @@ export class AppFormsService {
       case 'newBoard': {
         return new FormGroup({
           boardTitle: this.getNewFormControl('boardTitle'),
+          boardTemplate: new FormControl(''),
           participants: new FormControl(''),
         });
       }

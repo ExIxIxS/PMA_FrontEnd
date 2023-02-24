@@ -20,11 +20,12 @@ import { DialogPopupComponent } from '../components/dialog-popup/dialog-popup.co
 export class ConfirmationService {
   public type: ConfirmationTypes = 'default';
   public title: string = 'Confirmation Service';
-  public newBoard: NewBoardObj | undefined;
   public isConfirmValid: boolean;
   public deletedBoard: DeletedBoard | null = null;
   public boardId: string | undefined;
   public boardOrder: number | undefined;
+  public newBoard: NewBoardObj | undefined;
+  public newBoardTemplate: string | undefined;
   public newColumnTitle: string | undefined;
   public newTaskTitle: string | undefined;
   public newTaskDescription: string | undefined;
@@ -115,7 +116,7 @@ export class ConfirmationService {
     switch(this.type) {
       case 'createBoard':
         if (this.newBoard) {
-          this.restAPI.createBoard(this.newBoard);
+          this.restAPI.createBoard(this.newBoard, this.newBoardTemplate);
         };
         break;
       case 'createColumn':

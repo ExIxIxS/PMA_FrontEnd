@@ -13,7 +13,7 @@
         [
           {
             "title": "Boards management",
-            "description": "Boards management according to user's role",
+            "description": "Boards management according to user's role, ready-made templates",
             "iconName": "dashboard"
           },
           {
@@ -161,7 +161,9 @@
     "taskTitleField": "Task title",
     "excecutorSelectionField": "Select an excecutor",
     "taskDescriptionField": "Enter a task description",
-    "taskSearchField": "Task search"
+    "taskSearchField": "Task search",
+    "templateField": "Board template",
+    "useTemplateNote": "You can use a template"
   },
 
   "formErrors": {
@@ -244,6 +246,58 @@
 
   "pageNotFound": {
     "title": "Page not found"
+  },
+
+  "boardTemplates": {
+    "kanban": {
+      "title": "kanban",
+      "columns": {
+        "backlog": "BackLog",
+        "design": "Design",
+        "toDo": "To Do",
+        "doing": "Doing",
+        "codeReview": "Code review",
+        "testing": "Testing",
+        "done": "Done"
+      }
+    },
+
+    "weekPlan": {
+      "title": "weekly plan",
+      "columns": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    },
+
+    "projectManagment": {
+      "title": "project managment",
+      "columns": {
+        "projectResources": "Project resources",
+        "questionsForMeeting": "Questions for meeting",
+        "toDo": "To Do",
+        "pending": "Pending",
+        "blocked": "Blocked",
+        "done": "Done"
+      }
+    },
+
+    "designHuddle": {
+      "title": "design huddle",
+      "columns": {
+        "concept": "Concept",
+        "notes": "Notes",
+        "positives": "Positives",
+        "negatives": "Negatives",
+        "questions": "Questions",
+        "potentialBlockers": "Potential blockers"
+      }
+    }
   }
 
 }

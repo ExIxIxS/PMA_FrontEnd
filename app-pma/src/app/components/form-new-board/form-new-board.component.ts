@@ -9,6 +9,7 @@ import { ErrorHandlerService } from 'src/app/services/errorHandler.service';
 import { NewBoardObj, Participant, UserRestObj } from '../../app.interfeces'
 import { AppFormsService } from 'src/app/services/app-forms.service';
 import { Observable, Observer } from 'rxjs';
+import { AppControlService } from 'src/app/services/app-control.service';
 
 @Component({
   selector: 'app-form-new-board',
@@ -17,14 +18,14 @@ import { Observable, Observer } from 'rxjs';
 })
 export class FormNewBoardComponent {
   public hide = true;
-
-  checkoutForm = this.formService.getNewFormGroup({type: 'newBoard'});
-
+  public boardTemplates = this.appControlService.boardTemplates;
   public addOnBlur = true;
   public participants: Participant[] = [];
   public availableUsers: string[] = [];
   public foundedUsers: Observable<string[]> | undefined;
   public allUsers: UserRestObj[] | undefined;
+
+  public checkoutForm = this.formService.getNewFormGroup({type: 'newBoard'});
 
   constructor(
     private restAPI: RestDataService,
@@ -32,6 +33,7 @@ export class FormNewBoardComponent {
     private confirmationService: ConfirmationService,
     private errorHandlerService: ErrorHandlerService,
     private formService: AppFormsService,
+    private appControlService: AppControlService,
   ) { }
 
   ngOnInit() {
@@ -128,12 +130,40 @@ export class FormNewBoardComponent {
   private _updateNewBoard(): void {
     if (this.checkoutForm.valid) {
       this.confirmationService.newBoard = this._createNewBoardObj();
+      this.confirmationService.newBoardTemplate = this.checkoutForm.controls['boardTemplate'].value;
     }
   }
 
   private _observeFormChanges() {
     this._observeTitleInputChanges();
+    this._observeBoardTemplateChanges();
     this._observeUsersInputChanges();
+  }
+
+
+
+  private _observeTitleInputChanges(): void {
+    const changesObserver = {
+      next: () => {
+        this.confirmationService.isConfirmValid = this.checkoutForm.valid;
+        this._updateNewBoard();
+      }
+    }
+
+    this.checkoutForm.controls['boardTitle'].valueChanges
+      .subscribe(changesObserver);
+  }
+
+  private _observeBoardTemplateChanges(): void {
+    const changesObserver = {
+      next: () => {
+        this.confirmationService.isConfirmValid = this.checkoutForm.valid;
+        this._updateNewBoard();
+      }
+    }
+
+    this.checkoutForm.controls['boardTemplate'].valueChanges
+      .subscribe(changesObserver);
   }
 
   private _observeUsersInputChanges(): void {
@@ -150,18 +180,6 @@ export class FormNewBoardComponent {
     };
 
     this.checkoutForm.controls['participants'].valueChanges
-      .subscribe(changesObserver);
-  }
-
-  private _observeTitleInputChanges(): void {
-    const changesObserver = {
-      next: () => {
-        this.confirmationService.isConfirmValid = this.checkoutForm.valid;
-        this._updateNewBoard();
-      }
-    }
-
-    this.checkoutForm.controls['boardTitle'].valueChanges
       .subscribe(changesObserver);
   }
 

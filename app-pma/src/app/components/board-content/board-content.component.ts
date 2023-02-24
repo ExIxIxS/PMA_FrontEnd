@@ -28,7 +28,8 @@ export class BoardContentComponent {
     },
   }
 
-  constructor(private activeRoute: ActivatedRoute,
+  constructor(
+              private activeRoute: ActivatedRoute,
               private router: Router,
               private restAPI: RestDataService,
               private localStorageService: LocalStorageService,
@@ -61,7 +62,13 @@ export class BoardContentComponent {
   startComponent() {
     this.localStorageService.clearColumns();
     this.updateBoardUsers();
-    this.createBoardColumns();
+
+    if (this.restAPI.isNewBoard) {
+      this.restAPI.isNewBoard = false;
+    } else {
+      this.createBoardColumns();
+    }
+
     this.updateBoardTitle();
   }
 
@@ -259,7 +266,7 @@ export class BoardContentComponent {
 
   createColumn(): void {
     const newColumnObj = {
-      boardID: this.currentBoardId,
+      boardId: this.currentBoardId,
       columnOrder: this.columnsAmount,
     }
     this.confirmationService.openDialog({type: 'createColumn', newColumn: newColumnObj})
