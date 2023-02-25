@@ -9,12 +9,12 @@ import { BoardContentComponent } from './components/board-content/board-content.
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 const routes: Routes = [
-  { path: "main", component: MainPageComponent },
+  { path: "main", component: MainPageComponent, title: 'PMA' },
   { path: "signin", component: SigninPageComponent, title: 'Login' },
   { path: "signup", component: SignupPageComponent, title: 'Sign Up' },
   { path: "user", component: EditUserComponent, title: 'Edit User' },
-  { path: "boards/:id", pathMatch: 'full', component: BoardContentComponent, title: 'Board`s workshop' },
-  { path: "", pathMatch: 'full', component: WelcomePageComponent },
+  { path: "boards/:id", pathMatch: 'full', component: BoardContentComponent, title: 'Board' },
+  { path: "", pathMatch: 'full', component: WelcomePageComponent, title: 'PMA' },
   { path: '**', component: PageNotFoundComponent, title: '404 Page Not Found' },
 ];
 

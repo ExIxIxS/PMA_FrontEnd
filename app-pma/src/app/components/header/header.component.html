@@ -1,12 +1,13 @@
 <mat-toolbar class="header-toolbar"
             color="primary">
   <app-menu-header></app-menu-header>
-    <a mat-flat-button
+    <button mat-flat-button
       class="app-button"
+      type="button"
       color="primary"
-      routerLink="/main">
+      (click)="navigateToRoot()">
       PMA
-    </a>
+    </button>
 
     <span class="left-spacer"></span>
 

@@ -44,6 +44,10 @@ export class HeaderComponent {
     this.appControlService.logOut()
   }
 
+  navigateToRoot() {
+    this.appControlService.navigateToRoot();
+  }
+
 }
 
 

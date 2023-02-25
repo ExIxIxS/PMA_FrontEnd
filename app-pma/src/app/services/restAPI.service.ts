@@ -14,8 +14,8 @@ import { TokenObj, UserRestObj, NewBoardObj, RestBoardObj, ColumnRestObj, TaskRe
       } from '../app.interfeces';
 import { TranslateService } from '@ngx-translate/core';
 
-//  const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
-const REST_URL = 'http://localhost:3000/';
+const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
+//  const REST_URL = 'http://localhost:3000/';
 
 @Injectable()
 export class RestDataService {

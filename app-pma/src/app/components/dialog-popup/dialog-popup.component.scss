@@ -1,5 +1,5 @@
 .confirmation-wrapper {
-  width: 100vw/540 * 432;
+  width: calc(100vw/540 * 432);
   max-width: 540px;
   min-width: 256px;
   max-height: 80vh;

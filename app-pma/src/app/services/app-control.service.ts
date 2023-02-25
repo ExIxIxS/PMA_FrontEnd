@@ -27,6 +27,14 @@ export class AppControlService {
     this.router.navigate(['']);
   }
 
+  navigateToRoot() {
+    if (this.localStorageService.isUserLoggedIn) {
+      this.router.navigate(['/main']);
+    } else {
+      this.router.navigate(['']);
+    }
+  }
+
   reloadPage() {
     this.router.navigate([this.router.url]);
   }
