@@ -38,7 +38,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ErrorPanelComponent } from './components/error-panel/error-panel.component';
 
 export function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
