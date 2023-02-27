@@ -8,7 +8,12 @@
 
 html, body { height: 100%; }
 
-body { margin: 0; }
+body {
+  margin: 0;
+  h2, h3, h4, h5, h6 {
+    font-weight: 400;
+  }
+}
 
 header {
   position: sticky;
@@ -18,15 +23,14 @@ header {
 
 main {
   width: calc(100vw - 120px);
-  min-height: calc(100vh - 165px);
-  margin: 20px auto;
+  min-height: calc(100vh - 155px);
+  margin: 10px auto 20px auto;
   padding-top: 1px;
 }
 
 @media (max-width: 539px) {
   main {
     width: 100%;
-    margin: 20px auto;
   }
 }
 
