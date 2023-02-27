@@ -16,7 +16,6 @@ import { AppControlService } from 'src/app/services/app-control.service';
 })
 export class SearchPanelComponent {
   private _lastSearchRequest: string | undefined;
-
   public foundTasks: SearchTaskObj[] = [];
   public allUsers: UserRestObj[] = [];
   public isNoResult: boolean = false;
@@ -154,7 +153,6 @@ export class SearchPanelComponent {
     this.confirmationService.openDialog({
       type: 'editTask',
       editableTask: task.restTask,
-      additionalHandler: this.repeatSearch.bind(this)
     });
   }
 

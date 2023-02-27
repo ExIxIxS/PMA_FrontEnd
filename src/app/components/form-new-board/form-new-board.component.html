@@ -2,6 +2,7 @@
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.boardTitleField' | translate}}</mat-label>
     <input matInput
+          autocomplete="off"
           formControlName="boardTitle">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage()}}</mat-error>
   </mat-form-field>
@@ -42,10 +43,11 @@
       <mat-form-field appearance="fill">
         <mat-label>{{'forms.userSelectionField' | translate}}</mat-label>
         <input #input
+              matInput
               type="text"
               placeholder=""
               aria-label="Number"
-              matInput
+              autocomplete="off"
               formControlName="participants"
               [matAutocomplete]="auto"
               [matChipInputFor]="chipGrid"

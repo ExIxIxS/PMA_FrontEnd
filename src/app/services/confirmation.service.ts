@@ -10,10 +10,6 @@ import { LocalStorageService } from './localStorage.service';
 
 import { DialogPopupComponent } from '../components/dialog-popup/dialog-popup.component';
 
-
-
-
-
 @Injectable({
   providedIn: 'root'
 })

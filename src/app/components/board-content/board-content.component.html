@@ -32,6 +32,7 @@
                       <input  #titleInput
                               matInput
                               class="column-title-input"
+                              autocomplete="off"
                               type="text"
                               [formControlName]="'columnTitle'"
                               (blur)="disableTitleInput(column)">

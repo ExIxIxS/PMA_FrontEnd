@@ -138,6 +138,7 @@ export class RestDataService {
 
   createBoard(newBoard: NewBoardObj, templateName?: string) {
     this.startProgress();
+
     const createBoardObserver = this.getRestObserver<RestBoardObj>({
       next: (boardObj: RestBoardObj) => {
         this.isNewBoard = true;
@@ -420,15 +421,12 @@ export class RestDataService {
   }
 
   updateTask<T extends TaskRestObj>(boardId: string, taskId: string, taskObj: EditableTask, additionalHandler?: Function) {
-    this.startProgress();
-
     const updateTaskObserver = this.getRestObserver<T>({
       next: (task: T) => {
         this.localStorageService.updateBoardTasks([task]);
         if (additionalHandler) {
           additionalHandler();
         }
-        this.stopProgress();
       },
     });
 
@@ -439,6 +437,7 @@ export class RestDataService {
 
   updateUser<T extends UserRestObj>(updatedUser: NewUserObj, additionalHandler: Function) {
     this.startProgress();
+
     const userId = this.localStorageService.currentUserId;
 
     const updateUserObserver = this.getRestObserver<T>({
@@ -478,8 +477,6 @@ export class RestDataService {
     if (boardId) {
       let boardObj: RestBoardObj;
       let users: UserRestObj[];
-      this.startProgress();
-
       const getBoardUsersObserver = this.getRestObserver<RestBoardObj | UserRestObj[]>({
         next: (result: RestBoardObj | UserRestObj[]) => {
           if (result.hasOwnProperty('length')) {
@@ -493,7 +490,6 @@ export class RestDataService {
             const boardUsersId = [boardObj.owner, ...boardObj.users];
             const boardUsers = users.filter((user) => boardUsersId.includes(user._id));
             completeCallBack(boardUsers);
-            this.stopProgress();
           }
         }
       });

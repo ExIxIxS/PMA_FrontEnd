@@ -14,9 +14,9 @@ import { RestDataService } from 'src/app/services/restAPI.service';
   styleUrls: ['./form-new-task.component.scss']
 })
 export class FormNewTaskComponent {
-  hide = true;
-  checkoutForm = this.getCheckoutForm();
-  _availableUsers: UserRestObj[] = [];
+  public hide = true;
+  public checkoutForm = this.getCheckoutForm();
+  public availableUsers: UserRestObj[] = [];
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -27,26 +27,25 @@ export class FormNewTaskComponent {
 
   ngOnInit() {
     this.disableSelect();
+    this.getAvailableUsers();
   }
 
-  get availableUsers() {
+  getAvailableUsers() {
     if (this.localStorageService.currentBoardUsers.length) {
       this.enableSelect();
-      return this.localStorageService.currentBoardUsers;
+      this.availableUsers = this.localStorageService.currentBoardUsers;
     } else {
-      if (!this._availableUsers.length && this.confirmationService.editableTask?.boardId) {
+      if (!this.availableUsers.length && this.confirmationService.editableTask?.boardId) {
         this.restRest.getBoardUsers(
           this.confirmationService.editableTask?.boardId,
           this._getUsersHandler.bind(this)
         );
       }
-
-      return this._availableUsers;
     }
   }
 
   private _getUsersHandler = (users: UserRestObj[]) => {
-    this._availableUsers = users;
+    this.availableUsers = users;
     this.checkoutForm.controls['taskExecutor']
       .setValue(users
         .find((user) => user._id === this.confirmationService.editableTask?.users[0])

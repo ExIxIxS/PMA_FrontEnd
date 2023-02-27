@@ -2,13 +2,16 @@
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.nameField' | translate}}</mat-label>
     <input matInput
+      autocomplete="username"
       formControlName="userName">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('userName')}}</mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.loginField' | translate}}</mat-label>
-    <input matInput formControlName="login">
+    <input matInput
+          autocomplete="nickname"
+          formControlName="login">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('login')}}</mat-error>
   </mat-form-field>
 
@@ -16,6 +19,7 @@
     <mat-label>{{'forms.passField' | translate}}</mat-label>
     <input matInput
           [type]="hide ? 'password' : 'text'"
+          autocomplete="new-password"
           formControlName="password">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('password')}}</mat-error>
     <button mat-icon-button

@@ -1,7 +1,10 @@
 <form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
     <mat-form-field appearance="fill">
       <mat-label>{{'forms.columnTitleField' | translate}}</mat-label>
-      <input matInput formControlName="columnTitle" (input)="checkInput()">
+      <input matInput
+            autocomplete="off"
+            formControlName="columnTitle"
+            (input)="checkInput()">
       <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
 </form>

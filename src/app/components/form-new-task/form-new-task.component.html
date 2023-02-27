@@ -2,6 +2,7 @@
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.taskTitleField' | translate}}</mat-label>
     <input matInput
+          autocomplete="off"
           formControlName="taskTitle"
           (input)="checkInput()">
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('taskTitle')}}</mat-error>
@@ -22,6 +23,7 @@
                   appearance="fill">
     <mat-label>{{'forms.taskDescriptionField' | translate}}</mat-label>
     <textarea matInput
+              autocomplete="off"
               formControlName="taskDescription"
               (input)="checkInput()"></textarea>
     <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage('taskDescription')}}</mat-error>

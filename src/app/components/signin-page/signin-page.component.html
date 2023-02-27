@@ -3,6 +3,7 @@
   <mat-form-field appearance="fill">
     <mat-label>{{'forms.loginField' | translate}}</mat-label>
     <input matInput
+          autocomplete="nickname"
           formControlName="login">
     <mat-error *ngIf="checkoutForm.invalid">{{getSignInErrorMessage('login')}}</mat-error>
   </mat-form-field>
@@ -11,6 +12,7 @@
     <mat-label>{{'forms.passField' | translate}}</mat-label>
     <input matInput
           [type]="hide ? 'password' : 'text'"
+          autocomplete="current-password"
           formControlName="password">
 
     <mat-error *ngIf="checkoutForm.invalid">{{getSignInErrorMessage('password')}}</mat-error>
@@ -28,5 +30,7 @@
           color="primary"
           type="submit"
           [disabled]="checkoutForm.invalid"
-          (click)="submitSignIn()">{{'buttons.login' | translate}}</button>
+          (click)="submitSignIn()">{{'buttons.login' | translate}}
+  </button>
+
 </form>

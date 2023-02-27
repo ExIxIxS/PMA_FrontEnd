@@ -6,6 +6,7 @@
       <mat-label>{{'forms.taskSearchField' | translate}}</mat-label>
       <input #input
             matInput
+            autocomplete="off"
             [formControl]="searchFormControl">
       <mat-error *ngIf="searchFormControl.invalid">
         {{getErrorMessage('searchRequest')}}
