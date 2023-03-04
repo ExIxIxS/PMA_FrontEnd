@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ConfirmationTypes } from 'src/app/app.interfeces';
 import { ConfirmationService } from 'src/app/services/confirmation.service';
 
 @Component({
@@ -12,24 +13,30 @@ export class DialogPopupComponent {
     private confirmationService: ConfirmationService,
     ) {}
 
-  get type() {
+  public get type(): ConfirmationTypes {
     return this.confirmationService.type;
   }
 
-  get isConfirmValid(): boolean {
+  public get isConfirmValid(): boolean {
     return this.confirmationService.isConfirmValid;
   }
 
-  get boardTitle() {
-    return this.confirmationService.deletedBoard?.boardTitle;
+  public get boardTitle(): string {
+    return (this.confirmationService.deletedBoard)
+      ? this.confirmationService.deletedBoard.boardTitle
+      : '';
   }
 
-  get boardOwner() {
-    return this.confirmationService.deletedBoard?.owner;
+  public get boardOwner(): string {
+    return (this.confirmationService.deletedBoard)
+      ? this.confirmationService.deletedBoard.owner
+      : '';
   }
 
-  get isRightToDelete() {
-    return this.confirmationService.deletedBoard?.rightToDelete;
+  public get isRightToDelete(): boolean {
+    return (this.confirmationService.deletedBoard)
+      ? this.confirmationService.deletedBoard.rightToDelete
+      : false;
   }
 
 }

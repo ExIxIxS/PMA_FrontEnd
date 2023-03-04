@@ -1,63 +1,68 @@
+import { HttpHeaders } from "@angular/common/http";
 import { FormControl, FormGroup } from "@angular/forms";
 
-interface CurUserObj {
+interface CurUser {
   login: string,
   token: string,
 }
 
-interface TokenObj {
+interface Token {
   token: string;
 }
 
-interface NewUserObj {
+interface NewUser {
   name: string,
   login: string,
   password: string,
 }
 
-interface UserRestObj {
+interface UserRest {
   _id: string,
   name: string,
   login: string,
 }
 
-interface NewBoardObj {
+interface NewBoard {
   title: string, // "Board title",
   owner: string, // "userId of owner",
   users: string[]
 }
 
-interface RestBoardObj {
+interface RestBoard {
   _id: string, // board id
   title: string, // "Board title",
   owner: string, // "userId of owner",
   users: string[]
 }
 
-interface AppBoardObj {
+interface AdaptedBoard extends Pick<RestBoard, '_id' | 'title' | 'owner'> {
+  users: string,
+}
+
+interface AppBoard {
   _id: string, // board id
   title: string, // "Board title",
-  owner: UserRestObj,
-  users: UserRestObj[],
+  owner: UserRest,
+  users: UserRest[],
 }
 
 interface Participant {
   name: string;
 }
 
-interface NewColumnRestObj {
+interface NewColumnRest {
   title: string, // "Column title"
   order: number,
 }
 
-interface ColumnRestObj {
+interface ColumnRest {
   _id: string, //"Column id"
   title: string, // "Column title"
   order: number,
   boardId: string, // "Id of boards"
 }
 
-interface TaskRestObj {
+interface TaskRest {
   _id: string, // "Task id"
   title: string, // "Task title"
   order: number,
@@ -68,12 +73,12 @@ interface TaskRestObj {
   users: string[], //  "Ids of responsible users"
 }
 
-interface ColumnAppObj extends ColumnRestObj {
-  tasks: TaskRestObj[],
+interface ColumnApp extends ColumnRest {
+  tasks: TaskRest[],
   titleForm: FormGroup,
 }
 
-interface PointRestObj {
+interface PointRest {
   _id: number, // "Point id",
   title: string, // "Point title",
   taskId: string, // "Id of task",
@@ -90,7 +95,7 @@ interface NewColumnOption extends NewColumn {
   columnTitle: string,
 }
 
-interface ColumnSetRestObj {
+interface ColumnSetRest {
   _id: string,
   order: number,
 }
@@ -105,7 +110,7 @@ interface NewTaskOptions extends DeletedColumnOption {
   userId: string,
 }
 
-interface NewTaskObj {
+interface NewTask {
   title: string,
   order: number,
   description: string,
@@ -113,11 +118,11 @@ interface NewTaskObj {
   users: string[],
 }
 
-interface EditableTask extends NewTaskObj {
+interface EditableTask extends NewTask {
   columnId: string,
 }
 
-interface TaskSetRestObj {
+interface TaskSetRest {
   _id: string,
   order: number,
   columnId: string,
@@ -125,7 +130,7 @@ interface TaskSetRestObj {
 
 interface TasksSetConfig {
   columnId: string,
-  tasksColumn: TaskSetRestObj[],
+  tasksColumn: TaskSetRest[],
 }
 
 interface DeletedTask extends DeletedColumnOption {
@@ -134,10 +139,10 @@ interface DeletedTask extends DeletedColumnOption {
 
 interface TaskDeletionOptions {
   deletedTask: DeletedTask,
-  updatedTasks?: TaskSetRestObj[],
+  updatedTasks?: TaskSetRest[],
 }
 
-interface ColumnTitleInputObj {
+interface ColumnTitleInput {
   columnId: string,
   formControl: FormControl,
 }
@@ -149,8 +154,8 @@ interface OpenDialogArgs {
   deletedColumn?: DeletedColumnOption,
   newTask?: NewTaskOptions,
   deletedTask?: DeletedTask,
-  updatedTasks?: TaskSetRestObj[],
-  editableTask?: TaskRestObj,
+  updatedTasks?: TaskSetRest[],
+  editableTask?: TaskRest,
   additionalHandler?: Function,
 }
 
@@ -161,14 +166,14 @@ interface DeletedBoard {
   rightToDelete: boolean
 }
 
-interface SearchTaskObj {
-  restTask: TaskRestObj,
+interface SearchTask {
+  restTask: TaskRest,
   description: string,
   owner: string,
   executor: string,
 };
 
-interface HandleConfirmObj {
+interface HandleConfirm {
   options: HandleConfirmOptions,
   callBack?: Function,
 }
@@ -177,6 +182,22 @@ interface ObserverTemplate {
   next?: (value: any) => void,
   error?: (error: Error) => void,
   complete?: () => void,
+}
+
+interface ValidOption {
+  title: string,
+  minLength: number,
+  maxLength: number,
+  pattern: RegExp | string,
+  patternError?: string,
+}
+
+interface ValidOptions {
+  [key: string]: ValidOption
+}
+
+interface RestHeaders {
+  headers: HttpHeaders,
 }
 
 type HandleConfirmOptions = NewColumn
@@ -215,38 +236,42 @@ type FormGroupTypes = 'taskForm'
                     | 'newBoard';
 
 export {
-  CurUserObj,
-  TokenObj,
-  NewUserObj,
-  UserRestObj,
-  NewBoardObj,
-  RestBoardObj,
-  AppBoardObj,
+  CurUser,
+  Token,
+  NewUser,
+  UserRest,
+  NewBoard,
+  RestBoard,
+  AppBoard,
   Participant,
   ConfirmationTypes,
-  NewColumnRestObj,
-  ColumnRestObj,
-  TaskRestObj,
-  PointRestObj,
-  ColumnAppObj,
+  NewColumnRest,
+  ColumnRest,
+  TaskRest,
+  PointRest,
+  ColumnApp,
   NewColumn,
   NewColumnOption,
-  ColumnSetRestObj,
+  ColumnSetRest,
   DeletedColumnOption,
   NewTaskOptions,
-  NewTaskObj,
-  TaskSetRestObj,
+  NewTask,
+  TaskSetRest,
   TasksSetConfig,
   DeletedTask,
-  ColumnTitleInputObj,
+  ColumnTitleInput,
   FormConrolTypes,
   OpenDialogArgs,
   DeletedBoard,
   HandleConfirmOptions,
   TaskDeletionOptions,
   EditableTask,
-  SearchTaskObj,
-  HandleConfirmObj,
+  SearchTask,
+  HandleConfirm,
   ObserverTemplate,
   FormGroupTypes,
+  ValidOption,
+  ValidOptions,
+  RestHeaders,
+  AdaptedBoard,
 }

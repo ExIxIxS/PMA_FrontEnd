@@ -127,7 +127,7 @@ textarea {
     }
   }
 
-  #github-logo {
+  .github-logo {
     fill: $color;
   }
 
@@ -243,7 +243,6 @@ textarea {
   @include theme-menu-colors($theme);
 
   $typography: mat.get-typography-config($theme);
-
   @include font-family-exceptions($typography);
 }
 
@@ -259,6 +258,3 @@ textarea {
   @include mat.all-component-typographies($typography);
   @include font-family-exceptions($typography);
 }
-
-
-

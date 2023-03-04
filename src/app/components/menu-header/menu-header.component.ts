@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AppControlService } from 'src/app/services/app-control.service';
 import { LocalStorageService } from 'src/app/services/localStorage.service';
 
 @Component({
@@ -7,31 +8,19 @@ import { LocalStorageService } from 'src/app/services/localStorage.service';
   styleUrls: ['./menu-header.component.scss']
 })
 export class MenuHeaderComponent {
-
-  colorThemes = [
-    { className:'default', title: 'Indigo', isDark: false },
-    { className:'dark-peace', title: 'Eclectic Peace', isDark: true },
-    { className:'light-teal', title: 'Tea Party', isDark: false },
-    { className:'dark-green', title: 'Fresh Apple', isDark: true },
-    { className:'light-desert', title: 'Desert Morning', isDark: false },
-    { className:'dark-pink', title: 'Night Pink', isDark: true },
-  ];
-
-  typographies = [
-    { className:'default', title: 'Roboto', },
-    { className:'shantell-sans', title: 'Shantell Sans', },
-    { className:'comfortaa', title: 'Comfortaa', },
-  ];
+  public colorThemes = this.appControlService.colorThemes;
+  public typographies = this.appControlService.typographies;
 
   constructor(
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private appControlService: AppControlService,
   ) { }
 
-  setColorTheme(colorTheme: string) {
+  public setColorTheme(colorTheme: string): void {
     this.localStorageService.currentColorTheme = colorTheme;
   }
 
-  setTypography(typography: string) {
+  public setTypography(typography: string): void {
     this.localStorageService.currentTypography = typography;
   }
 

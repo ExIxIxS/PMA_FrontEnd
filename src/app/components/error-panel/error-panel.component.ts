@@ -13,19 +13,19 @@ export class ErrorPanelComponent {
     private errorHandlerService: ErrorHandlerService,
     ) {}
 
-  get isError() {
+  public get isError(): boolean {
     return this.errorHandlerService.isError;
   }
 
-  get errorAmount() {
+  public get errorAmount(): number {
     return this.errorHandlerService.currentErrors.length;
   }
 
-  get currentError() {
+  public get currentError(): string {
     return this.errorHandlerService.currentErrors[this.pageIndex];
   }
 
-  cleanErrors() {
+  public cleanErrors(): void {
     this.errorHandlerService.clearErrors();
     this.pageIndex = 0;
   }

@@ -11,7 +11,8 @@ export class FooterComponent {
     private appControlService: AppControlService,
   ) {}
 
-  get isSmallScreen() {
+  public get isSmallScreen(): boolean {
     return this.appControlService.isSmallScreen;
   }
+
 }

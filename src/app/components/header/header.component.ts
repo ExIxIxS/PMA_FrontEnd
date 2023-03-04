@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { AppControlService } from 'src/app/services/app-control.service';
 import { LocalStorageService } from 'src/app/services/localStorage.service';
@@ -10,7 +10,7 @@ import { RestDataService } from 'src/app/services/restAPI.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   constructor(
     private appControlService: AppControlService,
     private localStorageService: LocalStorageService,
@@ -18,36 +18,34 @@ export class HeaderComponent {
     private restApiService: RestDataService,
     ) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     if (!this.isUserLoggedIn) {
       this.logOut();
     }
   }
 
-  get isInProgress() {
+  public get isInProgress(): boolean {
     return this.restApiService.isInProgress;
   }
 
-  get isUserLoggedIn() {
+  public get isUserLoggedIn(): boolean {
     return this.localStorageService.isUserLoggedIn;
   }
 
-  get isSmallScreen() {
+  public get isSmallScreen(): boolean {
     return this.appControlService.isSmallScreen;
   }
 
-  createNewBoard() {
+  public createNewBoard(): void {
     this.confirmationService.openDialog({type: 'createBoard'});
   }
 
-  logOut() {
+  public logOut(): void {
     this.appControlService.logOut()
   }
 
-  navigateToRoot() {
+  public navigateToRoot(): void {
     this.appControlService.navigateToRoot();
   }
 
 }
-
-

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, Injectable, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { CurUserObj, RestBoardObj, UserRestObj, AppBoardObj, ColumnAppObj,
-        ColumnRestObj, TaskRestObj, ColumnSetRestObj,
+import { CurUser, RestBoard, UserRest, AppBoard, ColumnApp,
+        ColumnRest, TaskRest, ColumnSetRest,
 } from '../app.interfeces';
 
 import { AppFormsService } from './app-forms.service';
@@ -11,82 +11,94 @@ const emptyUserStr = JSON.stringify({login: '', token: '',});
 
 @Injectable()
 export class LocalStorageService {
+  @Output() currentAppBoardsEmitter = new EventEmitter<AppBoard[]>();
+
   private _avalibleLanguages = ['en', 'pl', 'be', 'ru'];
-  private _currentUser: CurUserObj = this.getInitialCurrentUser();
+  private _currentUser: CurUser = this.getInitialCurrentUser();
   private _currentUserId: string = this.getInitialcurrentUserId();
   private _currentLanguage: string = this.getInitialcurrentUserId();
-  private _currentColorTheme: string = this._getInitialColorTheme();
-  private _currentTypography: string = this._getInitialTypography();
-  private _html = document.documentElement;
+  private _currentColorTheme: string = this.getInitialColorTheme();
+  private _currentTypography: string = this.getInitialTypography();
+  private html: HTMLElement = document.documentElement;
+  private _currentAppBoards: AppBoard[] = [];
 
-  public body = document.body;
+  public body: HTMLElement = document.body;
   public isBoards: boolean = false;
-  public restBoards: RestBoardObj[] = [];
-  public currentAppBoards: AppBoardObj[] = [];
-  public currentRestBoard: RestBoardObj | undefined;
-  public restUsers: UserRestObj[] = [];
-  public currentBoardUsers: UserRestObj[] = [];
-  public currentBoardColumns: ColumnAppObj[] = [];
-  public restColumns: ColumnRestObj[] = [];
-  public restTasks: TaskRestObj[] = [];
+  public restBoards: RestBoard[] = [];
+  public currentRestBoard: RestBoard | undefined;
+  public restUsers: UserRest[] = [];
+  public currentBoardUsers: UserRest[] = [];
+  public currentBoardColumns: ColumnApp[] = [];
+  public restColumns: ColumnRest[] = [];
+  public restTasks: TaskRest[] = [];
   public isTaskDropDisabled: boolean = false;
+  public changeDetector: ChangeDetectorRef | undefined;
 
   constructor(
     private formsService: AppFormsService,
     private translateService: TranslateService,
   ) {
-    this._setLanguages();
-    this._setInitialColorTheme();
-    this._setInitialTypography();
+    this.setLanguages();
+    this.setInitialColorTheme();
+    this.setInitialTypography();
   }
 
-  set currentLanguage(lang: string) {
+  public get currentAppBoards(): AppBoard[] {
+    return this._currentAppBoards;
+  }
+
+  public set currentAppBoards(appBoards: AppBoard[]) {
+    this._currentAppBoards = appBoards;
+    this.currentAppBoardsEmitter.emit();
+  }
+
+  public set currentLanguage(lang: string) {
     if (lang !== this._currentLanguage) {
       localStorage.setItem('currentLanguage', lang);
       this._currentLanguage = lang;
-      this._changeHtmlLang(lang);
+      this.changeHtmlLang(lang);
     }
   }
 
-  get currentLanguage(): string {
+  public get currentLanguage(): string {
     return this._currentLanguage;
   }
 
-  get currentUser(): CurUserObj {
+  public get currentUser(): CurUser {
     return this._currentUser;
   }
 
-  set currentUser(userObj: CurUserObj) {
+  public set currentUser(userObj: CurUser) {
     this._currentUser = userObj;
     localStorage.setItem('currentUser', JSON.stringify(userObj));
   }
 
-  get currentUserId(): string {
+  public get currentUserId(): string {
     return this._currentUserId
   }
 
-  set currentUserId(userId: string) {
+  public set currentUserId(userId: string) {
     this._currentUserId = userId;
     localStorage.setItem('currentUserId', userId);
   }
 
-  get isUserLoggedIn(): boolean {
+  public get isUserLoggedIn(): boolean {
     return !!(this._currentUser.token);
   }
 
-  get currentBoardUsersId(): string[] {
+  public get currentBoardUsersId(): string[] {
     return this.currentBoardUsers.map((user) => user._id);
   }
 
-  get currentBoardUsersNames(): string[] {
+  public get currentBoardUsersNames(): string[] {
     return this.currentBoardUsers.map((user) => user.name);
   }
 
-  get currentColorTheme() {
+  public get currentColorTheme(): string {
     return this._currentColorTheme;
   }
 
-  private _changeBodyColorTheme(colorTheme: string) {
+  private changeBodyColorTheme(colorTheme: string): void {
     if (this._currentColorTheme !== 'default') {
       this.body.classList.remove(`${this._currentColorTheme}-theme`);
     }
@@ -96,35 +108,35 @@ export class LocalStorageService {
     }
   }
 
-  set currentColorTheme(colorTheme: string) {
+  public set currentColorTheme(colorTheme: string) {
     if (colorTheme !== this._currentColorTheme) {
-      this._changeBodyColorTheme(colorTheme);
+      this.changeBodyColorTheme(colorTheme);
       this._currentColorTheme = colorTheme;
       localStorage.setItem('currentColorTheme', colorTheme);
     }
   }
 
-  private _setInitialColorTheme() {
-    this._changeBodyColorTheme(this._currentColorTheme);
+  private setInitialColorTheme(): void {
+    this.changeBodyColorTheme(this._currentColorTheme);
   }
 
-  private _getInitialColorTheme(): string {
+  private getInitialColorTheme(): string {
     const currentColorTheme = localStorage.getItem('currentColorTheme');
 
     return (currentColorTheme) ? currentColorTheme : 'default';
   }
 
-  private _setInitialTypography() {
-    this._changeTypography(this._currentTypography);
+  private setInitialTypography(): void {
+    this.changeTypography(this._currentTypography);
   }
 
-  private _getInitialTypography(): string {
+  private getInitialTypography(): string {
     const currentTypography = localStorage.getItem('currentTypography');
 
     return (currentTypography) ? currentTypography : 'default';
   }
 
-  private _changeTypography(typography: string) {
+  private changeTypography(typography: string): void {
     if (this._currentTypography !== 'default') {
       this.body.classList.remove(`${this._currentTypography}-typography`);
     }
@@ -135,35 +147,35 @@ export class LocalStorageService {
 
   }
 
-  set currentTypography(typography: string) {
+  public set currentTypography(typography: string) {
     if (typography !== this._currentTypography) {
-      this._changeTypography(typography);
+      this.changeTypography(typography);
       this._currentTypography = typography;
       localStorage.setItem('currentTypography', typography);
     }
   }
 
-  get currentTypography() {
+  public get currentTypography(): string {
     return this._currentTypography;
   }
 
-  getInitialCurrentUser(): CurUserObj {
+  public getInitialCurrentUser(): CurUser {
     const localCurrentUser = localStorage.getItem('currentUser');
 
-    if (localCurrentUser) {
-      return JSON.parse(localCurrentUser);
-    }
-
-    return JSON.parse(emptyUserStr);
+    return (localCurrentUser)
+      ? JSON.parse(localCurrentUser)
+      : JSON.parse(emptyUserStr);
   }
 
-  getInitialcurrentUserId(): string {
+  public getInitialcurrentUserId(): string {
     const currentUserId = localStorage.getItem('currentUserId');
 
-    return (currentUserId) ? currentUserId : '';
+    return (currentUserId)
+      ? currentUserId
+      : '';
   }
 
-  private _setLanguages(): void {
+  private setLanguages(): void {
     this.translateService.addLangs(this._avalibleLanguages);
     this.translateService.setDefaultLang('en');
 
@@ -173,29 +185,29 @@ export class LocalStorageService {
       : 'en';
 
     this.translateService.use(this._currentLanguage);
-    this._changeHtmlLang(this._currentLanguage);
+    this.changeHtmlLang(this._currentLanguage);
   }
 
-  private _changeHtmlLang(lang: string) {
-    if (this._html && this._avalibleLanguages.includes(lang)) {
-      this._html.lang = lang;
+  private changeHtmlLang(lang: string): void {
+    if (this.html && this._avalibleLanguages.includes(lang)) {
+      this.html.lang = lang;
     }
   }
 
-  getCurrentBoardUserById(userId: string): UserRestObj | undefined {
+  public getCurrentBoardUserById(userId: string): UserRest | undefined {
     if (this.currentBoardUsers.length) {
       return this.currentBoardUsers.find((user) => user._id === userId);
     }
     return;
   }
 
-  updateCurrentBoardUsers(boardId: string): void {
+  public updateCurrentBoardUsers(boardId: string): void {
     this.currentBoardUsers = (this.currentAppBoards.length)
-      ? this._getCurrentBoardAppUsers(boardId)
-      : this._getCurrentBoardRestUsers()
+      ? this.getCurrentBoardAppUsers(boardId)
+      : this.getCurrentBoardRestUsers()
   }
 
-  private _getCurrentBoardAppUsers(boardId: string): UserRestObj[] {
+  private getCurrentBoardAppUsers(boardId: string): UserRest[] {
     const currentBoard = this.currentAppBoards
       .find((board) => board._id === boardId);
 
@@ -204,25 +216,26 @@ export class LocalStorageService {
       : [];
   }
 
-  private _getCurrentBoardRestUsers(): UserRestObj[]  {
+  private getCurrentBoardRestUsers(): UserRest[]  {
     return (this.restUsers.length && this.currentRestBoard)
       ? [...this.currentRestBoard.users, this.currentRestBoard.owner]
           .map((userId) => this.restUsers
             .find((user) => user._id === userId))
-          .filter((user) => user) as UserRestObj[]
+          .filter((user) => user) as UserRest[]
       : [];
   }
 
-  updateBoardsStorage():void {
+  public updateBoardsStorage(): void {
     const storageBoards = this.restBoards
-      .map((boardObj) => this._createStorageBoard(boardObj));
+      .map((boardObj) => this.createStorageBoard(boardObj));
 
     this.currentAppBoards = storageBoards;
     this.updateCurrentUserId();
     this.isBoards = (!!storageBoards.length)
+
   }
 
-  private _createStorageBoard(boardObj: RestBoardObj): AppBoardObj {
+  private createStorageBoard(boardObj: RestBoard): AppBoard {
     const ownerObj = this.restUsers
       .find((userObj) => boardObj.owner === userObj._id);
 
@@ -237,13 +250,13 @@ export class LocalStorageService {
     };
   }
 
-  clearColumns(): void {
+  public clearColumns(): void {
     this.currentBoardColumns = [];
     this.restColumns = [];
     this.restTasks = [];
   }
 
-  updateCurrentUserId(): void {
+  public updateCurrentUserId(): void {
     if (this.restUsers.length !== 0 && this.currentUser.login) {
       const currentUserId = this.restUsers
         .find((userObj) => userObj.login === this.currentUser.login)
@@ -253,17 +266,18 @@ export class LocalStorageService {
     }
   }
 
-  logOutUser(): void {
+  public logOutUser(): void {
     this.currentUser = JSON.parse(emptyUserStr);
     this.currentUserId = '';
   }
 
-  deleteBoard(boardId: string): void {
+  public deleteBoard(boardId: string): void {
     const boardIndex = this.currentAppBoards.findIndex((boardObj) => boardObj._id === boardId);
     this.currentAppBoards.splice(boardIndex, 1);
+    this.currentAppBoards = this.currentAppBoards; // assignment for emitting
   }
 
-  createAppColumn(restColumn: ColumnRestObj): ColumnAppObj {
+  public createAppColumn(restColumn: ColumnRest): ColumnApp {
     return {
       ...restColumn,
       tasks: [],
@@ -271,30 +285,29 @@ export class LocalStorageService {
     }
   }
 
-  addColumn(restColumn: ColumnRestObj): void {
+  public addColumn(restColumn: ColumnRest, additionalHandler?: Function): void {
     const appColumn = this.createAppColumn(restColumn);
 
     this.restColumns.push(restColumn);
     this.currentBoardColumns.push(appColumn);
-
     this.currentBoardColumns.sort(this.sortByOrder);
+    additionalHandler?.();
   }
 
-  sortByOrder<T extends ColumnAppObj | ColumnRestObj | TaskRestObj>(a: T, b: T): number {
+  public sortByOrder<T extends ColumnApp | ColumnRest | TaskRest>(a: T, b: T): number {
       return a.order - b.order;
   }
 
-  updateBoardAppColumns(): void {
-    const appColumns: ColumnAppObj[] = this.restColumns
+  public updateBoardAppColumns(): void {
+    const appColumns: ColumnApp[] = this.restColumns
       .sort(this.sortByOrder)
       .map((restColumn) => this.createAppColumn(restColumn));
 
     this.fillAppBoardWithTasks(appColumns);
-
     this.currentBoardColumns = appColumns;
   }
 
-  fillAppBoardWithTasks(appColumns: ColumnAppObj[], columnIds: string[] = []): void {
+  public fillAppBoardWithTasks(appColumns: ColumnApp[], columnIds: string[] = []): void {
     const fillableColumns = (columnIds.length)
       ? appColumns.filter((column) => columnIds.includes(column._id))
       : appColumns;
@@ -310,12 +323,13 @@ export class LocalStorageService {
     });
   }
 
-  deleteRestColumn(columnObj: ColumnRestObj): void {
+  public deleteRestColumn(columnObj: ColumnRest): void {
     const columnIndex = this.restColumns.findIndex((column) => column._id === columnObj._id);
+
     this.restColumns.splice(columnIndex, 1);
   }
 
-  getColumnSet<T extends ColumnRestObj[] | ColumnAppObj[]>(columnsArr: T): ColumnSetRestObj[]  {
+  public getColumnSet<T extends ColumnRest[] | ColumnApp[]>(columnsArr: T): ColumnSetRest[]  {
     const columnSet = columnsArr.map((columnObj, index) => {
       return {
               _id: columnObj._id,
@@ -326,43 +340,46 @@ export class LocalStorageService {
     return columnSet;
   }
 
-  getColumnRestSet(): ColumnSetRestObj[] {
+  public getColumnRestSet(): ColumnSetRest[] {
     return this.getColumnSet(this.restColumns);
   }
 
-  getColumnAppSet(): ColumnSetRestObj[] {
+  public getColumnAppSet(): ColumnSetRest[] {
     return this.getColumnSet(this.currentBoardColumns);
   }
 
-  addTask(columnId: string, taskObj: TaskRestObj): void {
+  public addTask(columnId: string, taskObj: TaskRest): void {
     this.restTasks.push(taskObj);
     this.fillAppBoardWithTasks(this.currentBoardColumns, [columnId]);
   }
 
-  updateBoardTasks(tasks: TaskRestObj[]): void {
-    if (tasks.length) {
-      tasks.forEach((task) => {
-        const targetTaskIndex = this.restTasks
-            .findIndex((restTask) => restTask._id === task._id);
-
-        const targetTask = this.restTasks[targetTaskIndex] as TaskRestObj;
-
-        if (targetTask) {
-          this._updateObjValues(targetTask, task);
-        } else {
-          this._updateTasksInAppColumns(task);
-        }
-      });
+  public updateBoardTasks(tasks: TaskRest[]): void {
+    if (!tasks.length) {
+      return;
     }
+
+    tasks.forEach((task) => {
+      const targetTaskIndex = this.restTasks
+        .findIndex((restTask) => restTask._id === task._id);
+
+      const targetTask = this.restTasks[targetTaskIndex] as TaskRest;
+
+      if (targetTask) {
+        this.updateObjValues(targetTask, task);
+      } else {
+        this.updateTasksInAppColumns(task);
+      }
+    });
+
   }
 
-  private _updateObjValues<T extends TaskRestObj>(targetObj: T, sourceObj: T): void {
+  private updateObjValues<T extends TaskRest>(targetObj: T, sourceObj: T): void {
     for (let key in targetObj) {
       targetObj[key as keyof T] = sourceObj[key as keyof T];
     }
   }
 
-  private _updateTasksInAppColumns (task: TaskRestObj): void {
+  private updateTasksInAppColumns (task: TaskRest): void {
     this.restTasks.push(task);
     const targetAppColumn = this.currentBoardColumns
       .find((appColumn) => appColumn.tasks
@@ -376,7 +393,7 @@ export class LocalStorageService {
     }
   }
 
-  deleteTask(taskObj: TaskRestObj): void {
+  public deleteTask(taskObj: TaskRest): void {
     const taskIndex = this.restTasks.findIndex((task) => task._id === taskObj._id);
 
     if (taskIndex >= 0) {
@@ -385,22 +402,22 @@ export class LocalStorageService {
     }
   }
 
-  updateColumnTitle(column: ColumnRestObj) {
+  public updateColumnTitle(column: ColumnRest): void {
     const newTitle = column.title;
-    const restColumn = this._findColumnById(column, this.restColumns);
-    const appColumn = this._findColumnById(column, this.currentBoardColumns);
+    const restColumn = this.findColumnById(column, this.restColumns);
+    const appColumn = this.findColumnById(column, this.currentBoardColumns);
 
     if (restColumn && appColumn && newTitle) {
-      this._changeColumnTitle(restColumn, newTitle);
-      this._changeColumnTitle(appColumn, newTitle);
+      this.changeColumnTitle(restColumn, newTitle);
+      this.changeColumnTitle(appColumn, newTitle);
     }
   }
 
-  private _findColumnById<T extends ColumnRestObj | ColumnAppObj>(column: T, columns: T[]): T | undefined {
+  private findColumnById<T extends ColumnRest | ColumnApp>(column: T, columns: T[]): T | undefined {
     return columns.find((currentColumn) => currentColumn._id === column._id)
   };
 
-  private _changeColumnTitle(currentColumn: ColumnRestObj | ColumnAppObj, title: string): void {
+  private changeColumnTitle(currentColumn: ColumnRest | ColumnApp, title: string): void {
     currentColumn.title = title;
   }
 

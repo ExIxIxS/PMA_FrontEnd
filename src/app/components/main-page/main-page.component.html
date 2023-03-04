@@ -19,7 +19,7 @@
                     }">
     </ng-template>
     <button mat-flat-button
-            *ngIf="!isBoards"
+            *ngIf="!isHideStartButton"
             type="button"
             (click)="createNewBoard()">
       <mat-icon>dashboard_customize</mat-icon>{{'main.title' | translate}}
@@ -72,19 +72,19 @@
   <mat-card class="board-card"
             (click)="openBoard(boardId)">
     <mat-card-header>
-      <mat-card-title matListItemTitle>{{refactorForOutput(boardTitle, 15)}}</mat-card-title>
+      <mat-card-title matListItemTitle>{{boardTitle | userOutput : 15}}</mat-card-title>
       <button mat-icon-button
               class="delete-board-button"
               type="button"
               color="warn"
-              (click)="deleteBoard(boardId, boardTitle, boardOwner)"
+              (click)="deleteBoard($event, boardId, boardTitle, boardOwner)"
               aria-label="Icon button with a delete icon">
         <mat-icon>delete</mat-icon>
       </button>
     </mat-card-header>
     <mat-card-content>
-      <p matListItemLine>{{refactorForOutput('board.creator' | translate)}}: {{boardOwner}}</p>
-      <p matListItemLine>{{refactorForOutput('board.participants' | translate)}}: {{boardParticipants}}</p>
+      <p matListItemLine>{{'board.creator' | translate | userOutput}}: {{boardOwner}}</p>
+      <p matListItemLine>{{'board.participants' | translate | userOutput}}: {{boardParticipants}}</p>
     </mat-card-content>
   </mat-card>
 </ng-template>
@@ -102,4 +102,3 @@
     </mat-icon>
   </div>
 </ng-template>
-

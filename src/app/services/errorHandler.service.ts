@@ -4,68 +4,70 @@ import { AppControlService } from './app-control.service';
 
 @Injectable()
 export class ErrorHandlerService {
-  currentErrors: string[] = [];
+  public currentErrors: string[] = [];
 
   constructor(
     private appControlService: AppControlService
   ) {
-      this._setGlobalErrorHandlers();
+      this.setGlobalErrorHandlers();
     }
 
-  get isError() {
+  public get isError(): boolean {
     return this.currentErrors.length > 0;
   }
 
-  private _setGlobalErrorHandlers() {
-    if (window) {
-      window.console.error = (...errors: Error[] | string[]) => {
-        errors.forEach((error) => {
-          if (error instanceof Error) {
-            this.handleError(error);
-          }
-        });
-      };
+  private setGlobalErrorHandlers(): void {
+    if (!window) {
+      return;
+    };
 
-      window.onerror = (message, url, line, col, error) => {
-        if (message instanceof Event) {
-          message.preventDefault();
-        }
-
+    window.console.error = (...errors: Error[] | string[]) => {
+      errors.forEach((error) => {
         if (error instanceof Error) {
           this.handleError(error);
-        };
-      };
-
-      window.addEventListener('unhandledrejection', (event) => {
-          event.preventDefault();
-          this.handleError(event.reason);
         }
-      );
-    }
+      });
+    };
+
+    window.onerror = (message, url, line, col, error) => {
+      if (message instanceof Event) {
+        message.preventDefault();
+      }
+
+      if (error instanceof Error) {
+        this.handleError(error);
+      };
+    };
+
+    window.addEventListener('unhandledrejection', (event) => {
+        event.preventDefault();
+        this.handleError(event.reason);
+      }
+    );
 
   }
 
-  handleError(err: Error) {
+  public handleError(err: Error): void {
     if (err instanceof HttpErrorResponse) {
-      this._handleResponseError(err)
+      this.handleResponseError(err)
     } else {
-      this._createUserError(`Error message: ${err.message}`);
+      this.createUserError(`Error message: ${err.message}`);
     }
   }
 
-  private _handleResponseError(err: HttpErrorResponse) {
+  private handleResponseError(err: HttpErrorResponse): void {
       if (err.status === 403) {
         this.appControlService.logOut();
       } else {
-        this._createUserError(`HttpErrorResponse: ${err.error.message}`);
+        this.createUserError(`HttpErrorResponse: ${err.error.message}`);
       }
   }
 
-  private _createUserError(message: string) {
+  private createUserError(message: string): void {
     this.currentErrors.push(message)
   }
 
-  clearErrors() {
+  public clearErrors(): void {
     this.currentErrors = [];
   }
 

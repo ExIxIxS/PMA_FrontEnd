@@ -1,22 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-
-import { FormConrolTypes, UserRestObj } from '../../app.interfeces';
 
 import { ConfirmationService } from 'src/app/services/confirmation.service';
 import { LocalStorageService } from 'src/app/services/localStorage.service';
 import { AppFormsService } from 'src/app/services/app-forms.service';
 import { RestDataService } from 'src/app/services/restAPI.service';
 
+import { FormConrolTypes, UserRest } from '../../app.interfeces';
+import { FormGroup } from '@angular/forms';
+
 @Component({
   selector: 'app-form-new-task',
   templateUrl: './form-new-task.component.html',
   styleUrls: ['./form-new-task.component.scss']
 })
-export class FormNewTaskComponent {
-  public hide = true;
-  public checkoutForm = this.getCheckoutForm();
-  public availableUsers: UserRestObj[] = [];
+export class FormNewTaskComponent implements OnInit {
+  public hide: boolean = true;
+  public checkoutForm: FormGroup = this.getCheckoutForm();
+  public availableUsers: UserRest[] = [];
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -25,12 +26,12 @@ export class FormNewTaskComponent {
     private restRest: RestDataService,
   ) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.disableSelect();
     this.getAvailableUsers();
   }
 
-  getAvailableUsers() {
+  public getAvailableUsers(): void {
     if (this.localStorageService.currentBoardUsers.length) {
       this.enableSelect();
       this.availableUsers = this.localStorageService.currentBoardUsers;
@@ -38,13 +39,13 @@ export class FormNewTaskComponent {
       if (!this.availableUsers.length && this.confirmationService.editableTask?.boardId) {
         this.restRest.getBoardUsers(
           this.confirmationService.editableTask?.boardId,
-          this._getUsersHandler.bind(this)
+          this.getUsersHandler.bind(this)
         );
       }
     }
   }
 
-  private _getUsersHandler = (users: UserRestObj[]) => {
+  private getUsersHandler(users: UserRest[]): void {
     this.availableUsers = users;
     this.checkoutForm.controls['taskExecutor']
       .setValue(users
@@ -54,21 +55,21 @@ export class FormNewTaskComponent {
     this.enableSelect();
   }
 
-  enableSelect() {
+  public enableSelect(): void {
     const formControl = this.checkoutForm.controls['taskExecutor'];
     if (formControl.disabled) {
       formControl.enable();
     }
   }
 
-  disableSelect() {
+  public disableSelect(): void {
     const formControl = this.checkoutForm.controls['taskExecutor'];
     if (formControl.enabled) {
       formControl.disable();
     }
   }
 
-  getCheckoutForm() {
+  public getCheckoutForm(): FormGroup {
     const currentTask = this.confirmationService.editableTask;
 
     if (currentTask) {
@@ -78,16 +79,17 @@ export class FormNewTaskComponent {
       return this.formService
         .getNewFormGroup({type: 'taskForm', sourceTask: currentTask, executorName: executorName});
     }
+
     return this.formService.getNewFormGroup({type: 'taskForm'});
   }
 
-  getErrorMessage(optionName: FormConrolTypes) {
+  public getErrorMessage(optionName: FormConrolTypes): string {
     return this.formService.getErrorMessage(this.checkoutForm, optionName)
   };
 
-  checkInput(event?: MatSelectChange): void {
+  public checkInput(event?: MatSelectChange): void {
     if (event) {
-      let executor: UserRestObj | undefined;
+      let executor: UserRest | undefined;
       const indexArr = Object.entries(event.source._keyManager).find((propArr) => propArr[0] === '_activeItemIndex');
       if (indexArr) {
         const valueIndex = indexArr[1];
@@ -103,9 +105,9 @@ export class FormNewTaskComponent {
     const title = this.checkoutForm.controls['taskTitle'].value;
 
     if (this.checkoutForm.valid && title) {
-      this.confirmationService.newTaskTitle = title;
-
       const taskDescription = this.checkoutForm.controls['taskDescription'].value;
+
+      this.confirmationService.newTaskTitle = title;
       this.confirmationService.newTaskDescription = (taskDescription)
         ? taskDescription
         : 'without description';

@@ -4,7 +4,7 @@
     matTooltip="ExIxIxS"
     matTooltipPosition="above"
     [matTooltipDisabled]="!isSmallScreen">
-    <svg id="github-logo"
+    <svg class="github-logo"
           height="32"
           aria-hidden="true"
           viewBox="0 0 16 16"
@@ -16,16 +16,20 @@
         </path>
     </svg>
     <span *ngIf="!isSmallScreen"
-          id="git-nick">
+          class="git-nick">
       ExIxIxS
     </span>
   </a>
 
   <a href="https://rs.school/angular/">
-    <img id="rss-logo" src="assets/img/rs_school_js.svg" alt="RSSchool logo" width="73" height="26">
+    <img class="rss-logo"
+        src="assets/img/rs_school_js.svg"
+        alt="RSSchool logo"
+        width="73"
+        height="26">
   </a>
 
-  <a href="https://exixixs.github.io/CV/"
+  <a href="http://linkedin.com/in/denis-bondarenko-pl"
     matTooltip="© {{'developer.name' | translate }}"
     matTooltipPosition="above"
     [matTooltipDisabled]="!isSmallScreen">

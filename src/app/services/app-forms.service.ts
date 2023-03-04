@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
-import { FormConrolTypes, TaskRestObj, UserRestObj, FormGroupTypes } from '../app.interfeces';
+import { FormConrolTypes, TaskRest, UserRest, FormGroupTypes, ValidOption, ValidOptions } from '../app.interfeces';
 
 function repeatedPasswordValidator(sourcePasswordControl: FormControl | AbstractControl<any, any>): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -18,9 +18,9 @@ export class AppFormsService {
     private translateService: TranslateService,
   ) { }
 
-  currentLanguage = this.translateService.currentLang;
+  public currentLanguage: string = this.translateService.currentLang;
 
-  passwordOption = {
+  public passwordOption: ValidOption = {
     title: 'password',
     minLength: 8,
     maxLength: 96,
@@ -28,7 +28,7 @@ export class AppFormsService {
     patternError: 'password',
   }
 
-  validOptions = {
+  public validOptions: ValidOptions = {
     columnTitle: {
       title: 'column title',
       minLength: 2,
@@ -76,13 +76,14 @@ export class AppFormsService {
     repeatedPassword: this.passwordOption,
     searchRequest: {
       title: 'search request',
-      minLength: 1, maxLength: 20,
+      minLength: 1,
+      maxLength: 20,
       pattern: /^[\p{L}\d\s\-\.\+"]+$/u,
       patternError: 'searchRequest',
     }
   }
 
-  getValidators(type: FormConrolTypes, sourceControl?: AbstractControl<any, any>): ValidatorFn[] {
+  public getValidators(type: FormConrolTypes, sourceControl?: AbstractControl<any, any>): ValidatorFn[] {
     switch(type) {
       case 'columnTitle':
       case 'taskTitle':
@@ -122,10 +123,12 @@ export class AppFormsService {
     }
   }
 
-  getNewFormControl(type: FormConrolTypes, initValue: string = '', disabled: boolean = false, sourceControl?: AbstractControl<any, any>) {
+  public getNewFormControl(type: FormConrolTypes, initValue: string = '', disabled: boolean = false, sourceControl?: AbstractControl<any, any>
+    ): FormControl  {
     const validators = (sourceControl)
       ? this.getValidators(type, sourceControl)
       : this.getValidators(type);
+
     const formControl = new FormControl(initValue, validators);
     if (disabled) {
       formControl.disable()
@@ -134,8 +137,8 @@ export class AppFormsService {
     return formControl;
   }
 
-  getNewFormGroup(groupArgs:
-    {type: FormGroupTypes, sourceTask?: TaskRestObj | null, executorName?: string, editableUser?: UserRestObj, columnTitle?: string}
+  public getNewFormGroup(groupArgs:
+    {type: FormGroupTypes, sourceTask?: TaskRest | null, executorName?: string, editableUser?: UserRest, columnTitle?: string}
     ): FormGroup {
     switch(groupArgs.type) {
       case 'taskForm': {
@@ -199,13 +202,13 @@ export class AppFormsService {
     }
   }
 
-  translate(localeKey: string): string {
+  public translate(localeKey: string): string {
     const localizedValue = this.translateService.instant(localeKey)
 
     return (localizedValue) ? localizedValue : localeKey;
   }
 
-  getErrorMessage(controlObj: FormControl | FormGroup, formControlType: FormConrolTypes): string {
+  public getErrorMessage(controlObj: FormControl | FormGroup, formControlType: FormConrolTypes): string {
     const controlOption = this.validOptions[formControlType as keyof typeof this.validOptions];
     const localizedTitle = this.translate(`formErrors.${formControlType}`);
     const formControlErrors = (controlObj instanceof FormControl)

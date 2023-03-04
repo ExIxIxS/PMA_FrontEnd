@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { Observer, concat, merge } from 'rxjs';
+import { Observable, Observer, concat, merge } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LocalStorageService } from './localStorage.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { AppControlService } from './app-control.service'
 
-import { TokenObj, UserRestObj, NewBoardObj, RestBoardObj, ColumnRestObj, TaskRestObj,
-        NewColumnOption, NewColumnRestObj, DeletedColumnOption, NewTaskObj, TaskSetRestObj,
-        TaskDeletionOptions, EditableTask, NewUserObj, ObserverTemplate,
+import { Token, UserRest, NewBoard, RestBoard, ColumnRest, TaskRest,
+        NewColumnOption, NewColumnRest, DeletedColumnOption, NewTask, TaskSetRest,
+        TaskDeletionOptions, EditableTask, NewUser, ObserverTemplate, CurUser, RestHeaders,
       } from '../app.interfeces';
-import { TranslateService } from '@ngx-translate/core';
 
 const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
-//  const REST_URL = 'http://localhost:3000/';
+// const REST_URL = 'http://localhost:3000/';
 
 @Injectable()
 export class RestDataService {
@@ -31,21 +31,25 @@ export class RestDataService {
     private translateService: TranslateService,
   ) {}
 
-  startProgress() {
+  public startProgress(): void {
     this.isInProgress = true;
+    this.appControlService.checkChanges();
   }
 
-  stopProgress() {
+  public stopProgress(): void {
     this.isInProgress = false;
+    this.appControlService.checkChanges();
   }
 
-  translate(localeKey: string): string {
+  public translate(localeKey: string): string {
     const localizedValue = this.translateService.instant(localeKey)
 
-    return (localizedValue) ? localizedValue : localeKey;
+    return (localizedValue)
+      ? localizedValue
+      : localeKey;
   }
 
-  getRestObserver<T>(options: ObserverTemplate = {}): Observer<T> {
+  public getRestObserver<T>(options: ObserverTemplate = {}): Observer<T> {
     return {
       next: (options.next)
         ? options.next
@@ -62,18 +66,18 @@ export class RestDataService {
     };
   }
 
-  getToken(login: string, pass: string) {
-    const singInObj = {
+  public getToken(login: string, pass: string): Observable<Token> {
+    const signInObj: Pick<NewUser, 'login' | 'password'> = {
       login: login,
       password: pass,
     }
 
-    return this.http.post<TokenObj>(REST_URL + 'auth/signin', singInObj);
+    return this.http.post<Token>(REST_URL + 'auth/signin', signInObj);
   }
 
-  autoSignIn() {
-    const autoSingInObserver = this.getRestObserver<UserRestObj[]>({
-      next: (users: UserRestObj[]) => {
+  public autoSignIn(): void {
+    const autoSingInObserver = this.getRestObserver<UserRest[]>({
+      next: (users: UserRest[]) => {
         this.router.navigate(['main']);
         this.localStorageService.restUsers = users;
         this.localStorageService.updateCurrentUserId();
@@ -83,10 +87,10 @@ export class RestDataService {
     this.getUsers().subscribe(autoSingInObserver);
   }
 
-  signIn(login: string, pass: string): void {
-    const singInObserver = this.getRestObserver<TokenObj>({
-      next: (obj: TokenObj) => {
-        const currentUser = {
+  public signIn(login: string, pass: string): void {
+    const singInObserver = this.getRestObserver<Token>({
+      next: (obj: Token) => {
+        const currentUser: CurUser = {
           login,
           token: obj.token
         };
@@ -99,35 +103,35 @@ export class RestDataService {
       .subscribe(singInObserver);
   };
 
-  signUp(name: string, login: string, pass: string): void {
-    const singUpObj: NewUserObj = {
+  public signUp(name: string, login: string, pass: string): void {
+    const singUpObj: NewUser = {
       name: name,
       login: login,
       password: pass,
     }
 
-    const singUpObserver = this.getRestObserver<UserRestObj>({
+    const singUpObserver = this.getRestObserver<UserRest>({
       next: () => {
         this.signIn(login, pass);
       },
     });
 
     this.http
-      .post<UserRestObj>(REST_URL + 'auth/signup', singUpObj)
+      .post<UserRest>(REST_URL + 'auth/signup', singUpObj)
       .subscribe(singUpObserver);
   }
 
-  getUser(userId: string) {
-    return  this.http.get<UserRestObj>(`${REST_URL}users/${userId}`, this.getHttpOptions());
+  public getUser(userId: string): Observable<UserRest> {
+    return  this.http.get<UserRest>(`${REST_URL}users/${userId}`, this.getHttpOptions());
   }
 
-  getUsers() {
-    return  this.http.get<UserRestObj[]>(REST_URL + 'users', this.getHttpOptions());
+  public getUsers(): Observable<UserRest[]> {
+    return  this.http.get<UserRest[]>(REST_URL + 'users', this.getHttpOptions());
   }
 
-  updateRestUsers() {
-    const updateRestUsersObserver = this.getRestObserver<UserRestObj[]>({
-      next: (users: UserRestObj[]) => {
+  public updateRestUsers(): void {
+    const updateRestUsersObserver = this.getRestObserver<UserRest[]>({
+      next: (users: UserRest[]) => {
         this.localStorageService.restUsers = users;
       }
     });
@@ -136,29 +140,29 @@ export class RestDataService {
       .subscribe(updateRestUsersObserver);
   }
 
-  createBoard(newBoard: NewBoardObj, templateName?: string) {
+  public createBoard(newBoard: NewBoard, templateName?: string): void {
     this.startProgress();
 
-    const createBoardObserver = this.getRestObserver<RestBoardObj>({
-      next: (boardObj: RestBoardObj) => {
+    const createBoardObserver = this.getRestObserver<RestBoard>({
+      next: (boardObj: RestBoard) => {
         this.isNewBoard = true;
         this.localStorageService.restBoards.push(boardObj);
         this.localStorageService.updateBoardsStorage();
         this.router.navigateByUrl(`boards/${boardObj._id}`);
 
         if (templateName) {
-          this._createColumnsFromTemplate(templateName, boardObj._id);
+          this.createColumnsFromTemplate(templateName, boardObj._id);
         }
         this.stopProgress();
       }
     });
 
     this.http
-      .post<RestBoardObj>(REST_URL + 'boards', newBoard, this.getHttpOptions())
+      .post<RestBoard>(REST_URL + 'boards', newBoard, this.getHttpOptions())
       .subscribe(createBoardObserver);
   }
 
-  private _createColumnsFromTemplate(templateName: string, boardId: string) {
+  private createColumnsFromTemplate(templateName: string, boardId: string): void {
     const boardTemplates = this.appControlService.boardTemplates;
     const template = boardTemplates.find((temp) => temp.name === templateName);
     if (template) {
@@ -173,24 +177,23 @@ export class RestDataService {
     }
   }
 
-  updateBoardsStorage(completeCallBack?: Function) {
-    let isBoardsTime = true;
+  public updateBoardsStorage(completeCallBack?: Function): void {
+    let isBoardsTime: boolean = true;
+
     this.startProgress();
 
-    const updateBoardsStorageObserver = this.getRestObserver<RestBoardObj[] | UserRestObj[]>({
-      next: (objArr: RestBoardObj[] | UserRestObj[]) => {
+    const updateBoardsStorageObserver = this.getRestObserver<RestBoard[] | UserRest[]>({
+      next: (objArr: RestBoard[] | UserRest[]) => {
         if (isBoardsTime) {
-          this.localStorageService.restBoards = objArr as RestBoardObj[];
+          this.localStorageService.restBoards = objArr as RestBoard[];
           isBoardsTime = false;
         } else {
-          this.localStorageService.restUsers = objArr  as UserRestObj[];
+          this.localStorageService.restUsers = objArr  as UserRest[];
         }
       },
       complete: () => {
         this.localStorageService.updateBoardsStorage();
-        if (completeCallBack) {
-          completeCallBack();
-        }
+        completeCallBack?.();
         this.stopProgress();
       }
     });
@@ -200,18 +203,18 @@ export class RestDataService {
 
   }
 
-  getBoard(boardId: string) {
-    return  this.http.get<RestBoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions());
+  public getBoard(boardId: string): Observable<RestBoard> {
+    return  this.http.get<RestBoard>(REST_URL + 'boards/' + boardId, this.getHttpOptions());
   }
 
-  getBoards() {
-    return  this.http.get<RestBoardObj[]>(REST_URL + 'boards', this.getHttpOptions());
+  public getBoards(): Observable<RestBoard[]> {
+    return  this.http.get<RestBoard[]>(REST_URL + 'boards', this.getHttpOptions());
   }
 
-  deleteBoard(boardId: string) {
+  public deleteBoard(boardId: string): void {
     this.startProgress();
 
-    const deleteBoardObserver = this.getRestObserver<RestBoardObj>({
+    const deleteBoardObserver = this.getRestObserver<RestBoard>({
       next: () => {
         this.localStorageService.deleteBoard(boardId);
         this.stopProgress();
@@ -219,11 +222,11 @@ export class RestDataService {
     });
 
     this.http
-      .delete<RestBoardObj>(REST_URL + 'boards/' + boardId, this.getHttpOptions())
+      .delete<RestBoard>(REST_URL + 'boards/' + boardId, this.getHttpOptions())
       .subscribe(deleteBoardObserver);
   }
 
-  getHttpOptions() {
+  public getHttpOptions(): RestHeaders {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -233,10 +236,10 @@ export class RestDataService {
     };
   }
 
-  deleteCurentUser(): void {
+  public deleteCurentUser(): void {
     this.startProgress();
 
-    const deleteUserObserver = this.getRestObserver<UserRestObj>({
+    const deleteUserObserver = this.getRestObserver<UserRest>({
       next: () => {
         this.appControlService.logOut();
         this.stopProgress();
@@ -247,7 +250,7 @@ export class RestDataService {
 
     if (userId) {
       this.http
-        .delete<UserRestObj>(REST_URL + 'users/' + userId, this.getHttpOptions())
+        .delete<UserRest>(REST_URL + 'users/' + userId, this.getHttpOptions())
         .subscribe(deleteUserObserver);
     } else {
       this.errorHandlerService.handleError(new Error('Local Storage: "User does not exist!"'));
@@ -255,38 +258,39 @@ export class RestDataService {
     }
   }
 
-  getBoardColumns(boardId: string) {
+  public getBoardColumns(boardId: string): Observable<ColumnRest[]> {
     return  this.http
-      .get<ColumnRestObj[]>(`${REST_URL}boards/${boardId}/columns/`, this.getHttpOptions());
+      .get<ColumnRest[]>(`${REST_URL}boards/${boardId}/columns/`, this.getHttpOptions());
   }
 
-  getColumnTasks(boardId: string, columnId: string) {
+  public getColumnTasks(boardId: string, columnId: string): Observable<TaskRest[]> {
     return  this.http
-      .get<TaskRestObj[]>(`${REST_URL}boards/${boardId}/columns/${columnId}/tasks`, this.getHttpOptions());
+      .get<TaskRest[]>(`${REST_URL}boards/${boardId}/columns/${columnId}/tasks`, this.getHttpOptions());
   }
 
-  createColumn(columnOption: NewColumnOption): void {
+  public createColumn(columnOption: NewColumnOption,): void {
     this.startProgress();
 
-    const createColumnObserver = this.getRestObserver<ColumnRestObj>({
-      next: (columnObj: ColumnRestObj) => {
-        this.localStorageService.addColumn(columnObj);
+    const createColumnObserver = this.getRestObserver<ColumnRest>({
+      next: (columnObj: ColumnRest) => {
+        this.localStorageService.addColumn(columnObj, this.appControlService.checkChanges.bind(this.appControlService));
         this.stopProgress();
+        this.appControlService.checkChanges();
       },
     });
 
     const boardId = columnOption.boardId;
-    const newColumn: NewColumnRestObj = {
+    const newColumn: NewColumnRest = {
       title: columnOption.columnTitle,
       order: columnOption.columnOrder,
     }
 
     this.http
-      .post<ColumnRestObj>(`${REST_URL}boards/${boardId}/columns/`, newColumn, this.getHttpOptions())
+      .post<ColumnRest>(`${REST_URL}boards/${boardId}/columns/`, newColumn, this.getHttpOptions())
       .subscribe(createColumnObserver);
   }
 
-  deleteColumn<T extends ColumnRestObj>(deletedColumn: DeletedColumnOption): void {
+  public deleteColumn<T extends ColumnRest>(deletedColumn: DeletedColumnOption, additionalHandler?: Function): void {
     this.startProgress();
 
     const deleteColumnObserver = this.getRestObserver<T>({
@@ -294,6 +298,7 @@ export class RestDataService {
         this.localStorageService.deleteRestColumn(columnObj);
         this.updateColumnsOrder(true);
         this.stopProgress();
+        additionalHandler?.();
       },
     });
 
@@ -307,7 +312,7 @@ export class RestDataService {
     }
   }
 
-  updateColumnsOrder<T extends ColumnRestObj[]>(isDeletion: boolean = false) {
+  public updateColumnsOrder<T extends ColumnRest[]>(isDeletion: boolean = false): void {
     this.startProgress();
 
     const columnsSet = (isDeletion)
@@ -325,6 +330,9 @@ export class RestDataService {
         this.errorHandlerService.handleError(err);
         this.stopProgress();
       },
+      complete: () => {
+        this.appControlService.checkChanges();
+      }
     });
 
     if (columnsSet.length) {
@@ -338,10 +346,10 @@ export class RestDataService {
 
   }
 
-  createTask<T extends TaskRestObj>(boardId: string, columnId: string, newTaskObj: NewTaskObj): void {
+  public createTask<T extends TaskRest>(boardId: string, columnId: string, newTaskObj: NewTask): void {
     this.startProgress();
 
-     const createTaskObserver = this.getRestObserver<T>({
+    const createTaskObserver = this.getRestObserver<T>({
       next: (taskObj: T) => {
         this.localStorageService.addTask(columnId, taskObj);
         this.stopProgress();
@@ -353,34 +361,35 @@ export class RestDataService {
     .subscribe(createTaskObserver);
   }
 
-  updateTaskSet<T extends TaskRestObj[]>(tasksSetsConfig: TaskSetRestObj[]) {
-    if (tasksSetsConfig.length) {
-      this.localStorageService.isTaskDropDisabled = true;
-      this.startProgress();
-
-      const updateOrderObserver = this.getRestObserver<T>({
-        next: (tasks: T) => {
-          if (tasks.length) {
-            this.localStorageService.updateBoardTasks(tasks);
-          }
-          this.localStorageService.isTaskDropDisabled = false;
-          this.stopProgress();
-        },
-      });
-
-      this.http
-        .patch<T>(`${REST_URL}tasksSet`, tasksSetsConfig, this.getHttpOptions())
-        .subscribe(updateOrderObserver);
-
+  public updateTaskSet<T extends TaskRest[]>(tasksSetsConfig: TaskSetRest[]): void {
+    if (!tasksSetsConfig.length) {
+      return;
     }
+
+    this.localStorageService.isTaskDropDisabled = true;
+    this.startProgress();
+
+    const updateOrderObserver = this.getRestObserver<T>({
+      next: (tasks: T) => {
+        if (tasks.length) {
+          this.localStorageService.updateBoardTasks(tasks);
+        }
+        this.localStorageService.isTaskDropDisabled = false;
+        this.stopProgress();
+      },
+    });
+
+    this.http
+      .patch<T>(`${REST_URL}tasksSet`, tasksSetsConfig, this.getHttpOptions())
+      .subscribe(updateOrderObserver);
 
   }
 
-  deleteTask<T extends TaskRestObj>(deletionOptions: TaskDeletionOptions): void {
-    const deletedTask = deletionOptions.deletedTask;
-    const updatedTasks = deletionOptions.updatedTasks;
+  public deleteTask<T extends TaskRest>(deletionOptions: TaskDeletionOptions): void {
     this.startProgress();
 
+    const deletedTask = deletionOptions.deletedTask;
+    const updatedTasks = deletionOptions.updatedTasks;
     const deleteTaskObserver = this.getRestObserver<T>({
       next: (taskObj: T) => {
         this.localStorageService.deleteTask(taskObj);
@@ -401,16 +410,16 @@ export class RestDataService {
     }
   }
 
-  updateColumn(boardId: string, columnId: string, newColumn: NewColumnRestObj) {
+  public updateColumn(boardId: string, columnId: string, newColumn: NewColumnRest): Observable<ColumnRest> {
     return this.http
-      .put<ColumnRestObj>(`${REST_URL}boards/${boardId}/columns/${columnId}`, newColumn, this.getHttpOptions());
+      .put<ColumnRest>(`${REST_URL}boards/${boardId}/columns/${columnId}`, newColumn, this.getHttpOptions());
   }
 
-  updateColumnTitle(boardId: string, columnId: string, newColumn: NewColumnRestObj) {
+  public updateColumnTitle(boardId: string, columnId: string, newColumn: NewColumnRest): void {
     this.startProgress();
 
-    const updateColumnObserver = this.getRestObserver<ColumnRestObj>({
-      next: (column: ColumnRestObj) => {
+    const updateColumnObserver = this.getRestObserver<ColumnRest>({
+      next: (column: ColumnRest) => {
         this.localStorageService.updateColumnTitle(column);
         this.stopProgress();
       },
@@ -420,13 +429,11 @@ export class RestDataService {
       .subscribe(updateColumnObserver);
   }
 
-  updateTask<T extends TaskRestObj>(boardId: string, taskId: string, taskObj: EditableTask, additionalHandler?: Function) {
+  public updateTask<T extends TaskRest>(boardId: string, taskId: string, taskObj: EditableTask, additionalHandler?: Function): void {
     const updateTaskObserver = this.getRestObserver<T>({
       next: (task: T) => {
         this.localStorageService.updateBoardTasks([task]);
-        if (additionalHandler) {
-          additionalHandler();
-        }
+        additionalHandler?.();
       },
     });
 
@@ -435,7 +442,7 @@ export class RestDataService {
     .subscribe(updateTaskObserver);
   }
 
-  updateUser<T extends UserRestObj>(updatedUser: NewUserObj, additionalHandler: Function) {
+  public updateUser<T extends UserRest>(updatedUser: NewUser, additionalHandler: Function): void {
     this.startProgress();
 
     const userId = this.localStorageService.currentUserId;
@@ -456,47 +463,48 @@ export class RestDataService {
     .subscribe(updateUserObserver);
   }
 
-  search(rawRequest: string) {
-    const searchRequest = this._getSearchRequest(rawRequest);
+  public search(rawRequest: string): Observable<TaskRest[]> {
+    const searchRequest = this.getSearchRequest(rawRequest);
 
     return this.http
-      .get<TaskRestObj[]>(`${REST_URL}tasksSet?search=${searchRequest}`, this.getHttpOptions());
+      .get<TaskRest[]>(`${REST_URL}tasksSet?search=${searchRequest}`, this.getHttpOptions());
   }
 
-  private _getSearchRequest(str: string) {
-    const request = str
+  private getSearchRequest(str: string): string {
+    return str
       .trim()
       .split(' ')
       .filter((word) => !!word)
       .join('%20');
-
-    return request;
   }
 
-  getBoardUsers(boardId: string, completeCallBack: Function) {
-    if (boardId) {
-      let boardObj: RestBoardObj;
-      let users: UserRestObj[];
-      const getBoardUsersObserver = this.getRestObserver<RestBoardObj | UserRestObj[]>({
-        next: (result: RestBoardObj | UserRestObj[]) => {
-          if (result.hasOwnProperty('length')) {
-            users = result as UserRestObj[];
-          } else {
-            boardObj = result as RestBoardObj;
-          }
-        },
-        complete: () => {
-          if (completeCallBack) {
-            const boardUsersId = [boardObj.owner, ...boardObj.users];
-            const boardUsers = users.filter((user) => boardUsersId.includes(user._id));
-            completeCallBack(boardUsers);
-          }
-        }
-      });
-
-      merge(this.getBoard(boardId), this.getUsers())
-        .subscribe(getBoardUsersObserver);
+  public getBoardUsers(boardId: string, completeCallBack: Function): void {
+    if (!boardId) {
+      return;
     }
+
+    let boardObj: RestBoard;
+    let users: UserRest[];
+    const getBoardUsersObserver = this.getRestObserver<RestBoard | UserRest[]>({
+      next: (result: RestBoard | UserRest[]) => {
+        if (result.hasOwnProperty('length')) {
+          users = result as UserRest[];
+        } else {
+          boardObj = result as RestBoard;
+        }
+      },
+      complete: () => {
+        if (completeCallBack) {
+          const boardUsersId = [boardObj.owner, ...boardObj.users];
+          const boardUsers = users.filter((user) => boardUsersId.includes(user._id));
+          completeCallBack(boardUsers);
+        }
+      }
+    });
+
+    merge(this.getBoard(boardId), this.getUsers())
+      .subscribe(getBoardUsersObserver);
+
   }
 
 }

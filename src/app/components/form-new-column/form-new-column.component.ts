@@ -10,26 +10,25 @@ import { AppFormsService } from 'src/app/services/app-forms.service';
   styleUrls: ['./form-new-column.component.scss']
 })
 export class FormNewColumnComponent {
-  hide = true;
-
-  titleFormControl = this.formService.getNewFormControl('columnTitle');
-  checkoutForm = new FormGroup({columnTitle: this.titleFormControl})
+  public hide: boolean = true;
+  public titleFormControl = this.formService.getNewFormControl('columnTitle');
+  public checkoutForm = new FormGroup({columnTitle: this.titleFormControl})
 
   constructor(
     private confirmationService: ConfirmationService,
     private formService: AppFormsService,
   ) {}
 
-  getErrorMessage(): string {
+  public getErrorMessage(): string {
     return this.formService.getErrorMessage(this.checkoutForm, 'columnTitle');
   }
 
-  checkInput(): void {
+  public checkInput(): void {
     this.confirmationService.isConfirmValid = this.checkoutForm.valid;
     this.updateNewColumnTitle();
   }
 
-  updateNewColumnTitle(): void {
+  public updateNewColumnTitle(): void {
     const inputValue = this.titleFormControl.value;
 
     if (this.checkoutForm.valid && inputValue) {

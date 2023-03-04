@@ -18,15 +18,15 @@ export class LanquageMenuComponent {
     private appControlService: AppControlService,
   ) {};
 
-  get currentLanguage() {
+  public get currentLanguage(): string {
     return this.localStorageService.currentLanguage;
   }
 
-  get isSmallScreen() {
+  public get isSmallScreen(): boolean {
     return this.appControlService.isSmallScreen;
   }
 
-  changeLanguage(lang: string) {
+  public changeLanguage(lang: string): void {
     if (this.avalibleLanguages.includes(lang)) {
       this.translate.use(lang);
       this.localStorageService.currentLanguage = lang;

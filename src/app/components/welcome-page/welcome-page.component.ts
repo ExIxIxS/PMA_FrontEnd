@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 import { RestDataService } from 'src/app/services/restAPI.service';
@@ -17,16 +17,14 @@ import { AppControlService } from 'src/app/services/app-control.service';
     },
   ],
 })
-export class WelcomePageComponent {
-  public animationDuration = '1000';
-
-  public firstFormGroup = this.formBuilder.group({
+export class WelcomePageComponent implements OnInit {
+  public firstFormGroup: FormGroup = this.formBuilder.group({
     firstCtrl: ['', Validators.required],
   });
-  public secondFormGroup = this.formBuilder.group({
+  public secondFormGroup: FormGroup = this.formBuilder.group({
     secondCtrl: ['', Validators.required],
   });
-  public thirdFormGroup = this.formBuilder.group({
+  public thirdFormGroup: FormGroup = this.formBuilder.group({
     thirdCtrl: ['', Validators.required],
   });
 
@@ -37,21 +35,22 @@ export class WelcomePageComponent {
     private appControlService: AppControlService,
     ) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     if (this.localStorageService.isUserLoggedIn) {
       this.restAPI.autoSignIn();
     }
   }
 
-  get navigation() {
+  public get navigation() {
     return window.Navigator;
   }
 
-  get isSmallScreen() {
+  public get isSmallScreen(): boolean {
     return this.appControlService.isSmallScreen;
   }
 
-  scrollToUp() {
+  public scrollToUp(): void {
     this.appControlService.scrollToUp();
   }
+
 }

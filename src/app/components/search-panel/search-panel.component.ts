@@ -1,6 +1,6 @@
-import { Component, HostListener } from '@angular/core';
-
-import { FormConrolTypes, SearchTaskObj, UserRestObj } from '../../app.interfeces';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Subscription, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 import { AppFormsService } from 'src/app/services/app-forms.service';
 import { RestDataService } from 'src/app/services/restAPI.service';
@@ -8,16 +8,19 @@ import { ErrorHandlerService } from 'src/app/services/errorHandler.service';
 import { ConfirmationService } from 'src/app/services/confirmation.service';
 import { AppControlService } from 'src/app/services/app-control.service';
 
+import { FormConrolTypes, SearchTask, UserRest } from '../../app.interfeces';
 
 @Component({
   selector: 'app-search-panel',
   templateUrl: './search-panel.component.html',
   styleUrls: ['./search-panel.component.scss']
 })
-export class SearchPanelComponent {
-  private _lastSearchRequest: string | undefined;
-  public foundTasks: SearchTaskObj[] = [];
-  public allUsers: UserRestObj[] = [];
+export class SearchPanelComponent implements OnInit, OnDestroy {
+  private lastSearchRequest: string | undefined;
+  private subscribtions: Subscription[] = [];
+
+  public foundTasks: SearchTask[] = [];
+  public allUsers: UserRest[] = [];
   public isNoResult: boolean = false;
   public isSearchInProgress: boolean = false;
   public searchFormControl = this.formsService.getNewFormControl('searchRequest', '', true);
@@ -30,8 +33,12 @@ export class SearchPanelComponent {
               private appControlService: AppControlService
   ) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.observeInputChanges();
+  }
+
+  public ngOnDestroy(): void {
+    this.subscribtions.forEach((subscr) => subscr.unsubscribe());
   }
 
   @HostListener('body: click', ['$event']) onClick(e: Event) {
@@ -54,7 +61,7 @@ export class SearchPanelComponent {
 
   }
 
-  clearInput(input?: HTMLInputElement) {
+  public clearInput(input?: HTMLInputElement): void {
     this.searchFormControl.setValue('');
     if (input) {
       input.focus();
@@ -62,7 +69,7 @@ export class SearchPanelComponent {
 
   }
 
-  private _findUserNameById(userId: string) {
+  private findUserNameById(userId: string): string {
     const targetUser = this.allUsers.find((user) => user._id === userId);
     if (targetUser) {
       return targetUser.name;
@@ -71,45 +78,53 @@ export class SearchPanelComponent {
     return 'user unknown';
   }
 
-  startSearch(value: string) {
-    if (value === this.searchFormControl.value) {
-      this.isNoResult = false;
-      this.isSearchInProgress = true;
-      this.restRest.search(value)
-        .subscribe(
-          { next: (tasks) => {
-              this._lastSearchRequest = value;
-              this.foundTasks = [];
-              tasks.map((task) => {
-                const searchTask: SearchTaskObj = {
-                  restTask: task,
-                  description: (task.description !== 'without description' ? task.description : ''),
-                  owner: this._findUserNameById(task.userId),
-                  executor: this._findUserNameById(task.users[0]),
-                };
-                this.foundTasks.push(searchTask);
-              })
-            },
-            complete: () => {
-              this.isSearchInProgress = false;
-
-              if (!this.foundTasks.length) {
-                this.isNoResult = true;
-              }
-            }
-          });
+  public startSearch(value: string): void {
+    if (value !== this.searchFormControl.value) {
+      return;
     }
+
+    this.isNoResult = false;
+    this.isSearchInProgress = true;
+    this.appControlService.checkChanges();
+    const subscr = this.restRest.search(value)
+      .subscribe(
+        { next: (tasks) => {
+          this.lastSearchRequest = value;
+          this.foundTasks = [];
+          tasks.map((task) => {
+            const searchTask: SearchTask = {
+              restTask: task,
+              description: (task.description !== 'without description' ? task.description : ''),
+              owner: this.findUserNameById(task.userId),
+              executor: this.findUserNameById(task.users[0]),
+            };
+
+            this.foundTasks.push(searchTask);
+          })
+          },
+          complete: () => {
+            this.isSearchInProgress = false;
+
+            if (!this.foundTasks.length) {
+              this.isNoResult = true;
+            }
+
+            this.appControlService.checkChanges();
+          }
+        });
+
+    this.subscribtions.push(subscr);
 
   }
 
-  enableInput(input: HTMLInputElement) {
+  public enableInput(input: HTMLInputElement): void {
     const enableAndFocus = () => {
       this.searchFormControl.enable();
       input.focus();
     }
 
     const getUsersObserver = {
-      next: (users: UserRestObj[]) => {
+      next: (users: UserRest[]) => {
         this.allUsers = users;
         enableAndFocus();
        },
@@ -121,49 +136,52 @@ export class SearchPanelComponent {
     if (this.allUsers.length) {
       enableAndFocus();
     } else {
-      this.restRest.getUsers().subscribe(getUsersObserver);
+      const subscr = this.restRest.getUsers().subscribe(getUsersObserver);
+      this.subscribtions.push(subscr);
     }
   }
 
-  disableInput() {
+  public disableInput(): void {
     this.clearInput();
     this.foundTasks = [];
     this.isNoResult = false;
-    setTimeout(() => this.searchFormControl.disable(), 100);
+    this.searchFormControl.disable();
   }
 
-  observeInputChanges(delay: number = 1000) {
+  public observeInputChanges(del: number = 1000): void {
     const changesObserver = {
       next: (value: string | null) => {
         if (value && this.searchFormControl.valid) {
-          setTimeout(this.startSearch.bind(this), delay, value);
+          const subscr = of(value)
+            .pipe(delay(del))
+            .subscribe((result) => this.startSearch(result));
+
+          this.subscribtions.push(subscr);
         }
       }
     }
 
-    this.searchFormControl.valueChanges
+    const subscr = this.searchFormControl.valueChanges
       .subscribe(changesObserver);
+
+    this.subscribtions.push(subscr);
   }
 
-  getErrorMessage(type: FormConrolTypes) {
+  public getErrorMessage(type: FormConrolTypes): string {
     return this.formsService.getErrorMessage(this.searchFormControl, type);
   };
 
-  editTask(task: SearchTaskObj) {
+  public editTask(task: SearchTask): void {
     this.confirmationService.openDialog({
       type: 'editTask',
       editableTask: task.restTask,
     });
   }
 
-  repeatSearch() {
-    if (this._lastSearchRequest) {
-      this.startSearch(this._lastSearchRequest);
+  public repeatSearch(): void {
+    if (this.lastSearchRequest) {
+      this.startSearch(this.lastSearchRequest);
     }
-  }
-
-  refactorForOutput(str: string): string {
-    return this.appControlService.refactorForOutput(str);
   }
 
 }

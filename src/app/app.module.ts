@@ -36,6 +36,7 @@ import { SearchPanelComponent } from './components/search-panel/search-panel.com
 import { LanquageMenuComponent } from './components/lanquage-menu/lanquage-menu.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ErrorPanelComponent } from './components/error-panel/error-panel.component';
+import { OutputPipe } from './userOutput.pipe';
 
 export function httpTranslateLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -61,6 +62,7 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
     LanquageMenuComponent,
     FooterComponent,
     ErrorPanelComponent,
+    OutputPipe,
   ],
   imports: [
     BrowserModule,
@@ -77,7 +79,7 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [RestDataService, LocalStorageService, AppControlService, ErrorHandlerService, ConfirmationService, AppFormsService, Location ],
+  providers: [RestDataService, LocalStorageService, AppControlService, ErrorHandlerService, ConfirmationService, AppFormsService, Location, ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
