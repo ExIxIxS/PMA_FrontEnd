@@ -1,0 +1,104 @@
+<app-search-panel></app-search-panel>
+
+<section class="columns-wrapper">
+
+  <div class="boards-column">
+    <h3>{{'main.firstSubTitle' | translate}}:</h3>
+
+    <ng-template [ngTemplateOutlet]="emptyIconTemplate"
+                [ngTemplateOutletContext]="{boards: ownBoardsOutput}">
+    </ng-template>
+
+    <ng-template [ngTemplateOutlet]="boardTemplate"
+                  *ngFor="let board of ownBoardsOutput"
+                  [ngTemplateOutletContext]="
+                    { title: board.title,
+                      owner: board.owner,
+                      participants: board.users,
+                      boardId: board._id
+                    }">
+    </ng-template>
+    <button mat-flat-button
+            *ngIf="!isHideStartButton"
+            type="button"
+            (click)="createNewBoard()">
+      <mat-icon>dashboard_customize</mat-icon>{{'main.title' | translate}}
+    </button>
+  </div>
+
+  <div class="boards-column">
+    <h3>{{'main.secondSubTitle' | translate}}:</h3>
+
+    <ng-template [ngTemplateOutlet]="emptyIconTemplate"
+                [ngTemplateOutletContext]="{boards: participanceBoardsOutput}">
+    </ng-template>
+
+    <ng-template [ngTemplateOutlet]="boardTemplate"
+                  *ngFor="let board of participanceBoardsOutput"
+                  [ngTemplateOutletContext]="{title: board.title,
+                    owner: board.owner,
+                    participants: board.users,
+                    boardId: board._id
+                  }">
+    </ng-template>
+  </div>
+
+  <div class="boards-column">
+    <h3>{{'main.thirdSubTitle' | translate}}:</h3>
+
+    <ng-template [ngTemplateOutlet]="emptyIconTemplate"
+                [ngTemplateOutletContext]="{boards: otherBoardsOutput}">
+    </ng-template>
+
+    <ng-template [ngTemplateOutlet]="boardTemplate"
+                  *ngFor="let board of otherBoardsOutput"
+                  [ngTemplateOutletContext]="{title: board.title,
+                    owner: board.owner,
+                    participants: board.users,
+                    boardId: board._id
+                  }">
+    </ng-template>
+  </div>
+</section>
+
+<!-- templates-->
+
+<ng-template #boardTemplate
+            let-boardTitle="title"
+            let-boardOwner="owner"
+            let-boardParticipants="participants"
+            let-delete="deleteBoard"
+            let-boardId="boardId">
+  <mat-card class="board-card"
+            (click)="openBoard(boardId)">
+    <mat-card-header>
+      <mat-card-title matListItemTitle>{{boardTitle | userOutput : 15}}</mat-card-title>
+      <button mat-icon-button
+              class="delete-board-button"
+              type="button"
+              color="warn"
+              (click)="deleteBoard($event, boardId, boardTitle, boardOwner)"
+              aria-label="Icon button with a delete icon">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <p matListItemLine>{{'board.creator' | translate | userOutput}}: {{boardOwner}}</p>
+      <p matListItemLine>{{'board.participants' | translate | userOutput}}: {{boardParticipants}}</p>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
+<ng-template #emptyIconTemplate
+            let-boards="boards">
+  <div *ngIf="!boards.length"
+        class="empty-icon-wrapper">
+    <mat-icon color="primary"
+              class="empty-icon"
+              matTooltip="{{'tooltips.noProjects' | translate}}"
+              aria-hidden="false"
+              aria-label="Empty icon"
+              fontIcon="developer_board_off">
+    </mat-icon>
+  </div>
+</ng-template>

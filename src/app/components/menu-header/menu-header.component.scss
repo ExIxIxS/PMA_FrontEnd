@@ -1,0 +1,75 @@
+@use "@angular/material" as mat;
+@use '../../../styles/_app-mixins' as mix;
+@use '../../../styles/themes' as themes;
+
+.color-theme-button {
+  display: block;
+  margin: 2px 5px;
+  padding: 2px;
+  border: 0;
+}
+
+.color-theme-button:hover {
+  cursor: pointer;
+}
+
+.color-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.font-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.color-wrapper.default {
+  @include mix.color-wrapper(themes.$default-theme)
+}
+
+.color-wrapper.dark-pink {
+  @include mix.color-wrapper(themes.$dark-pink-theme)
+}
+
+.color-wrapper.dark-green {
+  @include mix.color-wrapper(themes.$dark-green-theme)
+}
+
+.color-wrapper.light-desert {
+  @include mix.color-wrapper(themes.$light-desert-theme)
+}
+
+.color-wrapper.dark-peace {
+  @include mix.color-wrapper(themes.$dark-peace-theme)
+}
+
+.color-wrapper.light-teal {
+  @include mix.color-wrapper(themes.$light-teal-theme)
+}
+
+@mixin typography-button($typography) {
+  $font-family: mat.font-family($typography, 'body-1');
+  font-family: $font-family;
+}
+
+.typography-button {
+  font-family: 'Roboto', sans-serif;
+}
+
+.typography-button.shantell-sans-typography {
+  @include typography-button(themes.$shantell-sans-typography);
+}
+
+.typography-button.comfortaa-typography {
+  @include typography-button(themes.$comfortaa-typography);
+}
+
+@media (max-width: 539px) {
+  .font-buttons-wrapper {
+    .font-button {
+      padding: 0 6px;
+    }
+  }
+
+}

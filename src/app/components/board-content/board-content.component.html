@@ -1,0 +1,147 @@
+<section class="board-wrapper">
+  <div class="board-header">
+    <h2>{{currentBoardTitle | userOutput : 15}}</h2>
+    <button mat-mini-fab
+            color="primary"
+            class="add-column-button"
+            type="button"
+            matTooltip="{{'buttons.newColumn' | translate}}"
+            (click)="createColumn()">
+      <mat-icon>post_add</mat-icon>
+    </button>
+  </div>
+  <div class="columns-wrapper">
+    <div class="columns-container"
+        cdkDropListGroup
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        [cdkDropListData]="appColumns"
+        (cdkDropListDropped)="dropColumn($event)"
+        [cdkDropListDisabled]="isTaskDropDisabled">
+        <div class="board-column"
+            *ngFor="let column of appColumns"
+            cdkDrag
+            cdkDragLockAxis="x">
+          <div class="title-container"
+              [ngClass]="{'invalid': column.titleForm.invalid}">
+            <form [formGroup]="column.titleForm"
+                  (ngSubmit)="submitTitleChanges($event, column)">
+              <mat-form-field class="title-form-field"
+                              appearance="outline"
+                              (click)="activateTitleInput(titleInput, column)">
+                <input  #titleInput
+                        matInput
+                        class="column-title-input"
+                        autocomplete="off"
+                        type="text"
+                        [formControlName]="'columnTitle'"
+                        (blur)="disableTitleInput(column)">
+                <mat-error *ngIf="column.titleForm.invalid">{{getErrorMessage(column)}}</mat-error>
+                <mat-hint *ngIf="column.titleForm.dirty">{{'forms.changesNote' | translate}}</mat-hint>
+                <button *ngIf="!titleInput.disabled"
+                        type="submit"
+                        mat-icon-button
+                        matPrefix>
+                  <mat-icon>check</mat-icon>
+                </button>
+
+                <button *ngIf="!titleInput.disabled"
+                        mat-icon-button
+                        matPrefix
+                        type="button"
+                        (click)="restoreTitleInputValue(column)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </form>
+          </div>
+
+          <div class="up-buttons-wrapper">
+            <button mat-icon-button
+                    class="add-task-button"
+                    color="primary"
+                    type="button"
+                    matTooltip="{{'buttons.newTask' | translate}}"
+                    matTooltipPosition="right"
+                    (click)="createTask(column._id)">
+              <mat-icon>add_to_photos</mat-icon>
+            </button>
+
+            <div class="drag-handle"
+                  cdkDragHandle>
+              <mat-icon color="primary"
+                        class="drag-handle"
+                        matTooltip="{{'tooltips.swapColumn' | translate}}"
+                        matTooltipPosition="left"
+                        aria-hidden="false"
+                        aria-label="Drag icon"
+                        fontIcon="drag_indicator">
+              </mat-icon>
+            </div>
+          </div>
+
+          <div cdkDropList
+              class="tasks-list"
+              [cdkDropListData]="column.tasks"
+              (cdkDropListDropped)="dropTask($event, column._id)"
+              [cdkDropListDisabled]="isTaskDropDisabled">
+
+            <div class="tasks-list-item"
+                *ngFor="let task of column.tasks"
+                cdkDrag
+                (click)="editTask($event, task)">
+
+            <mat-expansion-panel #taskPanel
+                                  hideToggle
+                                  (mouseover)="taskPanel.open()"
+                                  (mouseout)="taskPanel.close()">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <h3>{{task.title | userOutput }}</h3>
+                </mat-panel-title>
+                <button mat-icon-button
+                        class="delete-task-button"
+                        color="warn"
+                        [hidden]="!taskPanel.expanded"
+                        matTooltip="{{'buttons.deleteTask' | translate}}"
+                        matTooltipPosition="above"
+                        type="button"
+                        (click)="deleteTask(task._id, column._id)">
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+              </mat-expansion-panel-header>
+                <p *ngIf="task.description !== 'without description'">
+                  <mat-icon color="primary"
+                            aria-hidden="false"
+                            aria-label="Executor icon"
+                            fontIcon="description">
+                  </mat-icon>
+                  {{task.description | userOutput}}
+                </p>
+                <p>
+                  <mat-icon color="primary"
+                            aria-hidden="false"
+                            aria-label="Executor icon"
+                            fontIcon="directions_run">
+                  </mat-icon>
+                  {{getExecutorName(task) | userOutput}}
+                </p>
+            </mat-expansion-panel>
+
+          </div>
+        </div>
+
+        <button mat-icon-button
+                class="delete-column-button"
+                color="warn"
+                matTooltip="{{'buttons.deleteColumn' | translate}}"
+                matTooltipPosition="right"
+                type="button"
+                (click)="deleteColumn(column._id)">
+            <mat-icon>playlist_remove</mat-icon>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</section>

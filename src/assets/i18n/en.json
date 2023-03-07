@@ -1,0 +1,303 @@
+{
+  "tooltips": {
+    "aboutDeveloper": "Learn more about the developer",
+    "noProjects": "No projects",
+    "swapColumn": "Swap column"
+  },
+  "project": {
+    "title": "About project",
+    "description": {
+      "p1": "This application makes it easy to manage casual work`s or homes tasks with continuous connection with a team",
+      "featuresListTitle": "Main application features",
+      "featuresList":
+        [
+          {
+            "title": "Boards management",
+            "description": "Boards management according to user's role, ready-made templates",
+            "iconName": "dashboard"
+          },
+          {
+            "title": "Columns management",
+            "description": "Manage board`s columns with user-friendly drag and drop interface",
+            "iconName": "view_week"
+          },
+          {
+            "title": "Tasks management",
+            "description": "Create, search, edit and delete tasks in native way",
+            "iconName": "task"
+          },
+          {
+            "title": "Multilanguage",
+            "description": "Сhange the language on the fly",
+            "iconName": "translate"
+          },
+          {
+            "title": "Adaptive layout",
+            "description": "The minimum page width of the application is 320px",
+            "iconName": "devices"
+          },
+          {
+            "title": "Modern design",
+            "description": "Customizable, smooth and interactive interface for daily use",
+            "iconName": "design_services"
+          }
+        ],
+        "techListTitle": "Main technologies used in the the application",
+        "techList":
+        [
+                    {
+            "title": "Angular 15",
+            "iconName": "shield"
+          },
+          {
+            "title": "Angular material",
+            "iconName": "shield_moon"
+          },
+          {
+            "title": "JavaScript",
+            "iconName": "javascript"
+          },
+          {
+            "title": "TypeScript",
+            "iconName": "data_object"
+          },
+          {
+            "title": "RxJS",
+            "iconName": "source"
+          },
+          {
+            "title": "REST API",
+            "iconName": "api"
+          },
+          {
+            "title": "HTML5",
+            "iconName": "html"
+          },
+          {
+            "title": "SASS",
+            "iconName": "css"
+          }
+        ],
+        "p2": "To get started with the application, please",
+        "p3": "This application is implemented as an educational pet project in accordance with",
+        "login": "login",
+        "signUp": "sign up",
+        "or": "or"
+    }
+  },
+
+  "course": {
+    "title": "About course",
+    "description": {
+      "p1": "Implimentation of the application is a practical part of the course",
+      "angularCourse": "'RS School. Angular'",
+      "p2": ", that included in final stage of",
+      "feCourse": "'RS School. UpSkill Me'",
+      "p3": "During the 'UpSkill Me' course, under the supervision of mentors, theoretical and practical skills were obtained on the following topics",
+      "topics": ["Markdown", "HTML5", "CSS3",  "JS", "TypeScript", "Angular", "GIT", "NPM", "Figma", "DevTools", "Webpack", "HTTP/HTTPS, WebSocket", "REST API", "DOM API, Browser API", "Design Patterns", "Software Design Principles", "Unit tests", "Software Development Lifecycle"]
+    }
+  },
+
+  "developer": {
+    "title": "Developer",
+    "name": "Denis Bondarenko",
+    "description": {
+      "p1": "I began my career after university (Bachelor of Engineering / Electrician Engineer) in the railway industry in 2011, where I took initial skills of working with technical documentation and a stack of plenty of technologies",
+      "p2": "The last 2 years I have been working in an International Company as lead technical writer, where the main point of my work was development and management technical documentation with different types of content",
+      "p3": "At the moment I have done a lot and go on to do every day with passion for learning to become an experienced Frontend developer"
+    }
+  },
+
+  "welcome": {
+    "title": "Welcome to the Project Management Application (PMA)!"
+  },
+
+  "buttons": {
+    "login": "Login",
+    "signUp": "Sign up",
+    "logOut": "Log out",
+    "gotIt": "Got it",
+    "saveChanges": "Save",
+    "cancel": "Cancel",
+    "removeUser": "Remove User Account",
+    "confirm": "Confirm",
+    "seeRequirements": "requirements",
+    "userAccount": "Edit profile",
+    "newBoard": "Create a new project",
+    "changeLanguage": "Change Language",
+    "openBoard": "Open board",
+    "editTask": "Edit task",
+    "deleteBoard": "Delete board",
+    "deleteTask": "Delete task",
+    "newTask": "Add a task",
+    "deleteColumn": "Delete column",
+    "newColumn": "Add a column",
+    "palette": "palette",
+    "font": "font"
+  },
+
+  "error": {
+    "title": "Error",
+    "menuTitle": "Oops... Something went wrong!",
+    "noResult": "Tasks not found"
+  },
+
+  "forms": {
+    "changesNote": "*Please submit title changes",
+    "editNameTitle": "Change Name or Login",
+    "newNameField": "Enter new Name",
+    "nameField": "Enter your Name",
+    "newLoginField": "Enter new login",
+    "loginField": "Enter login",
+    "editPassTitle": "Change Password",
+    "newPassField": "Enter a new password",
+    "passField": "Enter password",
+    "repeatPassField": "Repeat new password",
+    "currentPassField": "Enter current password",
+    "boardTitleField": "Enter a board title",
+    "inviteUsersField": "Invite participants",
+    "userSelectionField": "Choose a name",
+    "columnTitleField": "Enter a column title",
+    "taskTitleField": "Task title",
+    "excecutorSelectionField": "Select an excecutor",
+    "taskDescriptionField": "Enter a task description",
+    "taskSearchField": "Task search",
+    "templateField": "Board template",
+    "useTemplateNote": "You can use a template"
+  },
+
+  "formErrors": {
+    "required": "You must enter a",
+    "minLength": "Min length of",
+    "maxLength": "Max length of",
+    "allowedSymbols": "Allowed symbols for",
+    "doNotMatch": "Passwords do not match",
+    "notValid": "Not valid",
+    "chars": "chars",
+    "columnTitle": "column title",
+    "boardTitle": "board title",
+    "taskTitle": "task title",
+    "taskDescription": "task description",
+    "taskExecutor": "task executor",
+    "userName": "name",
+    "login": "login",
+    "password": "password",
+    "newPassword": "password",
+    "repeatedPassword": "password",
+    "searchRequest": "search request",
+    "patternNote": {
+      "title": "unicode letters, digits, quotes +, spaces or -., (in the middle)",
+      "userName": "latin letters (starts with upper), digits and spaces or -. (in the middle)",
+      "login": "latin letters, digits and - (in the middle)",
+      "password": "latin letters, digits and !@#$%^&*?",
+      "searchRequest": "unicode letters, digits, spaces and .+-"
+    }
+  },
+
+  "board": {
+    "description": "Description",
+    "taskExecutor": "Current executor",
+    "taskTitle": "Task title",
+    "creator": "Creator",
+    "participants": "Participants"
+  },
+
+  "main": {
+    "title": "Create your first project",
+    "firstSubTitle": "Your own projects",
+    "secondSubTitle": "Projects you were invited to",
+    "thirdSubTitle": "Other projects",
+    "owner": "Owner"
+  },
+
+  "confirmation": {
+    "title": {
+      "createBoard": "Create a new board",
+      "createColumn": "Create a new column",
+      "createTask": "Create a new task",
+      "editTask": "Edit task",
+      "deleteBoard": "Board deletion",
+      "deleteUser": "User account removing",
+      "deleteColumn": "Column deletion",
+      "deleteTask": "Task deletion",
+      "default": "Confirmation service"
+    },
+    "deleteBoard": {
+      "title": "Board title",
+      "question": "Are you sure want to delete this board",
+      "note": "There is no way to restore the board after deletion!",
+      "notOwnerNote": "Sorry deletion avaliable only for board`s owner",
+      "owner": "Board`s owner"
+    },
+    "deleteUser": {
+      "question": "Are you sure want to delete your User Account?",
+      "note": "There is no way to restore it after removing!"
+    },
+    "deleteColumn": {
+      "question": "Are you sure want to delete this Column?",
+      "note": "There is no way to restore it after deletion!"
+    },
+    "deleteTask": {
+      "question": "Are you sure want to delete this Task?",
+      "note": "There is no way to restore it after deletion!"
+    },
+    "error": "Sorry, this window has opened with mistake..."
+  },
+
+  "pageNotFound": {
+    "title": "Page not found"
+  },
+
+  "boardTemplates": {
+    "kanban": {
+      "title": "kanban",
+      "columns": {
+        "backlog": "BackLog",
+        "design": "Design",
+        "toDo": "To Do",
+        "doing": "Doing",
+        "codeReview": "Code review",
+        "testing": "Testing",
+        "done": "Done"
+      }
+    },
+
+    "weekPlan": {
+      "title": "weekly plan",
+      "columns": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    },
+
+    "projectManagment": {
+      "title": "project managment",
+      "columns": {
+        "projectResources": "Project resources",
+        "questionsForMeeting": "Questions for meeting",
+        "toDo": "To Do",
+        "pending": "Pending",
+        "blocked": "Blocked",
+        "done": "Done"
+      }
+    },
+
+    "designHuddle": {
+      "title": "design huddle",
+      "columns": {
+        "concept": "Concept",
+        "notes": "Notes",
+        "positives": "Positives",
+        "negatives": "Negatives",
+        "questions": "Questions",
+        "potentialBlockers": "Potential blockers"
+      }
+    }
+  }
+
+}

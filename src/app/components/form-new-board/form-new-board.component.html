@@ -1,0 +1,68 @@
+<form [formGroup]="checkoutForm" (ngSubmit)="$event.preventDefault()">
+  <mat-form-field appearance="fill">
+    <mat-label>{{'forms.boardTitleField' | translate}}</mat-label>
+    <input matInput
+          autocomplete="off"
+          formControlName="boardTitle">
+    <mat-error *ngIf="checkoutForm.invalid">{{getErrorMessage()}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>{{'forms.templateField' | translate}}</mat-label>
+    <mat-select formControlName="boardTemplate">
+      <mat-option>--</mat-option>
+      <mat-option *ngFor="let boardTemplate of boardTemplates" [value]="boardTemplate.name">
+        {{'boardTemplates.' + boardTemplate.name + '.title'| translate}}
+      </mat-option>
+    </mat-select>
+    <mat-hint>{{'forms.useTemplateNote' | translate}}</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field class="user-chip-list" appearance="fill">
+    <mat-label>{{'forms.inviteUsersField' | translate}}</mat-label>
+    <mat-chip-grid #chipGrid aria-label="Invited users">
+
+      <mat-chip-row *ngFor="let participant of participants"
+      color="primary"
+                    (removed)="remove(participant)"
+                    [editable]="false">
+        {{participant.name}}
+
+        <mat-icon matChipAvatar aria-hidden="false" aria-label="Participant icon" fontIcon="person"></mat-icon>
+
+        <button matChipRemove
+                type="button"
+                [attr.aria-label]="'remove ' + participant">
+          <mat-icon>cancel</mat-icon>
+        </button>
+
+      </mat-chip-row>
+
+      <br>
+
+      <mat-form-field appearance="fill">
+        <mat-label>{{'forms.userSelectionField' | translate}}</mat-label>
+        <input #input
+              matInput
+              type="text"
+              placeholder=""
+              aria-label="Number"
+              autocomplete="off"
+              formControlName="participants"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipGrid"
+              [matChipInputAddOnBlur]="addOnBlur">
+
+      <mat-autocomplete #auto="matAutocomplete"
+                        (optionSelected)="add($event)">
+        <mat-option *ngFor="let userName of foundedUsers | async"
+                    [value]="userName">
+          {{userName}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    </mat-chip-grid>
+
+  </mat-form-field>
+</form>

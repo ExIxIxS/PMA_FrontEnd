@@ -1,0 +1,49 @@
+<button mat-icon-button
+        [matMenuTriggerFor]="menu"
+        type="button">
+  <mat-icon>menu</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item
+          [matMenuTriggerFor]="colors"
+          type="button">
+    {{'buttons.palette' | translate}}
+    <mat-icon>format_paint</mat-icon>
+  </button>
+  <button mat-menu-item
+          [matMenuTriggerFor]="fonts"
+          type="button">
+    {{'buttons.font' | translate}}
+    <mat-icon>rtt</mat-icon>
+  </button>
+</mat-menu>
+
+<mat-menu #colors="matMenu">
+    <button *ngFor="let theme of colorThemes"
+            class="color-theme-button"
+            type="button"
+            [matTooltip]="theme.title"
+            matTooltipPosition="left"
+            (click)="setColorTheme(theme.className)">
+      <span [class]="'color-wrapper ' + theme.className">
+        <span class="color-item color-item-primary"></span>
+        <span class="color-item color-item-accent"></span>
+        <span class="color-item color-item-warn"></span>
+        <mat-icon color="primary">{{(theme.isDark) ? 'dark_mode' : 'light_mode'}}</mat-icon>
+      </span>
+    </button>
+</mat-menu>
+
+<mat-menu #fonts="matMenu">
+  <div class="font-buttons-wrapper">
+    <button *ngFor="let typography of typographies"
+            class="font-button"
+            mat-flat-button
+            [ngClass]="'typography-button ' + typography.className + '-typography'"
+            type="button"
+            (click)="setTypography(typography.className)">
+        <span>{{typography.title}}</span>
+    </button>
+  </div>
+</mat-menu>

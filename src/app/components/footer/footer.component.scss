@@ -1,0 +1,30 @@
+.footer-toolbar {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  a {
+    font-size: 16px;
+  }
+}
+
+.github-logo {
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.git-nick {
+  padding-left: 3px;
+}
+
+.rss-logo {
+  width: auto;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+}
+
+

@@ -1,0 +1,73 @@
+/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@use 'sass:map';
+@use "styles/themes" as themes;
+@use "styles/app-mixins" as mix;
+
+@include mat.core();
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  h2, h3, h4, h5, h6 {
+    font-weight: 400;
+  }
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+main {
+  width: calc(100vw - 120px);
+  min-height: calc(100vh - 155px);
+  margin: 10px auto 20px auto;
+  padding-top: 1px;
+}
+
+@media (max-width: 539px) {
+  main {
+    width: 100%;
+  }
+}
+
+/* default theme */
+
+body {
+  @include mix.default-theme(themes.$default-theme);
+}
+
+/* additional App theme classes */
+
+.dark-pink-theme {
+  @include mix.additional-theme(themes.$dark-pink-theme);
+}
+
+.dark-green-theme {
+  @include mix.additional-theme(themes.$dark-green-theme);
+}
+
+.light-desert-theme {
+  @include mix.additional-theme(themes.$light-desert-theme);
+}
+
+.dark-peace-theme {
+  @include mix.additional-theme(themes.$dark-peace-theme);
+}
+
+.light-teal-theme {
+  @include mix.additional-theme(themes.$light-teal-theme);
+}
+
+/* additional Typography classes */
+
+.shantell-sans-typography {
+  @include mix.additional-typography(themes.$shantell-sans-typography);
+}
+
+.comfortaa-typography {
+  @include mix.additional-typography(themes.$comfortaa-typography);
+}

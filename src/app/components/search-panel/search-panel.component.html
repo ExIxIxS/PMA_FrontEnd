@@ -1,0 +1,74 @@
+<mat-card class="search-panel">
+  <mat-card-header (click)="enableInput(input)">
+    <mat-form-field
+      appearance="fill"
+      class="search-field">
+      <mat-label>{{'forms.taskSearchField' | translate}}</mat-label>
+      <input #input
+            matInput
+            autocomplete="off"
+            [formControl]="searchFormControl">
+      <mat-error *ngIf="searchFormControl.invalid">
+        {{getErrorMessage('searchRequest')}}
+      </mat-error>
+      <mat-hint *ngIf="isNoResult">*{{'error.noResult' | translate}}</mat-hint>
+
+      <button mat-icon-button
+            type="button"
+            matSuffix
+            disabled
+            [hidden]="!input.disabled"
+            aria-label="Search icon">
+        <mat-icon>search</mat-icon>
+      </button>
+
+      <button mat-icon-button
+              type="button"
+              matSuffix
+              (click)="disableInput()"
+              [hidden]="input.disabled"
+              matTooltip="{{'buttons.cancel' | translate}}"
+              [attr.aria-label]="'disable input'">
+          <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </mat-card-header>
+  <mat-progress-bar [ngClass]="{'hidden-progress': !isSearchInProgress}"
+                    mode="indeterminate">
+  </mat-progress-bar>
+  <mat-card-content class="search-results">
+
+     <mat-card *ngFor="let task of foundTasks"
+              class="task-card">
+        <div>
+        <mat-card-header>
+          <mat-card-title>{{task.restTask.title | userOutput}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{'board.creator' | translate}}: {{task.owner | userOutput}}</p>
+            <p>{{'board.taskExecutor' | translate}}: {{task.executor | userOutput}}</p>
+            <p>{{task.description | userOutput}}</p>
+        </mat-card-content>
+        </div>
+
+        <div class="buttons-wrapper">
+          <a mat-fab
+            color="primary"
+            class="board-button"
+            matTooltip="{{'buttons.openBoard' | translate}}"
+            matTooltipPosition="above"
+            [routerLink]="['/boards', task.restTask.boardId]">
+            <mat-icon>dashboard</mat-icon>
+          </a>
+
+          <button mat-mini-fab
+                  color="accent"
+                  aria-label="Edit task"
+                  matTooltip="{{'buttons.editTask' | translate}}"
+                  (click)="editTask(task)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+    </mat-card>
+  </mat-card-content>
+</mat-card>

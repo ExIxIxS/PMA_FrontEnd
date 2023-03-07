@@ -1,0 +1,102 @@
+<mat-toolbar class="header-toolbar"
+            color="primary">
+  <app-menu-header></app-menu-header>
+    <button mat-flat-button
+      class="app-button"
+      type="button"
+      color="primary"
+      (click)="navigateToRoot()">
+      PMA
+    </button>
+
+    <span class="left-spacer"></span>
+
+    <button *ngIf = "isUserLoggedIn" mat-mini-fab
+            type="button"
+            (click)="createNewBoard()"
+            color="accent"
+            aria-label="Add project"
+            matTooltip="{{'buttons.newBoard' | translate}}">
+      <mat-icon>add</mat-icon>
+    </button>
+
+    <span *ngIf = "isUserLoggedIn" class="right-spacer"></span>
+
+  <app-lanquage-menu></app-lanquage-menu>
+
+  <span *ngIf="!isUserLoggedIn">
+    <span *ngIf="!isSmallScreen">
+      <a mat-fab
+        extended
+        class="fab-button"
+        routerLink="/signin">
+        <mat-icon>login</mat-icon>
+        {{'buttons.login' | translate}}
+      </a>
+
+      <a mat-fab
+        extended
+        class="fab-button"
+        routerLink="//signup">
+        <mat-icon>key</mat-icon>
+        {{'buttons.signUp' | translate}}
+      </a>
+    </span>
+
+    <span *ngIf="isSmallScreen">
+      <a mat-mini-fab
+        matTooltip="{{'buttons.login' | translate}}"
+        class="mini-fab-button"
+        routerLink="/signin"
+        aria-label="Login mini fab icon">
+        <mat-icon>login</mat-icon>
+      </a>
+
+      <a mat-mini-fab
+        matTooltip="{{'buttons.signUp' | translate}}"
+        class="mini-fab-button"
+        routerLink="/signup"
+        aria-label="Sign up mini fab icon">
+        <mat-icon>key</mat-icon>
+      </a>
+    </span>
+  </span>
+
+  <span *ngIf="isUserLoggedIn">
+    <span *ngIf="!isSmallScreen">
+      <button mat-fab
+              extended
+              class="fab-button"
+              (click)="logOut()">
+        <mat-icon>logout</mat-icon>
+        {{'buttons.logOut' | translate}}
+      </button>
+
+    </span>
+
+    <span *ngIf="isSmallScreen">
+      <button mat-mini-fab
+              matTooltip="{{'buttons.logOut' | translate}}"
+              class="mini-fab-button"
+              (click)="logOut()"
+              aria-label="Log out mini fab icon">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </span>
+
+    <a mat-icon-button
+      matTooltip="{{'buttons.userAccount' | translate}}"
+      routerLink="/user"
+      aria-label="User account icon">
+      <mat-icon>manage_accounts</mat-icon>
+    </a>
+
+  </span>
+</mat-toolbar>
+
+<mat-progress-bar [ngClass]="{'hidden-progress': !isInProgress}"
+                  color="accent"
+                  mode="indeterminate">
+</mat-progress-bar>
+
+<app-error-panel></app-error-panel>

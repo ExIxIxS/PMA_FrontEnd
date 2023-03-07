@@ -1,0 +1,40 @@
+.header-toolbar {
+  height: 60px;
+}
+
+.left-spacer {
+  flex: 1 1 auto;
+}
+
+.right-spacer {
+  flex: 3 3 auto;
+}
+
+.app-button {
+  font-size: 28px;
+  padding: 40px 16px;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+.fab-button {
+  margin: 0 5px;
+}
+
+.mini-fab-button {
+  margin: 0 2px;
+}
+
+.hidden-progress {
+  visibility: hidden;
+}
+
+@media (max-width: 539px) {
+  .app-button {
+    font-size: 16px;
+  }
+
+  .header-toolbar {
+    padding: 5px;
+  }
+}
