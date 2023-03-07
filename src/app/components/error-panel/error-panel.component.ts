@@ -7,7 +7,7 @@ import { ErrorHandlerService } from 'src/app/services/errorHandler.service';
   styleUrls: ['./error-panel.component.scss']
 })
 export class ErrorPanelComponent {
-  public pageIndex: number = 0;
+  public pageIndex = 0;
 
   constructor(
     private errorHandlerService: ErrorHandlerService,

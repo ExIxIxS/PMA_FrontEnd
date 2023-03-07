@@ -123,7 +123,7 @@ export class AppFormsService {
     }
   }
 
-  public getNewFormControl(type: FormConrolTypes, initValue: string = '', disabled: boolean = false, sourceControl?: AbstractControl<any, any>
+  public getNewFormControl(type: FormConrolTypes, initValue = '', disabled = false, sourceControl?: AbstractControl<any, any>
     ): FormControl  {
     const validators = (sourceControl)
       ? this.getValidators(type, sourceControl)
@@ -228,7 +228,7 @@ export class AppFormsService {
         return `${this.translate('formErrors.doNotMatch')}`;
       default:
         return `${this.translate('formErrors.notValid')} ${localizedTitle}`;
-    };
+    }
 
   }
 

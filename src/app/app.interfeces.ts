@@ -156,7 +156,7 @@ interface OpenDialogArgs {
   deletedTask?: DeletedTask,
   updatedTasks?: TaskSetRest[],
   editableTask?: TaskRest,
-  additionalHandler?: Function,
+  additionalHandler?: () => void,
 }
 
 interface DeletedBoard {
@@ -171,11 +171,11 @@ interface SearchTask {
   description: string,
   owner: string,
   executor: string,
-};
+}
 
 interface HandleConfirm {
   options: HandleConfirmOptions,
-  callBack?: Function,
+  callBack?: () => void,
 }
 
 interface ObserverTemplate {

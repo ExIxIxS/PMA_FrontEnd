@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppControlService } from 'src/app/services/app-control.service';
 
 @Component({
-  selector: 'footer',
+  selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })

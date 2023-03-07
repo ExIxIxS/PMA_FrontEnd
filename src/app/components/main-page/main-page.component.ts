@@ -20,7 +20,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public ownBoardsOutput: AdaptedBoard[] = [];
   public participanceBoardsOutput: AdaptedBoard[] = [];
   public otherBoardsOutput: AdaptedBoard[] = [];
-  public isHideStartButton: boolean = true;
+  public isHideStartButton = true;
 
   constructor(
     private router: Router,

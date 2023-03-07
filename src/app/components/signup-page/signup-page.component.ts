@@ -13,7 +13,7 @@ import { FormGroup } from '@angular/forms';
 })
 
 export class SignupPageComponent {
-  public hide: boolean = true;
+  public hide = true;
   public checkoutForm: FormGroup = this.formService.getNewFormGroup({type: 'singUp'});
 
   constructor(
@@ -23,7 +23,7 @@ export class SignupPageComponent {
 
   public getErrorMessage(type: FormConrolTypes): string {
     return this.formService.getErrorMessage(this.checkoutForm, type);
-  };
+  }
 
   public submitSignUp(): void {
     if (this.checkoutForm.valid) {
@@ -34,6 +34,6 @@ export class SignupPageComponent {
 
       this.restAPI.signUp(name, login, pass);
     }
-  };
+  }
 
 }

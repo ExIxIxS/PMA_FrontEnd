@@ -8,7 +8,7 @@ import { AppControlService } from './services/app-control.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  public title: string = 'app-pma';
+  public title = 'app-pma';
 
   constructor(
     private appControlService: AppControlService,

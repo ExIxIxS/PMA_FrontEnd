@@ -19,10 +19,10 @@ import { Observer, Subscription } from 'rxjs';
 export class EditUserComponent implements OnInit, OnDestroy {
   private subscribtions: Subscription[] = [];
 
-  public hidePass: boolean = true;
-  public hideNewPass: boolean = true;
-  public initialName: string = '';
-  public initialLogin: string = '';
+  public hidePass = true;
+  public hideNewPass = true;
+  public initialName = '';
+  public initialLogin = '';
   public checkoutForm: FormGroup = this.formService.getNewFormGroup({type: 'editUser'});
   public passwordFormControls: AbstractControl[] = [
     this.checkoutForm.controls['password'],
@@ -62,7 +62,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       error: (err: Error) => {
         this.errorHandlerService.handleError(err);
       },
-      complete: () => {},
+      complete: () => {return;},
     }
 
     const subscr = this.restAPI.getUser(this.localStorageService.currentUserId)
@@ -77,7 +77,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   public getErrorMessage(type: FormConrolTypes): string {
     return this.formService.getErrorMessage(this.checkoutForm, type);
-  };
+  }
 
   public saveChanges(): void {
     if (!this.checkoutForm.valid) {
@@ -115,7 +115,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this.subscribtions.push(subscr);
 
-  };
+  }
 
   private updateCurentUser(name: string, login: string): void {
     this.initialName = name;

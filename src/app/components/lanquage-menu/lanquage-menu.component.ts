@@ -16,7 +16,7 @@ export class LanquageMenuComponent {
     private localStorageService: LocalStorageService,
     private translate: TranslateService,
     private appControlService: AppControlService,
-  ) {};
+  ) {}
 
   public get currentLanguage(): string {
     return this.localStorageService.currentLanguage;

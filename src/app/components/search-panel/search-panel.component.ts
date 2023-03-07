@@ -21,8 +21,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
   public foundTasks: SearchTask[] = [];
   public allUsers: UserRest[] = [];
-  public isNoResult: boolean = false;
-  public isSearchInProgress: boolean = false;
+  public isNoResult = false;
+  public isSearchInProgress = false;
   public searchFormControl = this.formsService.getNewFormControl('searchRequest', '', true);
 
   constructor(
@@ -148,7 +148,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
     this.searchFormControl.disable();
   }
 
-  public observeInputChanges(del: number = 1000): void {
+  public observeInputChanges(del = 1000): void {
     const changesObserver = {
       next: (value: string | null) => {
         if (value && this.searchFormControl.valid) {
@@ -169,7 +169,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
   public getErrorMessage(type: FormConrolTypes): string {
     return this.formsService.getErrorMessage(this.searchFormControl, type);
-  };
+  }
 
   public editTask(task: SearchTask): void {
     this.confirmationService.openDialog({

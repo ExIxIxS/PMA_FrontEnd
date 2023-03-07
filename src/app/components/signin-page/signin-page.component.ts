@@ -14,7 +14,7 @@ import { FormGroup } from '@angular/forms';
 })
 
 export class SigninPageComponent {
-  public hide: boolean = true;
+  public hide = true;
   public checkoutForm: FormGroup = this.formService.getNewFormGroup({type: 'singIn'});
 
   constructor(
@@ -34,6 +34,6 @@ export class SigninPageComponent {
 
       this.restAPI.signIn(login, pass);
     }
-  };
+  }
 
 }

@@ -19,7 +19,7 @@ export class ErrorHandlerService {
   private setGlobalErrorHandlers(): void {
     if (!window) {
       return;
-    };
+    }
 
     window.console.error = (...errors: Error[] | string[]) => {
       errors.forEach((error) => {
@@ -36,7 +36,7 @@ export class ErrorHandlerService {
 
       if (error instanceof Error) {
         this.handleError(error);
-      };
+      }
     };
 
     window.addEventListener('unhandledrejection', (event) => {

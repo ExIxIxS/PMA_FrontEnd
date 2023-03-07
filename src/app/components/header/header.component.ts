@@ -6,7 +6,7 @@ import { ConfirmationService } from 'src/app/services/confirmation.service';
 import { RestDataService } from 'src/app/services/restAPI.service';
 
 @Component({
-  selector: 'header',
+  selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

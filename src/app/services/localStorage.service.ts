@@ -23,7 +23,7 @@ export class LocalStorageService {
   private _currentAppBoards: AppBoard[] = [];
 
   public body: HTMLElement = document.body;
-  public isBoards: boolean = false;
+  public isBoards = false;
   public restBoards: RestBoard[] = [];
   public currentRestBoard: RestBoard | undefined;
   public restUsers: UserRest[] = [];
@@ -31,7 +31,7 @@ export class LocalStorageService {
   public currentBoardColumns: ColumnApp[] = [];
   public restColumns: ColumnRest[] = [];
   public restTasks: TaskRest[] = [];
-  public isTaskDropDisabled: boolean = false;
+  public isTaskDropDisabled = false;
   public changeDetector: ChangeDetectorRef | undefined;
 
   constructor(
@@ -274,7 +274,7 @@ export class LocalStorageService {
   public deleteBoard(boardId: string): void {
     const boardIndex = this.currentAppBoards.findIndex((boardObj) => boardObj._id === boardId);
     this.currentAppBoards.splice(boardIndex, 1);
-    this.currentAppBoards = this.currentAppBoards; // assignment for emitting
+    this.currentAppBoardsEmitter.emit();
   }
 
   public createAppColumn(restColumn: ColumnRest): ColumnApp {
@@ -285,7 +285,7 @@ export class LocalStorageService {
     }
   }
 
-  public addColumn(restColumn: ColumnRest, additionalHandler?: Function): void {
+  public addColumn(restColumn: ColumnRest, additionalHandler?: () => void): void {
     const appColumn = this.createAppColumn(restColumn);
 
     this.restColumns.push(restColumn);
@@ -374,7 +374,7 @@ export class LocalStorageService {
   }
 
   private updateObjValues<T extends TaskRest>(targetObj: T, sourceObj: T): void {
-    for (let key in targetObj) {
+    for (const key in targetObj) {
       targetObj[key as keyof T] = sourceObj[key as keyof T];
     }
   }
@@ -415,7 +415,7 @@ export class LocalStorageService {
 
   private findColumnById<T extends ColumnRest | ColumnApp>(column: T, columns: T[]): T | undefined {
     return columns.find((currentColumn) => currentColumn._id === column._id)
-  };
+  }
 
   private changeColumnTitle(currentColumn: ColumnRest | ColumnApp, title: string): void {
     currentColumn.title = title;

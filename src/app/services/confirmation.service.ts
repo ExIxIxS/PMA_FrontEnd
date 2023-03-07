@@ -15,7 +15,7 @@ import { DialogPopupComponent } from '../components/dialog-popup/dialog-popup.co
 })
 export class ConfirmationService {
   public type: ConfirmationTypes = 'default';
-  public title: string = 'Confirmation Service';
+  public title = 'Confirmation Service';
   public isConfirmValid: boolean;
   public deletedBoard: DeletedBoard | null = null;
   public boardId: string | undefined;
@@ -52,12 +52,12 @@ export class ConfirmationService {
             options: rest.newColumn,
             callBack: rest.additionalHandler,
           };
-        };
+        }
         break;
       case 'createTask':
         if (rest.newTask) {
           handleOptions = {options: rest.newTask};
-        };
+        }
         break;
       case 'editTask':
         if (rest.editableTask) {
@@ -66,7 +66,7 @@ export class ConfirmationService {
             options: rest.editableTask,
             callBack: rest.additionalHandler
           };
-        };
+        }
 
         break;
       case 'deleteBoard': {
@@ -99,7 +99,7 @@ export class ConfirmationService {
               updatedTasks: rest.updatedTasks,
             } as TaskDeletionOptions
           };
-        };
+        }
         break;
       default:
         break;
@@ -119,7 +119,7 @@ export class ConfirmationService {
       case 'createBoard':
         if (this.newBoard) {
           this.restAPI.createBoard(this.newBoard, this.newBoardTemplate);
-        };
+        }
         break;
       case 'createColumn':
         if (handleOptions && this.newColumnTitle) {
@@ -181,12 +181,12 @@ export class ConfirmationService {
         case 'deleteBoard':
           if (this.deletedBoard) {
             this.restAPI.deleteBoard(this.deletedBoard.boardId)
-          };
+          }
           break;
         case 'deleteUser':
           if (this.localStorageService.currentUserId) {
               this.restAPI.deleteCurentUser();
-            };
+            }
             break;
         case 'deleteColumn': {
           this.restAPI.deleteColumn(handleOptions.options as DeletedColumnOption, handleOptions.callBack);

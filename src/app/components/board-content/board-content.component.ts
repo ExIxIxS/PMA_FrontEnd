@@ -139,7 +139,7 @@ export class BoardContentComponent implements OnInit, OnDestroy {
 
       const updateBoardUsersObserver = {
         next: (restObj: RestBoard | UserRest[]) => {
-          if (restObj.hasOwnProperty('length') ) {
+          if (Object.hasOwn(restObj, 'length')) {
             this.localStorageService.restUsers = restObj as UserRest[];
           } else {
             this.localStorageService.currentRestBoard = restObj as RestBoard;
@@ -167,10 +167,10 @@ export class BoardContentComponent implements OnInit, OnDestroy {
     if (this.isDropValid(event)) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         this.restAPI.updateColumnsOrder();
-    };
+    }
   }
 
-  private getTasksSet(container: CdkDropList<TaskRest[]> | TaskRest[], newColumnId: string = ''): TaskSetRest[] {
+  private getTasksSet(container: CdkDropList<TaskRest[]> | TaskRest[], newColumnId = ''): TaskSetRest[] {
     const sourceObj = (container instanceof CdkDropList)
       ? container.data
       : container;

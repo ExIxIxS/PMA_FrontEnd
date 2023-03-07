@@ -20,8 +20,8 @@ import { FormGroup } from '@angular/forms';
 export class FormNewBoardComponent implements OnInit, OnDestroy {
   private subscribtions: Subscription[] = [];
 
-  public hide: boolean = true;
-  public addOnBlur: boolean = true;
+  public hide = true;
+  public addOnBlur = true;
   public boardTemplates = this.appControlService.boardTemplates;
   public participants: Participant[] = [];
   public availableUsers: string[] = [];

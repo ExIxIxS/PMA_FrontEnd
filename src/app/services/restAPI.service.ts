@@ -19,8 +19,8 @@ const REST_URL = 'https://pmabackend-exixixs.up.railway.app/';
 
 @Injectable()
 export class RestDataService {
-  public isInProgress: boolean = false;
-  public isNewBoard: boolean = false;
+  public isInProgress = false;
+  public isNewBoard = false;
 
   constructor(
     private http: HttpClient,
@@ -53,7 +53,7 @@ export class RestDataService {
     return {
       next: (options.next)
         ? options.next
-        : (value: T) => {},
+        : (value: T) => {return value},
       error: (options.error)
         ? options.error
         : (err: Error) => {
@@ -62,7 +62,7 @@ export class RestDataService {
       },
       complete: (options.complete)
         ? options.complete
-        : () => {},
+        : () => {return;},
     };
   }
 
@@ -101,7 +101,7 @@ export class RestDataService {
 
     this.getToken(login, pass)
       .subscribe(singInObserver);
-  };
+  }
 
   public signUp(name: string, login: string, pass: string): void {
     const singUpObj: NewUser = {
@@ -177,8 +177,8 @@ export class RestDataService {
     }
   }
 
-  public updateBoardsStorage(completeCallBack?: Function): void {
-    let isBoardsTime: boolean = true;
+  public updateBoardsStorage(completeCallBack?: () => void): void {
+    let isBoardsTime = true;
 
     this.startProgress();
 
@@ -290,7 +290,7 @@ export class RestDataService {
       .subscribe(createColumnObserver);
   }
 
-  public deleteColumn<T extends ColumnRest>(deletedColumn: DeletedColumnOption, additionalHandler?: Function): void {
+  public deleteColumn<T extends ColumnRest>(deletedColumn: DeletedColumnOption, additionalHandler?: () => void): void {
     this.startProgress();
 
     const deleteColumnObserver = this.getRestObserver<T>({
@@ -312,7 +312,7 @@ export class RestDataService {
     }
   }
 
-  public updateColumnsOrder<T extends ColumnRest[]>(isDeletion: boolean = false): void {
+  public updateColumnsOrder<T extends ColumnRest[]>(isDeletion = false): void {
     this.startProgress();
 
     const columnsSet = (isDeletion)
@@ -429,7 +429,7 @@ export class RestDataService {
       .subscribe(updateColumnObserver);
   }
 
-  public updateTask<T extends TaskRest>(boardId: string, taskId: string, taskObj: EditableTask, additionalHandler?: Function): void {
+  public updateTask<T extends TaskRest>(boardId: string, taskId: string, taskObj: EditableTask, additionalHandler?: () => void): void {
     const updateTaskObserver = this.getRestObserver<T>({
       next: (task: T) => {
         this.localStorageService.updateBoardTasks([task]);
@@ -442,7 +442,7 @@ export class RestDataService {
     .subscribe(updateTaskObserver);
   }
 
-  public updateUser<T extends UserRest>(updatedUser: NewUser, additionalHandler: Function): void {
+  public updateUser<T extends UserRest>(updatedUser: NewUser, additionalHandler: (...rest: any[]) => void): void {
     this.startProgress();
 
     const userId = this.localStorageService.currentUserId;
@@ -478,7 +478,7 @@ export class RestDataService {
       .join('%20');
   }
 
-  public getBoardUsers(boardId: string, completeCallBack: Function): void {
+  public getBoardUsers(boardId: string, completeCallBack: (arg: UserRest[]) => void): void {
     if (!boardId) {
       return;
     }
@@ -487,7 +487,7 @@ export class RestDataService {
     let users: UserRest[];
     const getBoardUsersObserver = this.getRestObserver<RestBoard | UserRest[]>({
       next: (result: RestBoard | UserRest[]) => {
-        if (result.hasOwnProperty('length')) {
+        if (Object.hasOwn(result, 'length')) {
           users = result as UserRest[];
         } else {
           boardObj = result as RestBoard;

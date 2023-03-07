@@ -10,7 +10,7 @@ import { AppFormsService } from 'src/app/services/app-forms.service';
   styleUrls: ['./form-new-column.component.scss']
 })
 export class FormNewColumnComponent {
-  public hide: boolean = true;
+  public hide = true;
   public titleFormControl = this.formService.getNewFormControl('columnTitle');
   public checkoutForm = new FormGroup({columnTitle: this.titleFormControl})
 

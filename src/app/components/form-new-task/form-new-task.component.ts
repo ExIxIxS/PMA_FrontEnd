@@ -15,7 +15,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./form-new-task.component.scss']
 })
 export class FormNewTaskComponent implements OnInit {
-  public hide: boolean = true;
+  public hide = true;
   public checkoutForm: FormGroup = this.getCheckoutForm();
   public availableUsers: UserRest[] = [];
 
@@ -85,7 +85,7 @@ export class FormNewTaskComponent implements OnInit {
 
   public getErrorMessage(optionName: FormConrolTypes): string {
     return this.formService.getErrorMessage(this.checkoutForm, optionName)
-  };
+  }
 
   public checkInput(event?: MatSelectChange): void {
     if (event) {
